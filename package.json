@@ -1,0 +1,40 @@
+{
+  "name": "staking",
+  "version": "0.0.1",
+  "description": "Stake LEV tokens here to get FEE tokens for a particular period",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bharathrao/staking.git"
+  },
+  "keywords": [
+    "leverj",
+    "LEV",
+    "FEE",
+    "coinpit",
+    "leverage",
+    "trading"
+  ],
+  "author": "coinpit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bharathrao/staking/issues"
+  },
+  "homepage": "https://github.com/bharathrao/staking#readme",
+  "devDependencies": {
+    "bignumber.js": "^4.0.4",
+    "bip39": "2.4.0",
+    "bluebird": "^3.5.0",
+    "bn.js": "4.11.6",
+    "ethereumjs-testrpc": "4.0.1",
+    "ethereumjs-wallet": "0.6.0",
+    "ethjs-contract": "^0.1.9",
+    "ethjs-provider-http": "0.1.6",
+    "ethjs-query": "0.2.4",
+    "ethjs-rpc": "0.1.5",
+    "truffle-hdwallet-provider": "0.0.3"
+  }
+}
