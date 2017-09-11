@@ -26,12 +26,12 @@ function generateAccounts(mnemonic, hdPathIndex, totalToGenerate, accumulatedAdd
   return generateAccounts(mnemonic, nextHDPathIndex, totalToGenerate, accumulatedAddrs);
 }
 
-try {
-  cp.execSync('npm run lint ./');
-} catch (err) {
-  console.log(err.stdout.toString());
-  process.exit(1);
-}
+// try {
+//   cp.execSync('npm run lint ./');
+// } catch (err) {
+//   console.log(err.stdout.toString());
+//   process.exit(1);
+// }
 
 if (!fs.existsSync('secrets.json')) {
   throw new Error('no secrets.json found.');
