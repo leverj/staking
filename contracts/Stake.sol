@@ -6,14 +6,9 @@ import "tokens/HumanStandardToken.sol";
 
 contract Stake {
 
+//    event TokenStakeEvent(address indexed purchaser, uint amount);
 
-    event TokenStakeEvent(address indexed purchaser, uint amount);
-
-    struct TokenStake {
-    address beneficiary;
-    uint256 quantity;
-    uint blockNumber;
-    }
+    mapping (address => uint256) public levBlocks;
 
     HumanStandardToken public token;
 
@@ -24,8 +19,6 @@ contract Stake {
     address public owner;
 
     uint public counter = 0;
-
-    mapping (uint => TokenStake) public tokenSales;
 
     modifier onlyOwner {
         require(msg.sender == owner);
@@ -49,24 +42,12 @@ contract Stake {
         token = HumanStandardToken(_tokenid);
     }
 
-    function transfer(address stakeaddress, uint256 _quantity) notFrozen returns (bool){
-//        require(stakeaddress == this);
+    function stakeTokens(uint256 _quantity)  returns (bool result){
         require(token.balanceOf(msg.sender) >= _quantity);
-        tokenSales[counter] = TokenStake(msg.sender, _quantity, block.number);
-//        token.transfer.delegatecall(this, _quantity);
-//        token.transfer(this, _quantity, msg.sender);
-//        bool result = tokenid.delegatecall(bytes4(sha3("transfer(address,uint256)")), this, _quantity);
-        tokenid.delegatecall(msg.data);
-//        return result;
-                return true;
+        levBlocks[msg.sender] += _quantity * (freezeBlock - block.number);
+//        return token.transfer( msg.sender, _quantity);
+        return tokenid.delegatecall(bytes4(sha3("transfer(address,uint256)")), this, _quantity);
+
     }
 
-    // when fees is received.
-    function() payable {
-        //        address user = msg.sender;
-        //        uint256 qty = msg.value;
-        //        tokenSales[counter] = TokenStake(msg.sender, msg.value, block.number);
-        //        counter++;
-        //        TokenStakeEvent(user, msg.value);
-    }
 }
