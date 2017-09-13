@@ -45,8 +45,9 @@ contract Stake {
     function stakeTokens(uint256 _quantity)  returns (bool result){
         require(token.balanceOf(msg.sender) >= _quantity);
         levBlocks[msg.sender] += _quantity * (freezeBlock - block.number);
-//        return token.transfer( msg.sender, _quantity);
-        return tokenid.delegatecall(bytes4(sha3("transfer(address,uint256)")), this, _quantity);
+
+        return token.transferFrom( msg.sender, this, _quantity);
+//        return tokenid.delegatecall(bytes4(sha3("transfer(address,uint256)")), this, _quantity);
 
     }
 

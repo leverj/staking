@@ -29,7 +29,10 @@ contract('Stake', (accounts)=>{
 
   it('user should be able to put tokens for stake', async function(){
     let stake = await Stake.deployed();
-    await stake.stakeTokens(10, { from: user1 });
+    await token.approve(stake.address, 10, {from:user1});
+    await stake.stakeTokens(10, {from: user1});
+
+    // await stake.stakeTokens(10, { from: user1 });
     // await token.transfer(stake.address, 10, {from: user1});
     console.log(await token.balanceOf(user1), await token.balanceOf(stake.address));
   })
