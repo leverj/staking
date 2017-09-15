@@ -1,42 +1,42 @@
+/**
+  * stake users levs
+  * get fee from trading contract
+  * get eth from trading contract
+  * calculate fee tokens to be generated
+  * distribute fee tokens and lev to users in chunks.
+  * re-purpose it for next trading duration.
+  * what happens to extra fee if not enough trading happened? destroy it.
+  * Stake will have full control over FEE.sol
+  */
+
 pragma solidity ^0.4.11;
 
 
 import "tokens/HumanStandardToken.sol";
 
 
-// stake users levs
-// get fee from trading contract
-// get eth from trading contract
-// calculate fee tokens to be generated
-// distribute fee tokens and lev to users in chunks.
-
-// re-purpose it for next trading duration.
-
-// what happens to extra fee if not enough trading happened? destroy it.
-// Stake will have full control over FEE.sol
-
-
 contract Stake {
-    // user address to (lev tokens)*(blocks left to expiry)
+    /* user address to (lev tokens)*(blocks left to expiry) */
     mapping (address => uint256) levBlocks;
-    // user address to lev tokens at stake
+    /*user address to lev tokens at stake*/
     mapping (address => uint256) stakes;
 
     //todo: total lev tokens. This may not be required. revisit
     uint256 public totalLevs;
 
-    // total lev blocks. this will be help not to iterate through full mapping
+    /*total lev blocks. this will be help not to iterate through full mapping*/
     uint256 public totalLevBlocks;
 
-    // Lev token reference
+    /*Lev token reference*/
     address public tokenid;
+
     HumanStandardToken public token;
 
     uint public startBlock;
 
     uint public expiryBlock;
 
-    // owner address for admin functions
+    /*owner address for admin functions*/
     address public owner;
 
     modifier onlyOwner {
@@ -84,9 +84,11 @@ contract Stake {
         expiryBlock = _expiry;
     }
 
-    // staking function for user.
-    // User has to approve staking contract on token before calling this function.
-    // refer to tests.
+    /**
+      * staking function for user.
+      * User has to approve staking contract on token before calling this function.
+      * refer to tests.
+      */
     function stakeTokens(uint256 _quantity) started notExpired returns (bool result){
         require(token.balanceOf(msg.sender) >= _quantity);
         levBlocks[msg.sender] += _quantity * (expiryBlock - block.number);
