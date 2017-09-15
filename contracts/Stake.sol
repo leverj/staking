@@ -13,6 +13,7 @@ pragma solidity ^0.4.11;
 
 
 import "tokens/HumanStandardToken.sol";
+import "./Fee.sol";
 
 
 contract Stake {
@@ -38,6 +39,10 @@ contract Stake {
 
     /*owner address for admin functions*/
     address public owner;
+
+    /* fee token reference*/
+    address public feeTokenId;
+    Fee public fee;
 
     modifier onlyOwner {
         require(msg.sender == owner);
@@ -79,10 +84,16 @@ contract Stake {
         token = HumanStandardToken(_tokenid);
     }
 
+    function setFeeToken(address _feeTokenId) onlyOwner {
+        feeTokenId = _feeTokenId;
+        fee = Fee(_feeTokenId);
+    }
+
     function setBlocks(uint _start, uint _expiry) onlyOwner {
         startBlock = _start;
         expiryBlock = _expiry;
     }
+
 
     /**
       * staking function for user.
