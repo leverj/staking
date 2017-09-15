@@ -17,28 +17,27 @@ import "tokens/HumanStandardToken.sol";
 
 
 contract Stake {
-
-    //    event TokenStakeEvent(address indexed purchaser, uint amount);
-
+    // user address to (lev tokens)*(blocks left to expiry)
     mapping (address => uint256) levBlocks;
-
+    // user address to lev tokens at stake
     mapping (address => uint256) stakes;
 
+    //todo: total lev tokens. This may not be required. revisit
     uint256 public totalLevs;
 
+    // total lev blocks. this will be help not to iterate through full mapping
     uint256 public totalLevBlocks;
 
+    // Lev token reference
+    address public tokenid;
     HumanStandardToken public token;
 
     uint public startBlock;
 
     uint public expiryBlock;
 
-    address public tokenid;
-
+    // owner address for admin functions
     address public owner;
-
-    uint public counter = 0;
 
     modifier onlyOwner {
         require(msg.sender == owner);
@@ -52,6 +51,11 @@ contract Stake {
 
     modifier notExpired{
         require(block.number < expiryBlock);
+        _;
+    }
+
+    modifier hasExpired{
+        require(block.number >= expiryBlock);
         _;
     }
 
@@ -80,6 +84,9 @@ contract Stake {
         expiryBlock = _expiry;
     }
 
+    // staking function for user.
+    // User has to approve staking contract on token before calling this function.
+    // refer to tests.
     function stakeTokens(uint256 _quantity) started notExpired returns (bool result){
         require(token.balanceOf(msg.sender) >= _quantity);
         levBlocks[msg.sender] += _quantity * (expiryBlock - block.number);
