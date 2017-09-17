@@ -13,10 +13,15 @@ pragma solidity ^0.4.11;
 
 
 import "tokens/HumanStandardToken.sol";
+
+
+//import "zeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Fee.sol";
 
 
 contract Stake {
+
+    event StakeDebug(address indexed _owner, uint256 _value);
     /* user address to (lev tokens)*(blocks left to expiry) */
     mapping (address => uint256) levBlocks;
     /*user address to lev tokens at stake*/
@@ -27,6 +32,11 @@ contract Stake {
 
     /*total lev blocks. this will be help not to iterate through full mapping*/
     uint256 public totalLevBlocks;
+
+    /*wei for each Fee token*/
+    uint256 public weiPerFee;
+    /* total fee to be distributed */
+    uint256 public feeForThePeriod;
 
     /*Lev token reference*/
     address public tokenid;
@@ -42,7 +52,12 @@ contract Stake {
 
     /* fee token reference*/
     address public feeTokenId;
+
     Fee public fee;
+
+    /* wei owned by contarct */
+    uint256 public weiAsFee;
+
 
     modifier onlyOwner {
         require(msg.sender == owner);
@@ -72,11 +87,13 @@ contract Stake {
         return stakes[_for];
     }
 
-    function Stake(address _owner, address _tokenid, uint _expiryBlock){
+    function Stake(address _owner, uint256 _weiPerFee, address _tokenid, uint _expiryBlock){
+        require(_weiPerFee > 0);
         tokenid = _tokenid;
         expiryBlock = _expiryBlock;
         owner = _owner;
         token = HumanStandardToken(_tokenid);
+        weiPerFee = _weiPerFee;
     }
 
     function setToken(address _tokenid) onlyOwner {
@@ -107,6 +124,15 @@ contract Stake {
         totalLevBlocks += _quantity * (expiryBlock - block.number);
         totalLevs += _quantity;
         return token.transferFrom(msg.sender, this, _quantity);
+    }
+
+    function() payable {
+        weiAsFee += msg.value;
+    }
+
+    function updateFeeForCurrentPeriod()  returns (bool result){
+        feeForThePeriod = fee.balanceOf(this) + weiAsFee / weiPerFee;
+        return true;
     }
 
 }

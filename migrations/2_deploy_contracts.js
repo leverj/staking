@@ -7,7 +7,7 @@ module.exports = async function (deployer) {
   try {
     await deployer.deploy([
       [Fee, feeConf.owner, feeConf.tokenName, feeConf.decimalUnits, feeConf.tokenSymbol],
-      [Stake, stakeConf.owner, stakeConf.levid, stakeConf.freezeBlock]]);
+      [Stake, stakeConf.owner, stakeConf.weiPerFee, stakeConf.levid, stakeConf.freezeBlock]]);
     let stake = await Stake.deployed();
     let fee = await Fee.deployed();
     await fee.setMinter(stake.address);
