@@ -22,7 +22,14 @@ contract('Stake Levs', (accounts) => {
 
 
   before(async function () {
-    [stake, fee, token] = await setup(accounts);
+    token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
+    await token.transfer(user1, 100);
+    await token.transfer(user2, 200);
+    stake = await Stake.deployed();
+    await stake.setBlocks(100, 300);
+    await token.transfer(stake.address, 1000);
+    await stake.setToken(token.address);
+    await forceMine(new BN(200))
   });
 
   it('user should be able to put tokens for stake', async function () {
