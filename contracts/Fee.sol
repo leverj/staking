@@ -16,9 +16,12 @@ contract Fee is StandardToken {
     string public name;                   //fancy name: eg Simon Bucks
     uint8 public decimals;                //How many decimals to show. ie. There could 1000 base units with 3 decimals. Meaning 0.980 SBX = 980 base units. It's like comparing 1 wei to 1 ether.
     string public symbol;                 //An identifier: eg SBX
+    uint256 public feeInCirculation;      //total fee in circulation
     string public version = 'F0.1';       //human 0.1 standard. Just an arbitrary versioning scheme.
     address public owner;
+
     address public minter;
+
 
     modifier onlyOwner {
         require(msg.sender == owner);
@@ -50,12 +53,14 @@ contract Fee is StandardToken {
     function burn(uint256 _value) returns (bool success) {
         require(balanceOf(msg.sender) >= _value);
         balances[msg.sender] -= _value;
+        feeInCirculation -= _value;
         Burn(msg.sender, _value);
         return true;
     }
 
     function sendTokens(address _to, uint256 _value) onlyMinter returns (bool success) {
         balances[_to] += _value;
+        feeInCirculation +=_value;
         Transfer(msg.sender, _to, _value);
         return true;
     }

@@ -22,14 +22,7 @@ contract('Stake Levs', (accounts) => {
 
 
   before(async function () {
-    token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
-    await token.transfer(user1, 100);
-    await token.transfer(user2, 200);
-    stake = await Stake.deployed();
-    await stake.setBlocks(100, 300);
-    await token.transfer(stake.address, 1000);
-    await stake.setToken(token.address);
-    await forceMine(new BN(200))
+    [stake, fee, token] = await setup(accounts);
   });
 
   it('user should be able to put tokens for stake', async function () {
@@ -59,15 +52,7 @@ contract('Calculate Fee Tokens', (accounts) => {
 
 
   before(async function () {
-    stake = await Stake.deployed();
-    fee = await Fee.deployed();
-    await fee.setMinter(stake.address);
-    await stake.setFeeToken(fee.address);
-    token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
-    // token = await HumanStandardToken.at(token.address);
-    await token.transfer(user1, 100);
-    await token.transfer(user2, 200);
-    await stake.setBlocks(100, 300);
+    [stake, fee, token] = await setup(accounts);
     await stake.setToken(token.address);
     await forceMine(new BN(200));
     await stakeit(10, user1, stake, token);
@@ -85,6 +70,48 @@ contract('Calculate Fee Tokens', (accounts) => {
   });
 });
 
+
+contract('Circulate Fee Tokens', (accounts) => {
+  let token, stake, fee;
+  let user1 = accounts[1];
+  let user2 = accounts[2];
+  let user3 = accounts[3];
+
+
+  before(async function () {
+    [stake, fee, token] = await setup(accounts);
+    await stakeit(10, user1, stake, token);
+    await stakeit(15, user2, stake, token);
+    await forceMine(new BN(300));
+    await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
+    await web3.eth.sendTransaction({from: user1, to: stake.address, value: 10000000});
+    await stake.updateFeeForCurrentPeriod();
+  });
+
+
+  it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
+
+  });
+});
+
+
+async function setup(accounts) {
+  let user1 = accounts[1];
+  let user2 = accounts[2];
+  let user3 = accounts[3];
+  let stake = await Stake.deployed();
+  let fee = await Fee.deployed();
+  await fee.setMinter(stake.address);
+  await stake.setFeeToken(fee.address);
+  let token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
+  // token = await HumanStandardToken.at(token.address);
+  await token.transfer(user1, 100);
+  await token.transfer(user2, 200);
+  await stake.setBlocks(100, 300);
+  await stake.setToken(token.address);
+  await forceMine(new BN(200));
+  return [stake, fee, token];
+}
 
 async function stakeit(count, user, stake, token) {
   await token.approve(stake.address, count, {from: user});
