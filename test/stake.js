@@ -74,6 +74,7 @@ contract('Calculate Fee Tokens', (accounts) => {
     stake = await Stake.deployed();
     await stake.updateFeeForCurrentPeriod();
     expect((await stake.feeForThePeriod()).toNumber()).to.eql(1010);
+    expect((await fee.balanceOf(stake.address)).toNumber()).to.eql(0);
   });
 });
 
@@ -97,7 +98,12 @@ contract('Circulate Fee Tokens', (accounts) => {
 
 
   it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
-
+    await stake.redeamLevAndFee(user1);
+    expect((await token.balanceOf(user1)).toNumber()).to.eql(100);
+    expect((await fee.balanceOf(user1)).toNumber()).to.eql(409);
+    expect((await stake.getStakes(user1)).toNumber()).to.eql(0);
+    expect((await stake.getLevBlocks(user1)).toNumber()).to.eql(0);
+    expect((await stake.totalLevs()).toNumber()).to.eql(15);
   });
 });
 
@@ -119,6 +125,48 @@ async function setup(accounts) {
   await forceMine(new BN(200));
   return [stake, fee, token];
 }
+
+contract('Stake setup', (accounts) => {
+  let token, stake, fee;
+  let user1 = accounts[1];
+  let user2 = accounts[2];
+  let user3 = accounts[3];
+
+  before(async function () {
+    [stake, fee, token] = await setup(accounts);
+    await stake.setToken(token.address);
+    await forceMine(new BN(200));
+    await stakeit(10, user1, stake, token);
+    await stakeit(15, user2, stake, token);
+    await forceMine(new BN(300));
+    await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
+    await web3.eth.sendTransaction({from: user1, to: stake.address, value: 10000000});
+  });
+
+  it('should fail to reset if there are stakes left', async function () {
+    try {
+      await stake.startNewTradingPeriod(1000, 2000);
+      expect().fail();
+    } catch (e) {
+
+    }
+  });
+
+  it('should reset after all the stakes have been returned', async function(){
+    await stake.updateFeeForCurrentPeriod();
+    await stake.redeamLevAndFee(user1);
+    await stake.redeamLevAndFee(user2);
+    await stake.startNewTradingPeriod(1000, 2000);
+    expect((await stake.startBlock()).toNumber()).to.eql( 1000 );
+    expect((await stake.expiryBlock()).toNumber()).to.eql( 2000);
+    expect((await stake.totalLevBlocks()).toNumber()).to.eql( 0);
+    expect((await stake.feeForThePeriod()).toNumber()).to.eql( 0);
+    expect((await stake.weiAsFee()).toNumber()).to.eql( 0);
+    expect((await stake.feeCalculated())).to.eql( false);
+
+  })
+});
+
 
 async function stakeit(count, user, stake, token) {
   await token.approve(stake.address, count, {from: user});

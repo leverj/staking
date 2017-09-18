@@ -50,7 +50,7 @@ contract Fee is StandardToken {
         return true;
     }
 
-    function burn(uint256 _value) returns (bool success) {
+    function burnTokens(uint256 _value) returns (bool success) {
         require(balanceOf(msg.sender) >= _value);
         balances[msg.sender] -= _value;
         feeInCirculation -= _value;

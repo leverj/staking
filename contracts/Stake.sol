@@ -21,7 +21,7 @@ import "./Fee.sol";
 
 contract Stake {
 
-    event StakeDebug(address indexed _owner, uint256 _value);
+    event StakeEvent(address indexed _user, uint256 _levs, string action);
     /* user address to (lev tokens)*(blocks left to expiry) */
     mapping (address => uint256) levBlocks;
     /*user address to lev tokens at stake*/
@@ -58,6 +58,7 @@ contract Stake {
     /* wei owned by contarct */
     uint256 public weiAsFee;
 
+    bool public feeCalculated = false;
 
     modifier onlyOwner {
         require(msg.sender == owner);
@@ -123,16 +124,47 @@ contract Stake {
         stakes[msg.sender] += _quantity;
         totalLevBlocks += _quantity * (expiryBlock - block.number);
         totalLevs += _quantity;
-        return token.transferFrom(msg.sender, this, _quantity);
+        token.transferFrom(msg.sender, this, _quantity);
+        StakeEvent(msg.sender, _quantity, "STAKED");
+        return true;
     }
 
     function() payable {
         weiAsFee += msg.value;
     }
 
-    function updateFeeForCurrentPeriod()  returns (bool result){
-        feeForThePeriod = fee.balanceOf(this) + weiAsFee / weiPerFee;
+    function updateFeeForCurrentPeriod() hasExpired returns (bool result){
+        require(feeCalculated == false);
+        uint256 feeFromExchange = fee.balanceOf(this);
+        feeForThePeriod = feeFromExchange + weiAsFee / weiPerFee;
+        feeCalculated = true;
+        fee.burnTokens(feeFromExchange);
         return true;
     }
 
+    function redeamLevAndFee(address _user) hasExpired returns (bool result){
+        require(msg.sender == _user || msg.sender == owner);
+        require(feeCalculated);
+        uint256 levBlock = levBlocks[_user];
+        uint256 stake = stakes[_user];
+        require(stake > 0);
+        uint256 feeEarned = levBlock * feeForThePeriod / totalLevBlocks;
+        delete stakes[_user];
+        delete levBlocks[_user];
+        if (feeEarned > 0) fee.sendTokens(_user, feeEarned);
+        token.transfer(_user, stake);
+        StakeEvent(_user, stake, "CLAIMED");
+        totalLevs -= stake;
+        return true;
+    }
+
+    function startNewTradingPeriod(uint _start, uint _expiry) onlyOwner returns (bool result){
+        require(totalLevs == 0);
+        startBlock = _start;
+        expiryBlock = _expiry;
+        totalLevBlocks = 0;
+        feeForThePeriod = 0;
+        weiAsFee = 0;
+        feeCalculated = false;
+    }
 }
