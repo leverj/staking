@@ -12,9 +12,12 @@ const HDPATH = 'm/44\'/60\'/0\'/0/';
 function generateAccounts(mnemonic, hdPathIndex, totalToGenerate, accumulatedAddrs) {
   const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeed(mnemonic));
   const node = hdwallet.derivePath(HDPATH + hdPathIndex.toString());
-  const secretKey = node.getWallet().getPrivateKeyString();
+  let wallet = node.getWallet();
+  const secretKey = wallet.getPrivateKeyString();
+  const address = wallet.getAddressString();
   accumulatedAddrs.push({
                           secretKey,
+                          address,
                           balance: ACCOUNTFUNDING,
                         });
 

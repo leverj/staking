@@ -39,5 +39,7 @@
     "truffle-hdwallet-provider": "0.0.3",
     "web3": "^1.0.0-beta.18"
   },
-  "dependencies": {}
+  "dependencies": {
+    "debug": "^3.0.1"
+  }
 }
