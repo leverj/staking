@@ -50,6 +50,8 @@ contract Stake {
     /*owner address for admin functions*/
     address public owner;
 
+    address public wallet;
+
     /* fee token reference*/
     address public feeTokenId;
 
@@ -88,11 +90,12 @@ contract Stake {
         return stakes[_for];
     }
 
-    function Stake(address _owner, uint256 _weiPerFee, address _tokenid, uint _expiryBlock){
+    function Stake(address _owner, address _wallet, uint256 _weiPerFee, address _tokenid, uint _expiryBlock){
         require(_weiPerFee > 0);
         tokenid = _tokenid;
         expiryBlock = _expiryBlock;
         owner = _owner;
+        wallet = _wallet;
         token = HumanStandardToken(_tokenid);
         weiPerFee = _weiPerFee;
     }
@@ -105,6 +108,11 @@ contract Stake {
     function setFeeToken(address _feeTokenId) onlyOwner {
         feeTokenId = _feeTokenId;
         fee = Fee(_feeTokenId);
+    }
+
+    function setWallet(address _wallet) onlyOwner returns (bool result){
+        wallet = _wallet;
+        return true;
     }
 
     function setBlocks(uint _start, uint _expiry) onlyOwner {
@@ -133,16 +141,18 @@ contract Stake {
         weiAsFee += msg.value;
     }
 
-    function updateFeeForCurrentPeriod() hasExpired returns (bool result){
+    function updateFeeForCurrentPeriod() onlyOwner hasExpired returns (bool result){
         require(feeCalculated == false);
         uint256 feeFromExchange = fee.balanceOf(this);
         feeForThePeriod = feeFromExchange + weiAsFee / weiPerFee;
         feeCalculated = true;
         fee.burnTokens(feeFromExchange);
+        wallet.transfer(weiAsFee);
+        weiAsFee = 0;
         return true;
     }
 
-    function redeamLevAndFee(address _user) hasExpired returns (bool result){
+    function redeemLevAndFee(address _user) hasExpired returns (bool result){
         require(msg.sender == _user || msg.sender == owner);
         require(feeCalculated);
         uint256 levBlock = levBlocks[_user];
@@ -166,5 +176,6 @@ contract Stake {
         feeForThePeriod = 0;
         weiAsFee = 0;
         feeCalculated = false;
+        return true;
     }
 }
