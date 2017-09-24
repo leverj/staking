@@ -152,9 +152,9 @@ contract('Stake setup', (accounts) => {
   it('should fail to reset if there are stakes left', async function () {
     try {
       await stake.startNewTradingPeriod(1000, 2000);
-      expect().fail();
+      expect().fail("should not pass");
     } catch (e) {
-
+      expect(e.message).to.not.eql("should not pass")
     }
   });
 
