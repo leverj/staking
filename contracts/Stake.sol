@@ -12,7 +12,7 @@
 pragma solidity ^0.4.11;
 
 
-import "tokens/HumanStandardToken.sol";
+import "tokens/Token.sol";
 
 
 //import "zeppelin-solidity/contracts/math/SafeMath.sol";
@@ -41,7 +41,7 @@ contract Stake {
     /*Lev token reference*/
     address public tokenid;
 
-    HumanStandardToken public token;
+    Token public token;
 
     uint public startBlock;
 
@@ -96,13 +96,13 @@ contract Stake {
         expiryBlock = _expiryBlock;
         owner = _owner;
         wallet = _wallet;
-        token = HumanStandardToken(_tokenid);
+        token = Token(_tokenid);
         weiPerFee = _weiPerFee;
     }
 
     function setToken(address _tokenid) onlyOwner {
         tokenid = _tokenid;
-        token = HumanStandardToken(_tokenid);
+        token = Token(_tokenid);
     }
 
     function setFeeToken(address _feeTokenId) onlyOwner {
