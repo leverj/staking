@@ -23,9 +23,9 @@ contract Stake {
 
     event StakeEvent(address indexed _user, uint256 _levs, string action);
     /* user address to (lev tokens)*(blocks left to expiry) */
-    mapping (address => uint256) levBlocks;
+    mapping (address => uint256) public levBlocks;
     /*user address to lev tokens at stake*/
-    mapping (address => uint256) stakes;
+    mapping (address => uint256) public stakes;
 
     //todo: total lev tokens. This may not be required. revisit
     uint256 public totalLevs;
@@ -116,6 +116,7 @@ contract Stake {
     }
 
     function setBlocks(uint _start, uint _expiry) onlyOwner {
+        require(_expiry > _start);
         startBlock = _start;
         expiryBlock = _expiry;
     }

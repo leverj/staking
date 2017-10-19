@@ -13,3 +13,4 @@ node 8.4.0
     truffle compile
     npm test
 ```
+6 months staking

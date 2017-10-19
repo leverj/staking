@@ -6,3 +6,5 @@ build
 package-lock.json
 secrets.json
 node_modules/
+dist
+bower_components
