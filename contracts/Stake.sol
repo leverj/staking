@@ -15,7 +15,7 @@ pragma solidity ^0.4.11;
 import "tokens/Token.sol";
 
 
-//import "zeppelin-solidity/contracts/math/SafeMath.sol";
+import "./SafeMath.sol";
 import "./Fee.sol";
 
 
@@ -129,10 +129,10 @@ contract Stake {
       */
     function stakeTokens(uint256 _quantity) started notExpired returns (bool result){
         require(token.balanceOf(msg.sender) >= _quantity);
-        levBlocks[msg.sender] += _quantity * (expiryBlock - block.number);
-        stakes[msg.sender] += _quantity;
-        totalLevBlocks += _quantity * (expiryBlock - block.number);
-        totalLevs += _quantity;
+        levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity , SafeMath.sub(expiryBlock , block.number)));
+        stakes[msg.sender] = SafeMath.add(stakes[msg.sender],_quantity);
+        totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(expiryBlock ,block.number)));
+        totalLevs = SafeMath.add(totalLevs,_quantity);
         token.transferFrom(msg.sender, this, _quantity);
         StakeEvent(msg.sender, _quantity, "STAKED");
         return true;
@@ -145,10 +145,10 @@ contract Stake {
     function updateFeeForCurrentPeriod() onlyOwner hasExpired returns (bool result){
         require(feeCalculated == false);
         uint256 feeFromExchange = fee.balanceOf(this);
-        feeForThePeriod = feeFromExchange + weiAsFee / weiPerFee;
+        feeForThePeriod = SafeMath.add(feeFromExchange, SafeMath.div(this.balance , weiPerFee));
         feeCalculated = true;
         fee.burnTokens(feeFromExchange);
-        wallet.transfer(weiAsFee);
+        wallet.transfer(this.balance);
         weiAsFee = 0;
         return true;
     }
@@ -159,13 +159,13 @@ contract Stake {
         uint256 levBlock = levBlocks[_user];
         uint256 stake = stakes[_user];
         require(stake > 0);
-        uint256 feeEarned = levBlock * feeForThePeriod / totalLevBlocks;
+        uint256 feeEarned = SafeMath.div(SafeMath.mul(levBlock, feeForThePeriod) , totalLevBlocks);
         delete stakes[_user];
         delete levBlocks[_user];
         if (feeEarned > 0) fee.sendTokens(_user, feeEarned);
+        totalLevs = SafeMath.sub(totalLevs, stake);
         token.transfer(_user, stake);
         StakeEvent(_user, stake, "CLAIMED");
-        totalLevs -= stake;
         return true;
     }
 
