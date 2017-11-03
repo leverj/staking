@@ -1,5 +1,7 @@
 # LEV Stake Contract
 
+Make sure to install the required dependencies with `npm install`
+
 ### Prerequisites:
 
 ```
