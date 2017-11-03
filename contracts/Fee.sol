@@ -4,7 +4,7 @@
   */
 pragma solidity ^0.4.11;
 
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import './SafeMath.sol';
 import "tokens/StandardToken.sol";
 
 contract Fee is StandardToken {
