@@ -33,6 +33,7 @@ contract Fee is StandardToken {
         _;
     }
 
+    /// @notice Constructor to set the owner, tokenName, decimals and symbol
     function Fee(address _owner, string _tokenName, uint8 _decimalUnits, string _tokenSymbol) {
       require(_owner != address(0));
       require(_tokenName.length > 0);
@@ -45,6 +46,8 @@ contract Fee is StandardToken {
       symbol = _tokenSymbol;
     }
 
+    /// @notice To set the owner of the contract
+    /// @param _owner The address of the owner
     function setOwner(address _owner) onlyOwner returns (bool success) {
       require(_owner != address(0));
 
@@ -52,6 +55,8 @@ contract Fee is StandardToken {
       return true;
     }
 
+    /// @notice To set a new minter address
+    /// @param _minter The address of the minter
     function setMinter(address _minter) onlyOwner returns (bool success) {
       require(_minter != address(0));
 
@@ -59,6 +64,8 @@ contract Fee is StandardToken {
       return true;
     }
 
+    /// @notice To eliminate tokens and adjust the price of the FEE tokens
+    /// @param _value Amount of tokens to delete
     function burnTokens(uint256 _value) returns (bool success) {
       require(_value > 0);
       require(balances[msg.sender] >= _value);
@@ -69,6 +76,9 @@ contract Fee is StandardToken {
       return true;
     }
 
+    /// @notice To send tokens to another user
+    /// @param _to The receiver of the tokens
+    /// @param _value The amount o
     function sendTokens(address _to, uint256 _value) onlyMinter returns (bool success) {
       require(_to != address(0));
       require(_value != 0);

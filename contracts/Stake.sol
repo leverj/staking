@@ -178,19 +178,17 @@ contract Stake {
         require(msg.sender == _user || msg.sender == owner);
         require(feeCalculated);
 
-        address receiver
-        msg.sender == owner ? receiver = owner : receiver = _user;
-        uint256 levBlock = levBlocks[receiver];
-        uint256 stake = stakes[receiver];
+        uint256 levBlock = levBlocks[_user];
+        uint256 stake = stakes[_user];
 
         require(stake > 0);
 
         uint256 feeEarned = levBlock.mul(feeForThePeriod.div(totalLevBlocks));
-        delete stakes[receiver];
-        delete levBlocks[receiver];
-        if (feeEarned > 0) fee.sendTokens(receiver, feeEarned);
-        token.transfer(receiver, stake);
-        StakeEvent(receiver, stake, "CLAIMED");
+        delete stakes[_user];
+        delete levBlocks[_user];
+        if (feeEarned > 0) fee.sendTokens(_user, feeEarned);
+        token.transfer(_user, stake);
+        StakeEvent(_user, stake, "CLAIMED");
         totalLevs = totalLevs.sub(stake);
         return true;
     }
