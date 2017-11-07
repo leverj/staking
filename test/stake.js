@@ -21,7 +21,6 @@ contract('Stake Levs', (accounts) => {
   let user1 = accounts[1];
   let user2 = accounts[2];
 
-
   before(async function () {
     token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
     await token.transfer(user1, 100);

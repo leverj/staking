@@ -5,9 +5,10 @@
 pragma solidity ^0.4.11;
 
 import './SafeMath.sol';
-import "tokens/StandardToken.sol";
+import './StandardToken.sol';
 
 contract Fee is StandardToken {
+
     /* This notifies clients about the amount burnt */
     event Burn(address indexed from, uint256 value);
 
@@ -29,13 +30,33 @@ contract Fee is StandardToken {
         _;
     }
 
-    /// @notice Constructor to set the owner, tokenName, decimals and symbol
-    function Fee(address _owner, string _tokenName, uint8 _decimalUnits, string _tokenSymbol) {
-      require(_owner != address(0));
-      require(_tokenName.length > 0);
-      require(_decimalUnits > 0);
-      require(_tokenSymbol.length > 0);
+    modifier addressNotEmpty(address a) {
+      require(a != address(0));
+      _;
+    }
 
+    modifier uintNotEmpty(uint256 number) {
+      require(number != 0);
+      _;
+    }
+
+    modifier stringNotEmpty(string s) {
+      require(bytes(s).length != 0);
+      _;
+    }
+
+    /// @notice Constructor to set the owner, tokenName, decimals and symbol
+    function Fee(
+      address _owner,
+      string _tokenName,
+      uint8 _decimalUnits,
+      string _tokenSymbol
+    )
+      public
+      addressNotEmpty(_owner)
+      stringNotEmpty(_tokenName)
+      stringNotEmpty(_tokenSymbol)
+    {
       owner = _owner;
       name = _tokenName;
       decimals = _decimalUnits;
@@ -44,30 +65,39 @@ contract Fee is StandardToken {
 
     /// @notice To set the owner of the contract
     /// @param _owner The address of the owner
-    function setOwner(address _owner) onlyOwner returns (bool success) {
-      require(_owner != address(0));
-
+    function setOwner(address _owner)
+      public
+      addressNotEmpty(_owner)
+      onlyOwner
+      returns (bool success)
+    {
       owner = _owner;
       return true;
     }
 
     /// @notice To set a new minter address
     /// @param _minter The address of the minter
-    function setMinter(address _minter) onlyOwner returns (bool success) {
-      require(_minter != address(0));
-
+    function setMinter(address _minter)
+      public
+      addressNotEmpty(_minter)
+      onlyOwner
+      returns (bool success)
+    {
       minter = _minter;
       return true;
     }
 
     /// @notice To eliminate tokens and adjust the price of the FEE tokens
     /// @param _value Amount of tokens to delete
-    function burnTokens(uint256 _value) returns (bool success) {
-      require(_value > 0);
+    function burnTokens(uint256 _value)
+      public
+      uintNotEmpty(_value)
+      returns (bool success)
+    {
       require(balances[msg.sender] >= _value);
 
-      balances[msg.sender] = balances[msg.sender].sub(_value);
-      feeInCirculation = feeInCirculation.sub(_value);
+      balances[msg.sender] = SafeMath.sub(balances[msg.sender], _value);
+      feeInCirculation = SafeMath.sub(feeInCirculation, _value);
       Burn(msg.sender, _value);
       return true;
     }
@@ -76,12 +106,15 @@ contract Fee is StandardToken {
     /// doing this process by the minter
     /// @param _to The receiver of the tokens
     /// @param _value The amount o
-    function sendTokens(address _to, uint256 _value) onlyMinter returns (bool success) {
-      require(_to != address(0));
-      require(_value != 0);
-
-      balances[_to] = balances[_to].add(_value);
-      feeInCirculation = feeInCirculation.add(_value);
+    function sendTokens(address _to, uint256 _value)
+      public
+      addressNotEmpty(_to)
+      uintNotEmpty(_value)
+      onlyMinter
+      returns (bool success)
+    {
+      balances[_to] = SafeMath.add(balances[_to], _value);
+      feeInCirculation = SafeMath.add(feeInCirculation, _value);
       Transfer(msg.sender, _to, _value);
       return true;
     }

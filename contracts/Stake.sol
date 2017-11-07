@@ -10,9 +10,9 @@
   */
 pragma solidity ^0.4.11;
 
-import "tokens/Token.sol";
-import "./SafeMath.sol";
-import "./Fee.sol";
+import './SafeMath.sol';
+import './Token.sol';
+import './Fee.sol';
 
 contract Stake {
     using SafeMath for uint256;
@@ -40,8 +40,8 @@ contract Stake {
     // Lev token reference
     address public tokenid;
     Token public token;
-    uint public startBlock;
-    uint public expiryBlock;
+    uint256 public startBlock;
+    uint256 public expiryBlock;
 
     // Owner address for admin functions
     address public owner;
@@ -75,50 +75,62 @@ contract Stake {
         _;
     }
 
-    function () payable {
+    modifier addressNotEmpty(address a) {
+      require(a != address(0));
+      _;
+    }
+
+    modifier uintNotEmpty(uint256 number) {
+      require(number != 0);
+      _;
+    }
+
+    function () public payable {
         weiAsFee = weiAsFee.add(msg.value);
     }
 
     /// @notice Constructor to set all the default values for the owner, wallet,
     /// weiPerFee, tokenID and expiryBlock
-    function Stake(address _owner, address _wallet, uint256 _weiPerFee, address _tokenid, uint _expiryBlock){
-      require(_owner != address(0));
-      require(_wallet != address(0));
-      require(_weiPerFee > 0);
-      require(_tokenid != address(0));
-      require(_expiryBlock > 0);
-
+    function Stake(
+      address _owner,
+      address _wallet,
+      uint256 _weiPerFee,
+      address _tokenid
+    ) public
+      addressNotEmpty(_wallet)
+      addressNotEmpty(_owner)
+      addressNotEmpty(_tokenid)
+      uintNotEmpty(_weiPerFee)
+    {
       tokenid = _tokenid;
-      expiryBlock = _expiryBlock;
       owner = _owner;
       wallet = _wallet;
-      token = HumanStandardToken(_tokenid);
+      token = Token(_tokenid);
       weiPerFee = _weiPerFee;
     }
 
     /// @notice To set the the address of the LEV token
     /// @param _tokenid The token address
-    function setToken(address _tokenid) onlyOwner {
-      require(_tokenid != address(0));
-
+    function setToken(address _tokenid) external addressNotEmpty(_tokenid) onlyOwner {
       tokenid = _tokenid;
-      token = HumanStandardToken(_tokenid);
+      token = Token(_tokenid);
     }
 
     /// @notice To set the FEE token address
     /// @param _feeTokenId The address of that token
-    function setFeeToken(address _feeTokenId) onlyOwner {
-      require(_feeTokenId != address(0));
-
+    function setFeeToken(address _feeTokenId) external addressNotEmpty(_feeTokenId) onlyOwner {
       feeTokenId = _feeTokenId;
       fee = Fee(_feeTokenId);
     }
 
     /// @notice To set the wallet address by the owner only
     /// @param _wallet The wallet address
-    function setWallet(address _wallet) onlyOwner returns (bool result) {
-      require(_wallet != address(0));
-
+    function setWallet(address _wallet)
+      external
+      addressNotEmpty(_wallet)
+      onlyOwner
+      returns(bool)
+    {
       wallet = _wallet;
       return true;
     }
@@ -126,9 +138,12 @@ contract Stake {
     /// @notice To set the start and end blocks by the owner only
     /// @param _start The start block.number
     /// @param _expiry The end block.number
-    function setBlocks(uint _start, uint _expiry) onlyOwner {
-      require(_start > 0);
-      require(_expiry > 0);
+    function setBlocks(uint256 _start, uint256 _expiry)
+      external
+      uintNotEmpty(_start)
+      uintNotEmpty(_expiry)
+      onlyOwner
+    {
       require(_expiry > _start);
 
       startBlock = _start;
@@ -139,26 +154,27 @@ contract Stake {
     /// has to approve the staking contract on token before calling this function.
     /// Refer to the tests for more information
     /// @param _quantity How many LEV tokens to lock for staking
-    function stakeTokens(uint256 _quantity) started notExpired returns (bool result){
-      require(_quantity > 0);
+    function stakeTokens(uint256 _quantity)
+      public
+      uintNotEmpty(_quantity)
+      started
+      notExpired
+      returns (bool result)
+    {
       require(token.balanceOf(msg.sender) >= _quantity);
 
       levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
       stakes[msg.sender] = SafeMath.add(stakes[msg.sender], _quantity);
       totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
       totalLevs = SafeMath.add(totalLevs,_quantity);
-
-      // Make an transfer call to allow this contract to receive tokens.
-      // The point is to transfer the tokens from the user caller
-      // to this contract and to start staking those tokens
-      token.delegatecall(bytes4(keccak256("transfer(address, uint256)")), this, _quantity);
-      StakeEvent(msg.sender, _quantity, "STAKED");
+      token.transferFrom(msg.sender, this, _quantity);
+      StakeEvent(msg.sender, _quantity, 'STAKED');
       return true;
     }
 
     /// @notice To update the price of FEE tokens to the current value. Executable
     /// by the owner only
-    function updateFeeForCurrentPeriod() onlyOwner hasExpired returns (bool result){
+    function updateFeeForCurrentPeriod() public onlyOwner hasExpired returns (bool result){
         require(feeCalculated == false);
 
         uint256 feeFromExchange = fee.balanceOf(this);
@@ -173,8 +189,12 @@ contract Stake {
     /// @notice To unlock and recover your LEV and FEE tokens after staking
     /// @param _user The user address. The owner of this contract can redeem lev
     /// and fee to any user
-    function redeemLevAndFee(address _user) hasExpired returns (bool result){
-        require(_user != address(0));
+    function redeemLevAndFee(address _user)
+      public
+      addressNotEmpty(_user)
+      hasExpired
+      returns (bool result)
+    {
         require(msg.sender == _user || msg.sender == owner);
         require(feeCalculated);
 
@@ -187,14 +207,20 @@ contract Stake {
         if (feeEarned > 0) fee.sendTokens(_user, feeEarned);
         totalLevs = SafeMath.sub(totalLevs, stake);
         token.transfer(_user, stake);
-        StakeEvent(_user, stake, "CLAIMED");
+        StakeEvent(_user, stake, 'CLAIMED');
         return true;
     }
 
     /// @notice To start a new trading period where the price of the FEE will be updated
     /// @param _start The starting block.number of the new period
     /// @param _expiry When the new period ends in block.number
-    function startNewTradingPeriod(uint _start, uint _expiry) onlyOwner returns (bool result){
+    function startNewTradingPeriod(uint256 _start, uint256 _expiry)
+      external
+      uintNotEmpty(_start)
+      uintNotEmpty(_expiry)
+      onlyOwner
+      returns (bool result)
+    {
         require(totalLevs == 0);
         startBlock = _start;
         expiryBlock = _expiry;
@@ -207,13 +233,13 @@ contract Stake {
 
     /// @notice To get how many LEV blocks has an address
     /// @param _for The owner of the blocks
-    function getLevBlocks(address _for) constant returns (uint256 levBlock){
+    function getLevBlocks(address _for) public constant returns (uint256 levBlock){
         return levBlocks[_for];
     }
 
     /// @notice To get how many LEV blocks has an address
     /// @param _for The owner of the blocks
-    function getStakes(address _for) constant returns (uint256 stake){
+    function getStakes(address _for) public constant returns (uint256 stake){
         return stakes[_for];
     }
 }
