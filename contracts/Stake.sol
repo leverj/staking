@@ -39,7 +39,7 @@ contract Stake {
 
     // Lev token reference
     address public tokenid;
-    Token public token;
+
     uint256 public startBlock;
     uint256 public expiryBlock;
 
@@ -49,7 +49,6 @@ contract Stake {
 
     // FEE token reference
     address public feeTokenId;
-    Fee public fee;
 
     // Wei owned by the contract
     uint256 public weiAsFee;
@@ -105,7 +104,6 @@ contract Stake {
       tokenid = _tokenid;
       owner = _owner;
       wallet = _wallet;
-      token = Token(_tokenid);
       weiPerFee = _weiPerFee;
     }
 
@@ -113,14 +111,12 @@ contract Stake {
     /// @param _tokenid The token address
     function setToken(address _tokenid) external addressNotEmpty(_tokenid) onlyOwner {
       tokenid = _tokenid;
-      token = Token(_tokenid);
     }
 
     /// @notice To set the FEE token address
     /// @param _feeTokenId The address of that token
     function setFeeToken(address _feeTokenId) external addressNotEmpty(_feeTokenId) onlyOwner {
       feeTokenId = _feeTokenId;
-      fee = Fee(_feeTokenId);
     }
 
     /// @notice To set the wallet address by the owner only
@@ -161,13 +157,13 @@ contract Stake {
       notExpired
       returns (bool result)
     {
-      require(token.balanceOf(msg.sender) >= _quantity);
+      require(Token(tokenid).balanceOf(msg.sender) >= _quantity);
 
       levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
       stakes[msg.sender] = SafeMath.add(stakes[msg.sender], _quantity);
       totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
       totalLevs = SafeMath.add(totalLevs,_quantity);
-      token.transferFrom(msg.sender, this, _quantity);
+      Token(tokenid).transferFrom(msg.sender, this, _quantity);
       StakeEvent(msg.sender, _quantity, 'STAKED');
       return true;
     }
@@ -177,10 +173,10 @@ contract Stake {
     function updateFeeForCurrentPeriod() public onlyOwner hasExpired returns (bool result){
         require(feeCalculated == false);
 
-        uint256 feeFromExchange = fee.balanceOf(this);
+        uint256 feeFromExchange = Fee(feeTokenId).balanceOf(this);
         feeForThePeriod = SafeMath.add(feeFromExchange, SafeMath.div(this.balance , weiPerFee));
         feeCalculated = true;
-        fee.burnTokens(feeFromExchange);
+        Fee(feeTokenId).burnTokens(feeFromExchange);
         wallet.transfer(this.balance);
         weiAsFee = 0;
         return true;
@@ -204,9 +200,9 @@ contract Stake {
         uint256 feeEarned = SafeMath.div(SafeMath.mul(levBlock, feeForThePeriod) , totalLevBlocks);
         delete stakes[_user];
         delete levBlocks[_user];
-        if (feeEarned > 0) fee.sendTokens(_user, feeEarned);
+        if (feeEarned > 0) Fee(feeTokenId).sendTokens(_user, feeEarned);
         totalLevs = SafeMath.sub(totalLevs, stake);
-        token.transfer(_user, stake);
+        Token(tokenid).transfer(_user, stake);
         StakeEvent(_user, stake, 'CLAIMED');
         return true;
     }
