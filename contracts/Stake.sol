@@ -17,7 +17,7 @@ import './Fee.sol';
 contract Stake {
     using SafeMath for uint256;
 
-    event StakeEvent(address indexed _user, uint256 _levs, string action);
+    event StakeEvent(address indexed _user, uint256 _levs, string action, uint256 startBlock, uint256 expiryBlock);
 
     // User address to (lev tokens)*(blocks left to expiry)
     mapping (address => uint256) public levBlocks;
@@ -131,21 +131,6 @@ contract Stake {
       return true;
     }
 
-    /// @notice To set the start and end blocks by the owner only
-    /// @param _start The start block.number
-    /// @param _expiry The end block.number
-    function setBlocks(uint256 _start, uint256 _expiry)
-      external
-      uintNotEmpty(_start)
-      uintNotEmpty(_expiry)
-      onlyOwner
-    {
-      require(_expiry > _start);
-
-      startBlock = _start;
-      expiryBlock = _expiry;
-    }
-
     /// @notice Public function to stake tokens executable by any user. The user
     /// has to approve the staking contract on token before calling this function.
     /// Refer to the tests for more information
@@ -164,7 +149,7 @@ contract Stake {
       totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
       totalLevs = SafeMath.add(totalLevs,_quantity);
       Token(tokenid).transferFrom(msg.sender, this, _quantity);
-      StakeEvent(msg.sender, _quantity, 'STAKED');
+      StakeEvent(msg.sender, _quantity, 'STAKED', startBlock, expiryBlock);
       return true;
     }
 
@@ -203,7 +188,7 @@ contract Stake {
         if (feeEarned > 0) Fee(feeTokenId).sendTokens(_user, feeEarned);
         totalLevs = SafeMath.sub(totalLevs, stake);
         Token(tokenid).transfer(_user, stake);
-        StakeEvent(_user, stake, 'CLAIMED');
+        StakeEvent(_user, stake, 'CLAIMED', startBlock, expiryBlock);
         return true;
     }
 
@@ -215,6 +200,7 @@ contract Stake {
       uintNotEmpty(_start)
       uintNotEmpty(_expiry)
       onlyOwner
+      hasExpired
       returns (bool result)
     {
         require(totalLevs == 0);

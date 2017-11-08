@@ -26,7 +26,7 @@ contract('Stake Levs', (accounts) => {
     await token.transfer(user1, 100);
     await token.transfer(user2, 200);
     stake = await Stake.deployed();
-    await stake.setBlocks(100, 300);
+    await stake.startNewTradingPeriod(100, 300);
     await token.transfer(stake.address, 1000);
     await stake.setToken(token.address);
     await forceMine(new BN(200))
@@ -125,7 +125,7 @@ async function setup(accounts) {
   // token = await HumanStandardToken.at(token.address);
   await token.transfer(user1, 100);
   await token.transfer(user2, 200);
-  await stake.setBlocks(100, 300);
+  await stake.startNewTradingPeriod(100, 300);
   await stake.setToken(token.address);
   await forceMine(new BN(200));
   return [stake, fee, token];
