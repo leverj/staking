@@ -42,6 +42,7 @@ contract Stake {
 
     uint256 public startBlock;
     uint256 public expiryBlock;
+    uint public currentPeriod;
 
     // Owner address for admin functions
     address public owner;
@@ -168,28 +169,41 @@ contract Stake {
     }
 
     /// @notice To unlock and recover your LEV and FEE tokens after staking
-    /// @param _user The user address. The owner of this contract can redeem lev
     /// and fee to any user
-    function redeemLevAndFee(address _user)
+    function redeemLevAndFee() public returns (bool) {
+      return redeemLevAndFeeInternal(msg.sender);
+    }
+
+    function sendLevAndFeeToUsers(address[] _users)
       public
+      onlyOwner
+      returns (bool)
+    {
+      for(uint i = 0 ; i < _users.length; i++){
+        redeemLevAndFeeInternal(_users[i]);
+      }
+      return true;
+    }
+
+    function redeemLevAndFeeInternal(address _user)
+      internal
       addressNotEmpty(_user)
       hasExpired
-      returns (bool result)
+      returns (bool)
     {
-        require(msg.sender == _user || msg.sender == owner);
-        require(feeCalculated);
-
-        uint256 levBlock = levBlocks[_user];
-        uint256 stake = stakes[_user];
-        require(stake > 0);
-        uint256 feeEarned = SafeMath.div(SafeMath.mul(levBlock, feeForThePeriod) , totalLevBlocks);
-        delete stakes[_user];
-        delete levBlocks[_user];
-        if (feeEarned > 0) Fee(feeTokenId).sendTokens(_user, feeEarned);
-        totalLevs = SafeMath.sub(totalLevs, stake);
-        Token(tokenid).transfer(_user, stake);
-        StakeEvent(_user, stake, 'CLAIMED', startBlock, expiryBlock);
-        return true;
+      require(feeCalculated);
+      require(totalLevBlocks > 0);
+      uint256 levBlock = levBlocks[_user];
+      uint256 stake = stakes[_user];
+      require(stake > 0);
+      uint256 feeEarned = SafeMath.div(SafeMath.mul(levBlock, feeForThePeriod) , totalLevBlocks);
+      delete stakes[_user];
+      delete levBlocks[_user];
+      totalLevs = SafeMath.sub(totalLevs, stake);
+      if (feeEarned > 0) require(Fee(feeTokenId).sendTokens(_user, feeEarned));
+      require(Token(tokenid).transfer(_user, stake));
+      StakeEvent(_user, stake, 'CLAIMED', startBlock, expiryBlock);
+      return true;
     }
 
     /// @notice To start a new trading period where the price of the FEE will be updated
