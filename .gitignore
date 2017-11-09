@@ -8,3 +8,4 @@ secrets.json
 node_modules/
 dist
 bower_components
+src/client/conf.js

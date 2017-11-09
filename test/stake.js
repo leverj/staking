@@ -30,18 +30,11 @@ contract('Stake Levs', (accounts) => {
     await token.transfer(stake.address, 1000);
     await stake.setToken(token.address);
     await forceMine(new BN(200))
-  })
-  levRopsten.events.Approval({fromBlock: 0, toBlock: 'latest'}, (error, result) => {
-      if (error) {
-        console.error(error);
-      }
-      console.log(result);
-    })
+  });
+
   it('user should be able to put tokens for stake', async function () {
     stake = await Stake.deployed();
-    const event = await stakeit(10, user1, stake, token);
-    expect(Number(event._levs)).to.be.eql(10)
-    expect(event.action).to.be.eql('STAKED')
+    await stakeit(10, user1, stake, token);
     await stakeit(15, user2, stake, token);
     await forceMine(new BN(250));
     await stakeit(15, user1, stake, token);
@@ -162,16 +155,7 @@ contract('Stake setup', (accounts) => {
 
 async function stakeit(count, user, stake, token) {
   await token.approve(stake.address, count, {from: user});
-  let result = await stake.stakeTokens(count, {from: user});
-  return extractEventFrom('StakeEvent', result)
-}
-
-function extractEventFrom(eventName, result) {
-  for (let i = 0; i < result.logs.length; i++) {
-    let log = result.logs[i];
-    if (log.event == eventName) return log.args;
-  }
-  return null;
+  await stake.stakeTokens(count, {from: user});
 }
 
 function forceMine(blockToMine) {
