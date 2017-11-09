@@ -18,6 +18,7 @@ contract Stake {
     using SafeMath for uint256;
 
     event StakeEvent(address indexed _user, uint256 _levs, string action, uint256 startBlock, uint256 expiryBlock);
+    event Example(string message);
 
     // User address to (lev tokens)*(blocks left to expiry)
     mapping (address => uint256) public levBlocks;
@@ -225,6 +226,11 @@ contract Stake {
         weiAsFee = 0;
         feeCalculated = false;
         return true;
+    }
+
+    function getEventExample() {
+        Example('this is a new event');
+        Example('another event');
     }
 
     /// @notice To get how many LEV blocks has an address
