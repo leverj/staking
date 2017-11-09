@@ -19,10 +19,10 @@ module.exports = (async function () {
   app.use(compress());
 
   let indexhtml = 'index.html';
-  app.use(express.static('./dist/src/client', {maxAge: 31536000000}));
+  app.use(express.static('./dist/src-admin/client', {maxAge: 31536000000}));
 
   app.get(['/'], function (req, res) {
-    return res.sendFile(indexhtml, {root: './dist/src/client'})
+    return res.sendFile(indexhtml, {root: './dist/src-admin/client'})
   });
 
   app.use(function (err, req, res, next) {

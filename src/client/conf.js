@@ -1,5 +1,0 @@
-module.exports = {
-  stake: '0x226945268cbad88494ecd554275fbc4ae6b4849b',
-  fee: '0x5f9fe40124a119df4861d137d437885ef5c2c657',
-  lev: '0xf5f7a2a64ff548b6f65d4410fb13bb933d6d8383'
-}

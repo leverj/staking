@@ -1,9 +1,9 @@
 module.exports = function (grunt) {
   // Project configuration.
   const dist = './dist/';
-  const server = './src/server/';
-  const common = './src/common/';
-  const client = './src/client/';
+  const server = './src-admin/server/';
+  const common = './src-admin/common/';
+  const client = './src-admin/client/';
   const contracts = './build/';
 
   grunt.initConfig(
@@ -18,7 +18,7 @@ module.exports = function (grunt) {
               expand: true,
               cwd: client,
               src: ['**/*.html',"**/*.css"],
-              dest: dist + "/src/client"
+              dest: dist + "/src-admin/client"
             },
             {
               expand: true,
@@ -30,13 +30,13 @@ module.exports = function (grunt) {
               expand: true,
               cwd: server,
               src: ['**/*'],
-              dest: dist + "/src/server"
+              dest: dist + "/src-admin/server"
             },
             {
               expand: true,
               cwd: 'bower_components',
               src: ['**/*'],
-              dest: dist + "/src/client"
+              dest: dist + "/src-admin/client"
             },
             {
               expand: true,
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
       browserify: {
         dist: {
           files: {
-            "dist/src/client/client.js": client + "client.js"
+            "dist/src-admin/client/client.js": client + "client.js"
           }
         }
       },

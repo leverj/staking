@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
-    "start": "grunt; BLUEBIRD_DEBUG=1 NODE_ENV=dev node src/server/index.js"
+    "start": "grunt; BLUEBIRD_DEBUG=1 NODE_ENV=dev node src-admin/server/index.js"
   },
   "repository": {
     "type": "git",
