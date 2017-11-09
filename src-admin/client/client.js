@@ -9,7 +9,7 @@ module.exports = (function () {
   let lev, stake, fee, user;
 
   async function populate() {
-    web3 = new Web3(web3.currentProvider) || new Web3.providers.HttpProvider('https://ropsten.infura.io');
+    web3 = new Web3(web3.currentProvider || new Web3.providers.HttpProvider('https://ropsten.infura.io'));
     user = (await web3.eth.getAccounts())[0];
     stake = new web3.eth.Contract(stakeABI, config.stake);
     lev = new web3.eth.Contract(levABI, config.lev);

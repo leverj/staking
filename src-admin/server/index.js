@@ -3,10 +3,12 @@ const favicon = require('serve-favicon');
 
 module.exports = (async function () {
   let leverj = {};
-  let app = express();
-  let compress = require('compression');
-  let server = getServer();
-  let helmet = require('helmet');
+  const app = express();
+  const compress = require('compression');
+  const server = getServer();
+  const helmet = require('helmet');
+  const ip = '0.0.0.0'
+  const port = 8888
 
   function getServer() {
     return require('http').Server(app)
@@ -19,23 +21,24 @@ module.exports = (async function () {
   app.use(compress());
 
   let indexhtml = 'index.html';
-  app.use(express.static('./dist/src-admin/client', {maxAge: 31536000000}));
+  app.use(express.static('./dist/', {maxAge: 31536000000}));
 
   app.get(['/'], function (req, res) {
-    return res.sendFile(indexhtml, {root: './dist/src-admin/client'})
+    return res.sendFile(indexhtml, {root: './dist/'})
   });
 
   app.use(function (err, req, res, next) {
-    util.log('FAIL', err);
-    util.log('FAIL, stack:', err.stack);
+    // util.log('FAIL', err);
+    // util.log('FAIL, stack:', err.stack);
     res.status(err.statusCode || 500).send({error: err.message})
   });
 
   function init() {
-    server.listen(8888, '0.0.0.0');
+    server.listen(port, ip);
+    console.log(`Server listening on ${ip}:${port}`)
     process.on('uncaughtException', (err) => {
       console.log('################################## uncaught exception ######################################');
-      util.log(err.stack);
+      // util.log(err.stack);
       console.log('################################## uncaught exception ######################################')
     })
   }

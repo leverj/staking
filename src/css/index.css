@@ -1,0 +1,15 @@
+body {
+  font-family: 'verdana';
+}
+span {
+  padding: 10px;
+  box-shadow: 0 0 15px 0px #afafaf;
+  border-radius: 3px;
+}
+.hidden {
+  display: none;
+}
+.contract-data p {
+  display: inline-block;
+  width: 150px;
+}
