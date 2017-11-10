@@ -14,15 +14,17 @@ module.exports = {
          use: ['style-loader', 'css-loader'],
          include: /src/
       }, {
+        test: /\.json$/,
+        exclude: /node_modules/,
+        loader: 'json-loader'
+      }, {
          test: /\.js$/, // To load the js files
          loader: 'babel-loader',
          exclude: /node_modules/,
          query: {
-            presets: [['env', {
-					'targets': {
-						'node': 'current'
-					}
-				}], 'react']
+           presets: [['env', {
+             'targets': { 'node': 'current' }
+           }], 'react']
          }
       }]
    },
