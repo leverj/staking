@@ -7,8 +7,8 @@ module.exports = (async function () {
   const compress = require('compression');
   const server = getServer();
   const helmet = require('helmet');
-  const ip = '0.0.0.0'
-  const port = 8888
+  const ip = '0.0.0.0';
+  const port = 8888;
 
   function getServer() {
     return require('http').Server(app)
@@ -20,11 +20,11 @@ module.exports = (async function () {
 
   app.use(compress());
 
-  let indexhtml = 'index.html';
-  app.use(express.static('./dist/', {maxAge: 31536000000}));
+  let indexhtml = './dist/src-admin/client/index.html';
+  app.use(express.static('./dist/src-admin/client/', {maxAge: 31536000000}));
 
   app.get(['/'], function (req, res) {
-    return res.sendFile(indexhtml, {root: './dist/'})
+    return res.sendFile(indexhtml, {root: './dist/src-admin/client/'})
   });
 
   app.use(function (err, req, res, next) {
@@ -35,7 +35,7 @@ module.exports = (async function () {
 
   function init() {
     server.listen(port, ip);
-    console.log(`Server listening on ${ip}:${port}`)
+    console.log(`Server listening on ${ip}:${port}`);
     process.on('uncaughtException', (err) => {
       console.log('################################## uncaught exception ######################################');
       // util.log(err.stack);
