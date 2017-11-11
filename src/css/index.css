@@ -13,3 +13,11 @@ span {
   display: inline-block;
   width: 150px;
 }
+.bordered {
+  padding: 10px;
+  box-shadow: 0 0 15px 0px #afafaf;
+}
+.centered {
+  text-align: center;
+  display: block;
+}

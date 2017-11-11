@@ -58,16 +58,34 @@ class App extends React.Component {
 
   // To approve 100 LEV tokens to the stake contract from the user address
   async approve (amount) {
-    // 100 Ether is the same as 100 LEV since they both have 18 decimals so we can
-    // convert them easily with web3
-    await lev.methods.approve(stake._address, web3.utils.toWei(amount, 'ether')).send({
-      from: this.state.account
+    const estimateGas = await lev.methods.approve(
+      this.state.customAccount || this.state.account,
+      web3.utils.toWei(amount, 'ether')).estimateGas()
+    const data = await lev.methods.approve(
+      this.state.customAccount || this.state.account,
+      web3.utils.toWei(amount, 'ether')).encodeABI()
+
+    this.setState({
+      transactionFieldsTo: stake._address,
+      transactionFieldsAmount: 0,
+      transactionFieldsGasLimit: estimateGas,
+      transactionFieldsData: data,
+      showTransactionFields: true
     })
   }
 
   async stakeTokens (stakeAmount) {
-    await stake.methods.stakeTokens(web3.utils.toWei(stakeAmount, 'ether')).send({
-      from: this.state.account
+    const estimateGas = await stake.methods.stakeTokens(
+      web3.utils.toWei(stakeAmount, 'ether')).estimateGas()
+    const data = await stake.methods.stakeTokens(
+      web3.utils.toWei(stakeAmount, 'ether')).encodeABI()
+
+    this.setState({
+      transactionFieldsTo: stake._address,
+      transactionFieldsAmount: 0,
+      transactionFieldsGasLimit: estimateGas,
+      transactionFieldsData: data,
+      showTransactionFields: true
     })
   }
 
@@ -77,6 +95,52 @@ class App extends React.Component {
         <div className={this.state.loadingInitialData ? '' : 'hidden'}>
           <p>Loading initial data make sure you're on the Ropsten test network, plase wait...</p>
         </div>
+        <div className={this.state.loadingInitialData ? 'hidden' : 'contract-data'}>
+          <h2>Actions</h2>
+
+          <div className={this.state.showTransactionFields ? 'contract-data bordered' : 'hidden'} onClick={() => {
+            this.setState({showTransactionFields: false})
+          }}>
+            <i className="centered">Click to close</i><br/>
+            <p>Send to address: </p><span>{this.state.transactionFieldsTo}</span><br/>
+            <p>Send amount: </p><span>{this.state.transactionFieldsAmount}</span><br/>
+            <p>Send gas limit: </p><span>{this.state.transactionFieldsGasLimit}</span><br/>
+            <p>Send data: </p><span>{this.state.transactionFieldsData}</span><br/>
+          </div>
+
+          <p>Check allowance: </p><button disabled={this.state.isUpdatingAllowance ? true : false} onClick={async () => {
+            this.setState({ isUpdatingAllowance: true })
+            await this.updateAllowance()
+            this.setState({ isUpdatingAllowance: false })
+          }}>Allowance</button> <span>{this.state.allowance}</span><br/>
+
+          <p>Set custom account: </p>
+          <input type="text" ref="custom-account" onChange={() => {
+            this.setState({customAccount: this.refs['custom-account'].value})
+          }}/>&nbsp;
+          <button onClick={() => {
+            this.setState({customAccount: this.refs['custom-account'].value})
+          }}>Set {this.state.customAccount} custom account</button><br/>
+
+          <p>Approve tokens to Stake.sol: </p>
+          <input type="number" ref="approve-amount" onChange={() => {
+            this.setState({approveAmount: this.refs['approve-amount'].value})
+          }}/>&nbsp;
+          <button onClick={() => {
+            this.approve(this.state.approveAmount)
+          }}>Approve {this.state.approveAmount} LEV</button><br/>
+
+          <p>Stake tokens: </p>
+          <input type="number" ref="stake-amount" onChange={() => {
+            this.setState({stakeAmount: this.refs['stake-amount'].value})
+          }}/>&nbsp;
+          <button onClick={() => {
+            this.stakeTokens(this.state.stakeAmount)
+          }}>Stake now {this.state.stakeAmount} LEVs</button><br/>
+
+          <hr/>
+        </div>
+
         <div className={this.state.loadingInitialData ? 'hidden' : 'contract-data'}>
           <h2>Stake Smart Contract</h2>
           <button disabled={this.state.isUpdatingStakeData ? true : false} onClick={async () => {
@@ -99,28 +163,6 @@ class App extends React.Component {
           <p>Fee token ID: </p><span>{this.state.feeTokenId}</span><br/>
           <p>Wei as Fee: </p><span>{this.state.weiAsFee}</span><br/>
           <p>Fee calculated: </p><span>{this.state.feeCalculated}</span><br/>
-          <hr/>
-          <p>Approve tokens to Stake.sol: </p>
-          <input type="number" ref="approve-amount" onChange={() => {
-            this.setState({approveAmount: this.refs['approve-amount'].value})
-          }}/>&nbsp;
-          <button onClick={() => {
-            this.approve(this.state.approveAmount)
-          }}>Approve {this.state.approveAmount} LEV</button><br/>
-
-          <p>Check allowance: </p><button disabled={this.state.isUpdatingAllowance ? true : false} onClick={async () => {
-            this.setState({ isUpdatingAllowance: true })
-            await this.updateAllowance()
-            this.setState({ isUpdatingAllowance: false })
-          }}>Allowance</button> <span>{this.state.allowance}</span><br/>
-
-          <p>Stake tokens: </p>
-          <input type="number" ref="stake-amount" onChange={() => {
-            this.setState({stakeAmount: this.refs['stake-amount'].value})
-          }}/>&nbsp;
-          <button onClick={() => {
-            this.stakeTokens(this.state.stakeAmount)
-          }}>Stake now {this.state.stakeAmount} LEVs</button><br/>
         </div>
       </div>
     )
