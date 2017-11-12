@@ -9,7 +9,7 @@ module.exports = (function () {
   let lev, stake, fee, user;
 
   async function populate() {
-    web3 = new Web3(web3.currentProvider) || new Web3.providers.HttpProvider('https://ropsten.infura.io');
+    web3 = new Web3(web3.currentProvider || new Web3.providers.HttpProvider('https://ropsten.infura.io'));
     user = (await web3.eth.getAccounts())[0];
     stake = new web3.eth.Contract(stakeABI, config.stake);
     lev = new web3.eth.Contract(levABI, config.lev);
@@ -30,7 +30,7 @@ module.exports = (function () {
     $("#feeid").val(config.fee);
     $("#fee-setup").click(setupfee);
     displayDetails("current block", block);
-    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForThePeriod", "tokenid", "token", "startBlock", "expiryBlock", "owner", "wallet", "feeTokenId", "fee", "weiAsFee", "feeCalculated"];
+    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForThePeriod", "tokenid", "startBlock", "expiryBlock", "owner", "wallet", "feeTokenId", "weiAsFee", "feeCalculated"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
       let value = await stake.methods[prop]().call();
@@ -55,6 +55,18 @@ module.exports = (function () {
     displayDetails("Fee Owner", await fee.methods.owner().call());
     displayDetails("Fee Minter", await fee.methods.minter().call());
     displayDetails("Stake", config.stake);
+
+
+/*
+    levRopsten.events.Approval({fromBlock: 0, toBlock: 'latest'}, (error, result) => {
+      if (error) {
+        console.error(error);
+      }
+      console.log(result);
+    });
+*/
+
+    // console.log("events", await stake.getPastEvents("StakeEvent", {fromBlock: 0, toBlock: 'latest'}));
   }
 
   function displayDetails(key, value) {

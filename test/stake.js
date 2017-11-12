@@ -21,13 +21,12 @@ contract('Stake Levs', (accounts) => {
   let user1 = accounts[1];
   let user2 = accounts[2];
 
-
   before(async function () {
     token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
     await token.transfer(user1, 100);
     await token.transfer(user2, 200);
     stake = await Stake.deployed();
-    await stake.setBlocks(100, 300);
+    await stake.startNewTradingPeriod(100, 300);
     await token.transfer(stake.address, 1000);
     await stake.setToken(token.address);
     await forceMine(new BN(200))
@@ -103,8 +102,8 @@ contract('Circulate Fee Tokens', (accounts) => {
   });
 
 
-  it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
-    await stake.redeemLevAndFee(user1);
+  it('Stake contract should be able to send Fee and Lev to User', async function () {
+    await stake.redeemLevAndFee({from:user1});
     expect((await token.balanceOf(user1)).toNumber()).to.eql(100);
     expect((await fee.balanceOf(user1)).toNumber()).to.eql(409);
     expect((await stake.getStakes(user1)).toNumber()).to.eql(0);
@@ -113,24 +112,6 @@ contract('Circulate Fee Tokens', (accounts) => {
   });
 });
 
-
-async function setup(accounts) {
-  let user1 = accounts[1];
-  let user2 = accounts[2];
-  let user3 = accounts[3];
-  let stake = await Stake.deployed();
-  let fee = await Fee.deployed();
-  await fee.setMinter(stake.address);
-  await stake.setFeeToken(fee.address);
-  let token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
-  // token = await HumanStandardToken.at(token.address);
-  await token.transfer(user1, 100);
-  await token.transfer(user2, 200);
-  await stake.setBlocks(100, 300);
-  await stake.setToken(token.address);
-  await forceMine(new BN(200));
-  return [stake, fee, token];
-}
 
 contract('Stake setup', (accounts) => {
   let token, stake, fee;
@@ -160,8 +141,7 @@ contract('Stake setup', (accounts) => {
 
   it('should reset after all the stakes have been returned', async function () {
     await stake.updateFeeForCurrentPeriod();
-    await stake.redeemLevAndFee(user1);
-    await stake.redeemLevAndFee(user2);
+    await stake.sendLevAndFeeToUsers([user1, user2]);
     await stake.startNewTradingPeriod(1000, 2000);
     expect((await stake.startBlock()).toNumber()).to.eql(1000);
     expect((await stake.expiryBlock()).toNumber()).to.eql(2000);
@@ -207,4 +187,22 @@ async function sendFeesToSelf(_to, _owner, _fee, _qty) {
   await _fee.setMinter(_owner, {from: _owner});
   await _fee.sendTokens(_to, _qty, {from: _owner});
   await _fee.setMinter(minter, {from: _owner});
+}
+
+async function setup(accounts) {
+  let user1 = accounts[1];
+  let user2 = accounts[2];
+  let user3 = accounts[3];
+  let stake = await Stake.deployed();
+  let fee = await Fee.deployed();
+  await fee.setMinter(stake.address);
+  await stake.setFeeToken(fee.address);
+  let token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");
+  // token = await HumanStandardToken.at(token.address);
+  await token.transfer(user1, 100);
+  await token.transfer(user2, 200);
+  await stake.startNewTradingPeriod(100, 300);
+  await stake.setToken(token.address);
+  await forceMine(new BN(200));
+  return [stake, fee, token];
 }

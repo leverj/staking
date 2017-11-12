@@ -6,16 +6,16 @@ const debug = require('../lib').Debug(__filename);
 
 module.exports = async function (deployer) {
   try {
+    console.log('Starting deployment');
     await deployer.deploy([
       [Fee, feeConf.owner, feeConf.tokenName, feeConf.decimalUnits, feeConf.tokenSymbol],
-      [Stake, stakeConf.owner, stakeConf.wallet, stakeConf.weiPerFee, stakeConf.levid, stakeConf.freezeBlock]]);
+      [Stake, stakeConf.owner, stakeConf.wallet, stakeConf.weiPerFee, stakeConf.levid]
+    ]);
     let stake = await Stake.deployed();
     let fee = await Fee.deployed();
-    await fee.setMinter(stake.address);
-    await stake.setFeeToken(fee.address);
-    debug("deployed Stake and Fee");
+    console.log('done deployment');
   } catch (e) {
     debug(e);
-    process.exit(1);
+    process.exit(1)
   }
 };
