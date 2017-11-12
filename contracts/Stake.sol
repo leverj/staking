@@ -149,7 +149,7 @@ contract Stake {
       stakes[msg.sender] = SafeMath.add(stakes[msg.sender], _quantity);
       totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
       totalLevs = SafeMath.add(totalLevs,_quantity);
-      Token(tokenid).transferFrom(msg.sender, this, _quantity);
+      require(Token(tokenid).transferFrom(msg.sender, this, _quantity));
       StakeEvent(msg.sender, _quantity, 'STAKED', startBlock, expiryBlock);
       return true;
     }
@@ -162,7 +162,7 @@ contract Stake {
         uint256 feeFromExchange = Fee(feeTokenId).balanceOf(this);
         feeForThePeriod = SafeMath.add(feeFromExchange, SafeMath.div(this.balance , weiPerFee));
         feeCalculated = true;
-        Fee(feeTokenId).burnTokens(feeFromExchange);
+        require(Fee(feeTokenId).burnTokens(feeFromExchange));
         wallet.transfer(this.balance);
         weiAsFee = 0;
         return true;

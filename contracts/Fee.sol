@@ -69,7 +69,7 @@ contract Fee is StandardToken {
       public
       addressNotEmpty(_owner)
       onlyOwner
-      returns (bool success)
+      returns (bool)
     {
       owner = _owner;
       return true;
@@ -81,7 +81,7 @@ contract Fee is StandardToken {
       public
       addressNotEmpty(_minter)
       onlyOwner
-      returns (bool success)
+      returns (bool)
     {
       minter = _minter;
       return true;
@@ -92,7 +92,7 @@ contract Fee is StandardToken {
     function burnTokens(uint256 _value)
       public
       uintNotEmpty(_value)
-      returns (bool success)
+      returns (bool)
     {
       require(balances[msg.sender] >= _value);
 
@@ -111,7 +111,7 @@ contract Fee is StandardToken {
       addressNotEmpty(_to)
       uintNotEmpty(_value)
       onlyMinter
-      returns (bool success)
+      returns (bool)
     {
       balances[_to] = SafeMath.add(balances[_to], _value);
       feeInCirculation = SafeMath.add(feeInCirculation, _value);
