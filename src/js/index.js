@@ -92,7 +92,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-			<img src="img/favicon/android-chrome-512x512.png" className="logo"/>
+			<Header />
 
 			<div className={this.state.loadingInitialData ? '' : 'hidden'}>
 				<p>Loading initial data make sure you're on the Ropsten test network, please wait...</p>
@@ -109,6 +109,9 @@ class App extends React.Component {
 					}}
 					updateAllowance={() => {
 						this.updateAllowance()
+					}}
+					stakeTokens={amount => {
+						this.stakeTokens(amount)
 					}}
 					transactionFieldsTo={this.state.transactionFieldsTo}
 					transactionFieldsAmount={this.state.transactionFieldsAmount}
@@ -158,6 +161,18 @@ class App extends React.Component {
       </div>
     )
   }
+}
+
+class Header extends React.Component {
+	render () {
+		return (
+			<div className="logo-container">
+				<img src="img/favicon/android-chrome-512x512.png" className="logo"/>
+				<p className="logo-text">Leverj</p>
+				<p>Sample Text</p>
+			</div>
+		)
+	}
 }
 
 class Actions extends React.Component {

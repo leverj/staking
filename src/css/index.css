@@ -32,6 +32,16 @@ span {
    width: 50%;
    border: 1px solid grey;
 }
+.logo-container p {
+   position: relative;
+   top: -23px;
+   margin-right: 10px;
+   display: inline-block;
+}
 .logo {
    width: 55px;
+   height: 100%;
+}
+.logo-text {
+   color: orange;
 }
