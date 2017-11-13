@@ -92,8 +92,10 @@ class App extends React.Component {
   render () {
     return (
       <div>
+			<img src="img/favicon/android-chrome-512x512.png" className="logo"/>
+
 			<div className={this.state.loadingInitialData ? '' : 'hidden'}>
-				<p>Loading initial data make sure you're on the Ropsten test network, plase wait...</p>
+				<p>Loading initial data make sure you're on the Ropsten test network, please wait...</p>
 			</div>
 
 			<div className={this.state.loadingInitialData ? 'hidden' : 'contract-data actions-box'}>
@@ -159,10 +161,6 @@ class App extends React.Component {
 }
 
 class Actions extends React.Component {
-	constructor(props) {
-		super(props)
-	}
-
 	render() {
 		return (
 			<div className={this.props.className}>
@@ -203,10 +201,6 @@ class Actions extends React.Component {
 }
 
 class Stake extends React.Component {
-	constructor(props) {
-		super(props)
-	}
-
 	render() {
 		return (
 			<div className={this.props.classStake}>
@@ -237,10 +231,6 @@ class Stake extends React.Component {
 }
 
 class StakeBox extends React.Component {
-	constructor(props) {
-		super(props)
-	}
-
 	render() {
 		return (
 			<div className={this.props.showTransactionFields ? 'contract-data box' : 'hidden'} onClick={() => {
