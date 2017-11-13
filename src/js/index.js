@@ -96,8 +96,18 @@ class App extends React.Component {
 				<p>Loading initial data make sure you're on the Ropsten test network, plase wait...</p>
 			</div>
 
-			<div className={this.state.loadingInitialData ? 'hidden' : 'contract-data'}>
+			<div className={this.state.loadingInitialData ? 'hidden' : 'contract-data actions-box'}>
 				<Actions
+					className="actions-only"
+					setState={state => {
+						this.setState(state)
+					}}
+					approve={amount => {
+						this.approve(amount)
+					}}
+					updateAllowance={() => {
+						this.updateAllowance()
+					}}
 					transactionFieldsTo={this.state.transactionFieldsTo}
 					transactionFieldsAmount={this.state.transactionFieldsAmount}
 					transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
@@ -108,18 +118,16 @@ class App extends React.Component {
 					approveAmount={this.state.approveAmount}
 					stakeAmount={this.state.stakeAmount}
 				/>
+				<StakeBox
+					setState={state => {
+						this.setState(state)
+					}}
+					showTransactionFields={this.state.showTransactionFields}
+					transactionFieldsAmount={this.state.transactionFieldsAmount}
+					transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
+					transactionFieldsData={this.state.transactionFieldsData}
+				/>
 			</div>
-
-			<StakeBox
-				className={this.state.loadingInitialData ? 'hidden' : 'contract-data'}
-				setState={state => {
-					this.setState(state)
-				}}
-				showTransactionFields={this.state.showTransactionFields}
-				transactionFieldsAmount={this.state.transactionFieldsAmount}
-				transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
-				transactionFieldsData={this.state.transactionFieldsData}
-			/>
 
 			<Stake
 				classStake={this.state.loadingInitialData ? 'hidden' : 'contract-data'}
@@ -157,37 +165,37 @@ class Actions extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className={this.props.className}>
 				<h2>Actions</h2>
 
 				<p>Check allowance: </p><button disabled={this.props.isUpdatingAllowance ? true : false} onClick={async () => {
-					this.setState({ isUpdatingAllowance: true });
-					await this.updateAllowance();
-					this.setState({ isUpdatingAllowance: false })
+					this.props.setState({ isUpdatingAllowance: true })
+					await this.props.updateAllowance()
+					this.props.setState({ isUpdatingAllowance: false })
 				}}>Allowance</button> <span>{this.props.allowance}</span><br/>
 
 				<p>Set custom account: </p>
 				<input type="text" ref="custom-account" onChange={() => {
-					this.setState({customAccount: this.refs['custom-account'].value})
+					this.props.setState({customAccount: this.refs['custom-account'].value})
 				}}/>&nbsp;
 				<button onClick={() => {
-					this.setState({customAccount: this.refs['custom-account'].value})
+					this.props.setState({customAccount: this.refs['custom-account'].value})
 				}}>Set {this.props.customAccount} custom account</button><br/>
 
 				<p>Approve tokens to Stake.sol: </p>
 				<input type="number" ref="approve-amount" onChange={() => {
-					this.setState({approveAmount: this.refs['approve-amount'].value})
+					this.props.setState({approveAmount: this.refs['approve-amount'].value})
 				}}/>&nbsp;
 				<button onClick={() => {
-					this.approve(this.props.approveAmount)
+					this.props.approve(this.props.approveAmount)
 				}}>Approve {this.props.approveAmount} LEV</button><br/>
 
 				<p>Stake tokens: </p>
 				<input type="number" ref="stake-amount" onChange={() => {
-					this.setState({stakeAmount: this.refs['stake-amount'].value})
+					this.props.setState({stakeAmount: this.refs['stake-amount'].value})
 				}}/>&nbsp;
 				<button onClick={() => {
-					this.stakeTokens(this.props.stakeAmount)
+					this.props.stakeTokens(this.props.stakeAmount)
 				}}>Stake now {this.props.stakeAmount} LEVs</button><br/>
 			</div>
 		)
@@ -203,7 +211,7 @@ class Stake extends React.Component {
 		return (
 			<div className={this.props.classStake}>
 				<h2>Stake Smart Contract</h2>
-				<button disabled={this.props.isUpdatingStakeData ? true : false} onClick={async () => {
+				<button disabled={this.props.isUpdatingStakeData} onClick={async () => {
 					this.props.setState({ isUpdatingStakeData: true });
 					await this.props.updateStakeData();
 					this.props.setState({ isUpdatingStakeData: false })
@@ -235,14 +243,14 @@ class StakeBox extends React.Component {
 
 	render() {
 		return (
-			<div className={this.props.showTransactionFields ? 'contract-data bordered' : 'hidden'} onClick={() => {
+			<div className={this.props.showTransactionFields ? 'contract-data box' : 'hidden'} onClick={() => {
 				this.props.setState({showTransactionFields: false})
 			}}>
 				<i className="centered">Click to close</i><br/>
 				<p>Send to address: </p><span>{this.props.transactionFieldsTo}</span><br/>
 				<p>Send amount: </p><span>{this.props.transactionFieldsAmount}</span><br/>
 				<p>Send gas limit: </p><span>{this.props.transactionFieldsGasLimit}</span><br/>
-				<p>Send data: </p><span>{this.props.transactionFieldsData}</span><br/>
+				<p>Send data: </p><span className="big-lines">{this.props.transactionFieldsData}</span><br/>
 			</div>
 		)
 	}
