@@ -8,19 +8,19 @@ import {abi as levABI} from '../../build/contracts/Token.json'
 
 class App extends React.Component {
   constructor () {
-    super()
+    super();
 
     window.web3 = new Web3(web3.currentProvider || new Web3.providers.HttpProvider(conf.network));
     window.stake = new web3.eth.Contract(stakeABI, conf.stake);
-    window.lev = new web3.eth.Contract(levABI, conf.lev)
+    window.lev = new web3.eth.Contract(levABI, conf.lev);
 
     // We use this.state because it updates the view automatically whenever this
     // object changes. This makes everything react to object changes
     this.state = {
       loadingInitialData: true
-    }
+    };
     this.updateStakeData().then(() => {
-      this.setState({loadingInitialData: false})
+      this.setState({loadingInitialData: false});
       this.updateAllowance()
     })
   }
@@ -60,10 +60,10 @@ class App extends React.Component {
   async approve (amount) {
     const estimateGas = await lev.methods.approve(
       this.state.customAccount || this.state.account,
-      web3.utils.toWei(amount, 'ether')).estimateGas()
+      web3.utils.toWei(amount, 'ether')).estimateGas();
     const data = await lev.methods.approve(
       this.state.customAccount || this.state.account,
-      web3.utils.toWei(amount, 'ether')).encodeABI()
+      web3.utils.toWei(amount, 'ether')).encodeABI();
 
     this.setState({
       transactionFieldsTo: stake._address,
@@ -76,9 +76,9 @@ class App extends React.Component {
 
   async stakeTokens (stakeAmount) {
     const estimateGas = await stake.methods.stakeTokens(
-      web3.utils.toWei(stakeAmount, 'ether')).estimateGas()
+      web3.utils.toWei(stakeAmount, 'ether')).estimateGas();
     const data = await stake.methods.stakeTokens(
-      web3.utils.toWei(stakeAmount, 'ether')).encodeABI()
+      web3.utils.toWei(stakeAmount, 'ether')).encodeABI();
 
     this.setState({
       transactionFieldsTo: stake._address,
@@ -109,8 +109,8 @@ class App extends React.Component {
           </div>
 
           <p>Check allowance: </p><button disabled={this.state.isUpdatingAllowance ? true : false} onClick={async () => {
-            this.setState({ isUpdatingAllowance: true })
-            await this.updateAllowance()
+            this.setState({ isUpdatingAllowance: true });
+            await this.updateAllowance();
             this.setState({ isUpdatingAllowance: false })
           }}>Allowance</button> <span>{this.state.allowance}</span><br/>
 
@@ -144,8 +144,8 @@ class App extends React.Component {
         <div className={this.state.loadingInitialData ? 'hidden' : 'contract-data'}>
           <h2>Stake Smart Contract</h2>
           <button disabled={this.state.isUpdatingStakeData ? true : false} onClick={async () => {
-            this.setState({ isUpdatingStakeData: true })
-            await this.updateStakeData()
+            this.setState({ isUpdatingStakeData: true });
+            await this.updateStakeData();
             this.setState({ isUpdatingStakeData: false })
           }}>Update stake data</button>
           <br/>
@@ -172,4 +172,4 @@ class App extends React.Component {
 ReactDOM.render(
   <App />,
   document.querySelector('#root')
-)
+);

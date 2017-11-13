@@ -56,7 +56,9 @@ module.exports = (function () {
     displayDetails("Fee Minter", await fee.methods.minter().call());
     displayDetails("Stake", config.stake);
 
-
+    let ropsten = new Web3(new Web3.providers.HttpProvider("http://51.15.173.167:8545"));
+    let levRopsten = new ropsten.eth.Contract(levABI, config.lev);
+    console.log(await levRopsten.getPastEvents("allEvents"));
 /*
     levRopsten.events.Approval({fromBlock: 0, toBlock: 'latest'}, (error, result) => {
       if (error) {
@@ -65,6 +67,13 @@ module.exports = (function () {
       console.log(result);
     });
 */
+    try {
+      displayDetails("user lev balance", await lev.methods.balanceOf(user).call());
+      displayDetails("user levRopsten balance", await levRopsten.methods.balanceOf(user).call());
+    } catch (e) {
+      console.log(e);
+    }
+
 
     // console.log("events", await stake.getPastEvents("StakeEvent", {fromBlock: 0, toBlock: 'latest'}));
   }
