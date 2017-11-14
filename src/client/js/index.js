@@ -21,37 +21,22 @@ class App extends React.Component {
     };
     this.updateStakeData().then(() => {
       this.setState({loadingInitialData: false});
-      this.updateAllowance()
     })
   }
+
+	toLev (amount) {
+		return amount / 10e9;
+	}
 
   updateStakeData () {
     return new Promise(async (resolve, reject) => {
-      // Use this.setState to change the state object
-      this.setState({
-        account: (await web3.eth.getAccounts())[0],
-        totalLevs: await stake.methods.totalLevs().call(),
-        totalLevBlocks: await stake.methods.totalLevBlocks().call(),
-        weiPerFee: await stake.methods.weiPerFee().call(),
-        feeForThePeriod: await stake.methods.feeForThePeriod().call(),
-        tokenid: await stake.methods.tokenid().call(),
-        startBlock: await stake.methods.startBlock().call(),
-        expiryBlock: await stake.methods.expiryBlock().call(),
-        currentPeriod: await stake.methods.currentPeriod().call(),
-        owner: await stake.methods.owner().call(),
-        wallet: await stake.methods.wallet().call(),
-        feeTokenId: await stake.methods.feeTokenId().call(),
-        weiAsFee: await stake.methods.weiAsFee().call(),
-        feeCalculated: await stake.methods.feeCalculated().call()
-      }, resolve)
-    })
-  }
+		let account = (await web3.eth.getAccounts())[0]
 
-  updateAllowance () {
-    return new Promise(async (resolve, reject) => {
-      // Use this.setState to change the state object
       this.setState({
-        allowance: web3.utils.fromWei(await lev.methods.allowance(this.state.account, stake._address).call(), 'ether')
+        account: account,
+		  numberOfLev: await lev.methods.balanceOf(account).call(),
+		  stakedLev: await stake.methods.stakes(account).call(),
+		  approvedLev: this.toLev(await lev.methods.allowance(account, stake._address).call())
       }, resolve)
     })
   }
@@ -94,21 +79,37 @@ class App extends React.Component {
       <div>
 			<Header />
 
+			<ProgressBar
+				className={this.state.loadingInitialData ? 'hidden' : 'bar-container'}
+			/>
+
 			<div className={this.state.loadingInitialData ? '' : 'hidden'}>
 				<p>Loading initial data make sure you're on the Ropsten test network, please wait...</p>
 			</div>
 
-			<div className={this.state.loadingInitialData ? 'hidden' : 'contract-data actions-box'}>
+			<div className={this.state.loadingInitialData ? 'hidden' : 'boxes-container'}>
+				<Stake
+					classStake={this.state.loadingInitialData ? 'hidden' : 'stake'}
+					isUpdatingStakeData={this.state.isUpdatingStakeData}
+					setState={state => {
+						this.setState(state)
+					}}
+					// TODO update this
+					// updateStakeData={() => {
+					// 	this.updateStakeData()
+					// }}
+					account={this.state.account}
+					numberOfLev={this.state.numberOfLev}
+					stakedLev={this.state.stakedLev}
+					approvedLev={this.state.approvedLev}
+				/>
 				<Actions
-					className="actions-only"
+					className="actions-box"
 					setState={state => {
 						this.setState(state)
 					}}
 					approve={amount => {
 						this.approve(amount)
-					}}
-					updateAllowance={() => {
-						this.updateAllowance()
 					}}
 					stakeTokens={amount => {
 						this.stakeTokens(amount)
@@ -120,47 +121,30 @@ class App extends React.Component {
 					isUpdatingAllowance={this.state.isUpdatingAllowance}
 					allowance={this.state.allowance}
 					customAccount={this.state.customAccount}
-					approveAmount={this.state.approveAmount}
 					stakeAmount={this.state.stakeAmount}
-				/>
-				<StakeBox
-					setState={state => {
-						this.setState(state)
-					}}
 					showTransactionFields={this.state.showTransactionFields}
 					transactionFieldsAmount={this.state.transactionFieldsAmount}
 					transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
 					transactionFieldsData={this.state.transactionFieldsData}
 				/>
 			</div>
-
-			<Stake
-				classStake={this.state.loadingInitialData ? 'hidden' : 'contract-data'}
-				isUpdatingStakeData={this.state.isUpdatingStakeData}
-				setState={state => {
-					this.setState(state)
-				}}
-				updateStakeData={() => {
-					this.updateStakeData()
-				}}
-				account={this.state.account}
-				totalLevs={this.state.totalLevs}
-				totalLevBlocks={this.state.totalLevBlocks}
-				weiPerFee={this.state.weiPerFee}
-				feeForThisPeriod={this.state.feeForThisPeriod}
-				tokenid={this.state.tokenid}
-				startBlock={this.state.startBlock}
-				expiryBlock={this.state.expiryBlock}
-				currentPeriod={this.state.currentPeriod}
-				owner={this.state.owner}
-				wallet={this.state.wallet}
-				feeTokenId={this.state.feeTokenId}
-				weiAsFee={this.state.weiAsFee}
-				feeCalculated={this.state.feeCalculated}
-			/>
       </div>
     )
   }
+}
+
+class ProgressBar extends React.Component {
+	render () {
+		return (
+			<div className={this.props.className}>
+				<div className="bar">
+					<div className="bar-content">44%</div>
+				</div>
+				<p className="bar-start-block">Start: 195,242</p>
+				<p className="bar-end-block">End: 195,512</p>
+			</div>
+		)
+	}
 }
 
 class Header extends React.Component {
@@ -181,35 +165,26 @@ class Actions extends React.Component {
 			<div className={this.props.className}>
 				<h2>Actions</h2>
 
-				<p>Check allowance: </p><button disabled={this.props.isUpdatingAllowance ? true : false} onClick={async () => {
-					this.props.setState({ isUpdatingAllowance: true })
-					await this.props.updateAllowance()
-					this.props.setState({ isUpdatingAllowance: false })
-				}}>Allowance</button> <span>{this.props.allowance}</span><br/>
+				<div className="actions-stake">
+					<p>Amount to stake: &nbsp;</p>
+					<input type="number" ref="stakeAmount-amount" onChange={() => {
+						this.props.setState({stakeAmount: this.refs['stakeAmount-amount'].value})
+					}}/>
 
-				<p>Set custom account: </p>
-				<input type="text" ref="custom-account" onChange={() => {
-					this.props.setState({customAccount: this.refs['custom-account'].value})
-				}}/>&nbsp;
-				<button onClick={() => {
-					this.props.setState({customAccount: this.refs['custom-account'].value})
-				}}>Set {this.props.customAccount} custom account</button><br/>
+					<br/>
 
-				<p>Approve tokens to Stake.sol: </p>
-				<input type="number" ref="approve-amount" onChange={() => {
-					this.props.setState({approveAmount: this.refs['approve-amount'].value})
-				}}/>&nbsp;
-				<button onClick={() => {
-					this.props.approve(this.props.approveAmount)
-				}}>Approve {this.props.approveAmount} LEV</button><br/>
+					<button className="approve-button" onClick={() => {
+						this.props.approve(this.props.stakeAmount)
+					}}>Approve</button>
+					<button className="stake-button" onClick={() => {
+						this.props.stakeTokens(this.props.stakeAmount)
+					}}>Stake</button><br/>
+				</div>
 
-				<p>Stake tokens: </p>
-				<input type="number" ref="stake-amount" onChange={() => {
-					this.props.setState({stakeAmount: this.refs['stake-amount'].value})
-				}}/>&nbsp;
-				<button onClick={() => {
-					this.props.stakeTokens(this.props.stakeAmount)
-				}}>Stake now {this.props.stakeAmount} LEVs</button><br/>
+				<p>Send to address: <span>{this.props.transactionFieldsTo}</span></p><br/>
+				<p>Send amount: <span>{this.props.transactionFieldsAmount}</span></p><br/>
+				<p>Send gas limit: <span>{this.props.transactionFieldsGasLimit}</span></p><br/>
+				<p>Send data: </p><span>{this.props.transactionFieldsData}</span><br/>
 			</div>
 		)
 	}
@@ -217,45 +192,25 @@ class Actions extends React.Component {
 
 class Stake extends React.Component {
 	render() {
+		const {classStake, approvedLev, numberOfLev, stakedLev} = this.props
 		return (
-			<div className={this.props.classStake}>
-				<h2>Stake Smart Contract</h2>
-				<button disabled={this.props.isUpdatingStakeData} onClick={async () => {
-					this.props.setState({ isUpdatingStakeData: true });
-					await this.props.updateStakeData();
-					this.props.setState({ isUpdatingStakeData: false })
-				}}>Update stake data</button>
-				<br/>
-				<p>Account: </p><span>{this.props.account}</span><br/>
-				<p>Total levs: </p><span>{this.props.totalLevs}</span><br/>
-				<p>Total lev blocks: </p><span>{this.props.totalLevBlocks}</span><br/>
-				<p>Wei per fee: </p><span>{this.props.weiPerFee}</span><br/>
-				<p>Fee for this period: </p><span>{this.props.feeForThisPeriod}</span><br/>
-				<p>Lev token address: </p><span>{this.props.tokenid}</span><br/>
-				<p>Start block: </p><span>{this.props.startBlock}</span><br/>
-				<p>Expiry block: </p><span>{this.props.expiryBlock}</span><br/>
-				<p>Current period: </p><span>{this.props.currentPeriod}</span><br/>
-				<p>Owner: </p><span>{this.props.owner}</span><br/>
-				<p>Wallet: </p><span>{this.props.wallet}</span><br/>
-				<p>Fee token ID: </p><span>{this.props.feeTokenId}</span><br/>
-				<p>Wei as Fee: </p><span>{this.props.weiAsFee}</span><br/>
-				<p>Fee calculated: </p><span>{this.props.feeCalculated}</span><br/>
-			</div>
-		)
-	}
-}
+			<div className={classStake}>
+				<h2>User Information</h2>
 
-class StakeBox extends React.Component {
-	render() {
-		return (
-			<div className={this.props.showTransactionFields ? 'contract-data box' : 'hidden'} onClick={() => {
-				this.props.setState({showTransactionFields: false})
-			}}>
-				<i className="centered">Click to close</i><br/>
-				<p>Send to address: </p><span>{this.props.transactionFieldsTo}</span><br/>
-				<p>Send amount: </p><span>{this.props.transactionFieldsAmount}</span><br/>
-				<p>Send gas limit: </p><span>{this.props.transactionFieldsGasLimit}</span><br/>
-				<p>Send data: </p><span className="big-lines">{this.props.transactionFieldsData}</span><br/>
+				<div>
+					<p>Enter address: </p>
+					<input type="text" ref="custom-account" />&nbsp;
+					<button onClick={() => {
+						this.props.setState({customAccount: this.refs['custom-account'].value})
+					}}>Get Info</button><br/>
+				</div>
+
+				<div className="user-information">
+					<p>Number of LEV: {numberOfLev}</p>
+					<p>Staked LEV: {stakedLev}</p>
+					<p>Approved LEV: {approvedLev}</p>
+					<p>LEV available to withdraw: Unknown</p>
+				</div>
 			</div>
 		)
 	}
