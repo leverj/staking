@@ -13,7 +13,7 @@ test:
     - npm install truffle@4.0.1
     - npm install bower
     - bower install
-    - truffle compile
+#    - truffle compile
     - npm test
     - webpack
 
