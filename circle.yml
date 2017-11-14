@@ -7,10 +7,10 @@ machine:
 dependencies:
   pre:
     - sudo apt-get install -y libusb-1.0-0-dev
-    - sudo npm install -g truffle@4.0.1
 
 test:
   override:
+    - npm install truffle@4.0.1
     - npm install bower
     - bower install
     - truffle compile
