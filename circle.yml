@@ -1,0 +1,48 @@
+machine:
+  node:
+    version: 8.9.1
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - sudo apt-get install -y libusb-1.0-0-dev
+    - sudo npm install -g truffle@4.0.1
+
+test:
+  override:
+    - npm install bower
+    - bower install
+    - truffle compile
+    - npm test
+    - webpack
+
+#deployment:
+#  hub:
+#    branch: develop
+#    commands:
+#      - docker info
+#      - docker build -t bharathrao/coinpit:develop .
+#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#      - docker push bharathrao/coinpit
+#  grid-ui:
+#    branch: hw
+#    commands:
+#      - docker info
+#      - docker build -t bharathrao/coinpit:develop .
+#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#      - docker push bharathrao/coinpit
+#  master:
+#    branch: master
+#    commands:
+#      - docker info
+#      - docker build -t bharathrao/coinpit:master .
+#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#      - docker push bharathrao/coinpit
+#  testnet:
+#    branch: testnet
+#    commands:
+#      - docker info
+#      - docker build -t bharathrao/coinpit:testnet .
+#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#      - docker push bharathrao/coinpit
