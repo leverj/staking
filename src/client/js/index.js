@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom'
 import Web3 from 'web3'
 import conf from './conf'
 import './../css/index.css'
-import {abi as stakeABI} from '../../build/contracts/Stake.json'
-import {abi as levABI} from '../../build/contracts/Token.json'
+import {abi as stakeABI} from '../../../build/contracts/Stake.json'
+import {abi as levABI} from '../../../build/contracts/Token.json'
 
 class App extends React.Component {
   constructor () {
