@@ -6,22 +6,21 @@ machine:
 
 test:
   override:
-#    - npm install truffle@4.0.1
+    - npm test
     - npm install bower
     - bower install
-#    - truffle compile
-    - npm test
+    - truffle compile
     - webpack
 
 
-#deployment:
-#  hub:
-#    branch: develop
-#    commands:
-#      - docker info
-#      - docker build -t bharathrao/coinpit:develop .
-#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-#      - docker push bharathrao/coinpit
+deployment:
+  hub:
+    branch: consolidate
+    commands:
+      - docker info
+      - docker build -t leverj/stake:consolidate .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push leverj/stake
 #  grid-ui:
 #    branch: hw
 #    commands:
