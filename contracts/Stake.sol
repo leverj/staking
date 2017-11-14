@@ -17,9 +17,9 @@ import './Fee.sol';
 contract Stake {
     using SafeMath for uint256;
 
-    event StakeEvent(address indexed user, uint256 levs, string action, uint256 startBlock, uint256 expiryBlock);
+    event StakeEvent(address indexed user, uint256 levs, string action, uint256 startBlock, uint256 endBlock);
 
-    // User address to (lev tokens)*(blocks left to expiry)
+    // User address to (lev tokens)*(blocks left to end)
     mapping (address => uint256) public levBlocks;
 
     // User address to lev tokens at stake
@@ -41,7 +41,7 @@ contract Stake {
     address public tokenid;
 
     uint256 public startBlock;
-    uint256 public expiryBlock;
+    uint256 public endBlock;
     uint public currentStakingInterval;
 
     // Owner address for admin functions
@@ -66,12 +66,12 @@ contract Stake {
     }
 
     modifier notExpired{
-        require(block.number < expiryBlock);
+        require(block.number < endBlock);
         _;
     }
 
     modifier hasExpired{
-        require(block.number >= expiryBlock);
+        require(block.number >= endBlock);
         _;
     }
 
@@ -90,7 +90,7 @@ contract Stake {
     }
 
     /// @notice Constructor to set all the default values for the owner, wallet,
-    /// weiPerFee, tokenID and expiryBlock
+    /// weiPerFee, tokenID and endBlock
     function Stake(
       address _owner,
       address _wallet,
@@ -145,12 +145,12 @@ contract Stake {
     {
       require(Token(tokenid).balanceOf(msg.sender) >= _quantity);
 
-      levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
+      levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
       stakes[msg.sender] = SafeMath.add(stakes[msg.sender], _quantity);
-      totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(expiryBlock, block.number)));
+      totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
       totalLevs = SafeMath.add(totalLevs,_quantity);
       require(Token(tokenid).transferFrom(msg.sender, this, _quantity));
-      StakeEvent(msg.sender, _quantity, 'STAKED', startBlock, expiryBlock);
+      StakeEvent(msg.sender, _quantity, 'STAKED', startBlock, endBlock);
       return true;
     }
 
@@ -202,24 +202,24 @@ contract Stake {
       totalLevs = SafeMath.sub(totalLevs, stake);
       if (feeEarned > 0) require(Fee(feeTokenId).sendTokens(_user, feeEarned));
       require(Token(tokenid).transfer(_user, stake));
-      StakeEvent(_user, stake, 'CLAIMED', startBlock, expiryBlock);
+      StakeEvent(_user, stake, 'CLAIMED', startBlock, endBlock);
       return true;
     }
 
     /// @notice To start a new trading staking-interval where the price of the FEE will be updated
     /// @param _start The starting block.number of the new staking-interval
-    /// @param _expiry When the new staking-interval ends in block.number
-    function startNewStakingInterval(uint256 _start, uint256 _expiry)
+    /// @param _end When the new staking-interval ends in block.number
+    function startNewStakingInterval(uint256 _start, uint256 _end)
       external
       uintNotEmpty(_start)
-      uintNotEmpty(_expiry)
+      uintNotEmpty(_end)
       onlyOwner
       hasExpired
       returns (bool result)
     {
         require(totalLevs == 0);
         startBlock = _start;
-        expiryBlock = _expiry;
+        endBlock = _end;
         totalLevBlocks = 0;
         feeForTheStakingInterval = 0;
         weiAsFee = 0;

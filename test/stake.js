@@ -144,7 +144,7 @@ contract('Stake setup', (accounts) => {
     await stake.sendLevAndFeeToUsers([user1, user2]);
     await stake.startNewStakingInterval(1000, 2000);
     expect((await stake.startBlock()).toNumber()).to.eql(1000);
-    expect((await stake.expiryBlock()).toNumber()).to.eql(2000);
+    expect((await stake.endBlock()).toNumber()).to.eql(2000);
     expect((await stake.totalLevBlocks()).toNumber()).to.eql(0);
     expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(0);
     expect((await stake.weiAsFee()).toNumber()).to.eql(0);
