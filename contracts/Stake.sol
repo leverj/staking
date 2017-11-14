@@ -8,7 +8,7 @@
   * what happens to extra fee if not enough trading happened? destroy it.
   * Stake will have full control over FEE.sol
   */
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.18;
 
 import './SafeMath.sol';
 import './Token.sol';
@@ -35,14 +35,14 @@ contract Stake {
     uint256 public weiPerFee;
 
     // Total fee to be distributed
-    uint256 public feeForThePeriod;
+    uint256 public feeForTheStakingInterval;
 
     // Lev token reference
     address public tokenid;
 
     uint256 public startBlock;
     uint256 public expiryBlock;
-    uint public currentPeriod;
+    uint public currentStakingInterval;
 
     // Owner address for admin functions
     address public owner;
@@ -156,11 +156,11 @@ contract Stake {
 
     /// @notice To update the price of FEE tokens to the current value. Executable
     /// by the owner only
-    function updateFeeForCurrentPeriod() public onlyOwner hasExpired returns (bool result){
+    function updateFeeForCurrentStakingInterval() public onlyOwner hasExpired returns (bool result){
         require(feeCalculated == false);
 
         uint256 feeFromExchange = Fee(feeTokenId).balanceOf(this);
-        feeForThePeriod = SafeMath.add(feeFromExchange, SafeMath.div(this.balance , weiPerFee));
+        feeForTheStakingInterval = SafeMath.add(feeFromExchange, SafeMath.div(this.balance , weiPerFee));
         feeCalculated = true;
         require(Fee(feeTokenId).burnTokens(feeFromExchange));
         wallet.transfer(this.balance);
@@ -196,7 +196,7 @@ contract Stake {
       uint256 levBlock = levBlocks[_user];
       uint256 stake = stakes[_user];
       require(stake > 0);
-      uint256 feeEarned = SafeMath.div(SafeMath.mul(levBlock, feeForThePeriod) , totalLevBlocks);
+      uint256 feeEarned = SafeMath.div(SafeMath.mul(levBlock, feeForTheStakingInterval) , totalLevBlocks);
       delete stakes[_user];
       delete levBlocks[_user];
       totalLevs = SafeMath.sub(totalLevs, stake);
@@ -206,10 +206,10 @@ contract Stake {
       return true;
     }
 
-    /// @notice To start a new trading period where the price of the FEE will be updated
-    /// @param _start The starting block.number of the new period
-    /// @param _expiry When the new period ends in block.number
-    function startNewTradingPeriod(uint256 _start, uint256 _expiry)
+    /// @notice To start a new trading staking-interval where the price of the FEE will be updated
+    /// @param _start The starting block.number of the new staking-interval
+    /// @param _expiry When the new staking-interval ends in block.number
+    function startNewStakingInterval(uint256 _start, uint256 _expiry)
       external
       uintNotEmpty(_start)
       uintNotEmpty(_expiry)
@@ -221,7 +221,7 @@ contract Stake {
         startBlock = _start;
         expiryBlock = _expiry;
         totalLevBlocks = 0;
-        feeForThePeriod = 0;
+        feeForTheStakingInterval = 0;
         weiAsFee = 0;
         feeCalculated = false;
         return true;

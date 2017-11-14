@@ -26,7 +26,7 @@ contract('Stake Levs', (accounts) => {
     await token.transfer(user1, 100);
     await token.transfer(user2, 200);
     stake = await Stake.deployed();
-    await stake.startNewTradingPeriod(100, 300);
+    await stake.startNewStakingInterval(100, 300);
     await token.transfer(stake.address, 1000);
     await stake.setToken(token.address);
     await forceMine(new BN(200))
@@ -76,8 +76,8 @@ contract('Calculate Fee Tokens', (accounts) => {
     let walletBalance = (await web3.eth.getBalance(wallet));
     debug("after", walletBalance);
     stake = await Stake.deployed();
-    await stake.updateFeeForCurrentPeriod();
-    expect((await stake.feeForThePeriod()).toNumber()).to.eql(1010);
+    await stake.updateFeeForCurrentStakingInterval();
+    expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(1010);
     expect((await fee.balanceOf(stake.address)).toNumber()).to.eql(0);
     let walletNewBalance = (await web3.eth.getBalance(wallet));
     expect(walletNewBalance - walletBalance).to.eql(10000000);
@@ -98,7 +98,7 @@ contract('Circulate Fee Tokens', (accounts) => {
     await forceMine(new BN(300));
     await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
     await web3.eth.sendTransaction({from: user1, to: stake.address, value: 10000000});
-    await stake.updateFeeForCurrentPeriod();
+    await stake.updateFeeForCurrentStakingInterval();
   });
 
 
@@ -132,7 +132,7 @@ contract('Stake setup', (accounts) => {
 
   it('should fail to reset if there are stakes left', async function () {
     try {
-      await stake.startNewTradingPeriod(1000, 2000);
+      await stake.startNewStakingInterval(1000, 2000);
       expect().fail("should not pass");
     } catch (e) {
       expect(e.message).to.not.eql("should not pass")
@@ -140,13 +140,13 @@ contract('Stake setup', (accounts) => {
   });
 
   it('should reset after all the stakes have been returned', async function () {
-    await stake.updateFeeForCurrentPeriod();
+    await stake.updateFeeForCurrentStakingInterval();
     await stake.sendLevAndFeeToUsers([user1, user2]);
-    await stake.startNewTradingPeriod(1000, 2000);
+    await stake.startNewStakingInterval(1000, 2000);
     expect((await stake.startBlock()).toNumber()).to.eql(1000);
     expect((await stake.expiryBlock()).toNumber()).to.eql(2000);
     expect((await stake.totalLevBlocks()).toNumber()).to.eql(0);
-    expect((await stake.feeForThePeriod()).toNumber()).to.eql(0);
+    expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(0);
     expect((await stake.weiAsFee()).toNumber()).to.eql(0);
     expect((await stake.feeCalculated())).to.eql(false);
   })
@@ -201,7 +201,7 @@ async function setup(accounts) {
   // token = await HumanStandardToken.at(token.address);
   await token.transfer(user1, 100);
   await token.transfer(user2, 200);
-  await stake.startNewTradingPeriod(100, 300);
+  await stake.startNewStakingInterval(100, 300);
   await stake.setToken(token.address);
   await forceMine(new BN(200));
   return [stake, fee, token];
