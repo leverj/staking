@@ -2,9 +2,9 @@ const path = require('path')
 const htmlPlugin = require('html-webpack-plugin')
 
 module.exports = {
-   entry: path.join(__dirname, 'src/js', 'index.js'), // Our frontend will be inside the src folder
+   entry: path.join(__dirname, 'src/client/js', 'index.js'), // Our frontend will be inside the src folder
    output: {
-      path: path.join(__dirname, 'dist/src-admin/client/'),
+      path: path.join(__dirname, 'dist/src/client/'),
       filename: 'build.js' // The final file will be created in dist/build.js
    },
    module: {
@@ -31,7 +31,7 @@ module.exports = {
    plugins: [
       new htmlPlugin({
          title: "Staking User Interface",
-         template: "./src/templates/index.ejs",
+         template: "./src/client/templates/index.ejs",
          hash: true
       })
    ]
