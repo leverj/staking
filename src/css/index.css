@@ -3,7 +3,6 @@ body {
 }
 span {
   padding: 10px;
-  box-shadow: 0 0 15px 0px #afafaf;
   border-radius: 3px;
 }
 .hidden {
@@ -13,11 +12,36 @@ span {
   display: inline-block;
   width: 150px;
 }
-.bordered {
-  padding: 10px;
-  box-shadow: 0 0 15px 0px #afafaf;
-}
 .centered {
   text-align: center;
   display: block;
+}
+.actions-box {
+   display: flex;
+}
+.box {
+   word-wrap: break-word;
+   width: 50%;
+   padding: 10px;
+   border: 1px solid grey;
+}
+.big-lines {
+   line-height: 50px;
+}
+.actions-only {
+   width: 50%;
+   border: 1px solid grey;
+}
+.logo-container p {
+   position: relative;
+   top: -23px;
+   margin-right: 10px;
+   display: inline-block;
+}
+.logo {
+   width: 55px;
+   height: 100%;
+}
+.logo-text {
+   color: orange;
 }
