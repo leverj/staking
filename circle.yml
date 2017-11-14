@@ -19,7 +19,7 @@ deployment:
     commands:
       - docker info
       - docker build -t leverj/stake:consolidate .
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker login -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
 #  grid-ui:
 #    branch: hw
