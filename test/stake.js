@@ -9,7 +9,6 @@ const HttpProvider = require('ethjs-provider-http');
 const EthRPC = require('ethjs-rpc');
 const EthQuery = require('ethjs-query');
 const Web3 = require('web3');
-const debug = require('../lib').Debug(__filename);
 
 
 const ethRPC = new EthRPC(new HttpProvider('http://localhost:8545'));
@@ -74,7 +73,6 @@ contract('Calculate Fee Tokens', (accounts) => {
 
   it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
     let walletBalance = (await web3.eth.getBalance(wallet));
-    debug("after", walletBalance);
     stake = await Stake.deployed();
     await stake.updateFeeForCurrentStakingInterval();
     expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(1010);
