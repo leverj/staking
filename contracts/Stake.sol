@@ -21,8 +21,7 @@ import './Fee.sol';
 contract Stake is Owned, Validating {
   using SafeMath for uint;
 
-  //fixme: index action? or have distinct events?
-  event StakeEvent(address indexed user, uint levs, string action, uint startBlock, uint endBlock);
+  event StakeEvent(address indexed user, string indexed action, uint levs, uint startBlock, uint endBlock);
 
   // User address to (lev tokens)*(blocks left to end)
   mapping (address => uint) public levBlocks;
@@ -30,7 +29,6 @@ contract Stake is Owned, Validating {
   // User address to lev tokens at stake
   mapping (address => uint) public stakes;
 
-  // fixme: total lev tokens. This may not be required ... use or delete
   uint public totalLevs;
 
   // Total lev blocks. this will be help not to iterate through full mapping
@@ -43,23 +41,16 @@ contract Stake is Owned, Validating {
   uint public feeForTheStakingInterval;
 
   // Lev token reference
-  Token public levToken;
+  Token public levToken; //revisit: is there a difference in storage versus using address?
 
   // FEE token reference
-  Fee public feeToken;
+  Fee public feeToken; //revisit: is there a difference in storage versus using address?
 
   uint public startBlock;
 
   uint public endBlock;
 
-  // fixme: not really used ... use or delete
-  uint public currentStakingInterval;
-
   address public wallet;
-
-  // fixme: not really used ... use or delete
-  // Wei owned by the contract
-  uint public weiAsFee;
 
   bool public feeCalculated = false;
 
@@ -93,7 +84,7 @@ contract Stake is Owned, Validating {
     owner = _owner;
     wallet = _wallet;
     weiPerFee = _weiPerFee;
-    setLevToken(_levToken);
+    levToken = Token(_levToken);
   }
 
   function version() external pure returns (string) {
@@ -102,7 +93,7 @@ contract Stake is Owned, Validating {
 
   /// @notice To set the the address of the LEV token
   /// @param _levToken The token address
-  function setLevToken(address _levToken) public validAddress(_levToken) onlyOwner {
+  function setLevToken(address _levToken) external validAddress(_levToken) onlyOwner {
     levToken = Token(_levToken);
   }
 
@@ -131,7 +122,7 @@ contract Stake is Owned, Validating {
     totalLevBlocks = totalLevBlocks.add(_quantity.mul(endBlock.sub(block.number)));
     totalLevs = totalLevs.add(_quantity);
     require(levToken.transferFrom(msg.sender, this, _quantity));
-    StakeEvent(msg.sender, _quantity, 'STAKED', startBlock, endBlock);
+    StakeEvent(msg.sender, 'STAKED', _quantity, startBlock, endBlock);
     return true;
   }
 
@@ -145,7 +136,6 @@ contract Stake is Owned, Validating {
     feeCalculated = true;
     require(feeToken.burnTokens(feeFromExchange));
     wallet.transfer(this.balance);
-    weiAsFee = 0;
     return true;
   }
 
@@ -161,7 +151,7 @@ contract Stake is Owned, Validating {
   }
 
   function redeemLevAndFeeInternal(address _user) //what does the Internal in the method name means?
-    internal //fixme: why internal? should be private (as there are no subclasses)
+    private //fixme: why internal? should be private (as there are no subclasses)
     validAddress(_user)
     isDoneStaking
     returns (bool) //fixme: why the boolean?
@@ -171,7 +161,7 @@ contract Stake is Owned, Validating {
 
     uint levBlock = levBlocks[_user];
     uint stake = stakes[_user];
-    require(stake > 0); //fixme: use assert?
+    require(stake > 0);
 
     uint feeEarned = levBlock.mul(feeForTheStakingInterval).div(totalLevBlocks);
     delete stakes[_user];
@@ -180,7 +170,7 @@ contract Stake is Owned, Validating {
     if (feeEarned > 0) require(feeToken.sendTokens(_user, feeEarned));
     require(levToken.transfer(_user, stake));
 
-    StakeEvent(_user, stake, 'CLAIMED', startBlock, endBlock);
+    StakeEvent(_user, 'CLAIMED', stake, startBlock, endBlock);
     return true;
   }
 
@@ -206,7 +196,6 @@ contract Stake is Owned, Validating {
   function reset() private {
     totalLevBlocks = 0;
     feeForTheStakingInterval = 0;
-    weiAsFee = 0;
     feeCalculated = false;
   }
 

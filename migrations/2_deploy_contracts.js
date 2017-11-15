@@ -10,6 +10,6 @@ module.exports = async function (deployer) {
   ])
   const stake = await Stake.deployed()
   const fee = await Fee.deployed()
-  // await fee.setMinter(stake.address, {from: feeConf.owner})
+  await fee.setMinter(stake.address, {from: feeConf.owner})
   await stake.setFeeToken(fee.address, {from: stakeConf.owner})
 }
