@@ -5,9 +5,10 @@
 pragma solidity ^0.4.11;
 
 import './SafeMath.sol';
+import './Validated.sol';
 import './StandardToken.sol';
 
-contract Fee is StandardToken {
+contract Fee is Validated, StandardToken {
 
     /* This notifies clients about the amount burnt */
     event Burn(address indexed from, uint256 value);
@@ -28,21 +29,6 @@ contract Fee is StandardToken {
     modifier onlyMinter {
         require(msg.sender == minter);
         _;
-    }
-
-    modifier addressNotEmpty(address a) {
-      require(a != address(0));
-      _;
-    }
-
-    modifier uintNotEmpty(uint256 number) {
-      require(number != 0);
-      _;
-    }
-
-    modifier stringNotEmpty(string s) {
-      require(bytes(s).length != 0);
-      _;
     }
 
     /// @notice Constructor to set the owner, tokenName, decimals and symbol
@@ -91,7 +77,7 @@ contract Fee is StandardToken {
     /// @param _value Amount of tokens to delete
     function burnTokens(uint256 _value)
       public
-      uintNotEmpty(_value)
+      numberNotZero(_value)
       returns (bool)
     {
       require(balances[msg.sender] >= _value);
@@ -109,7 +95,7 @@ contract Fee is StandardToken {
     function sendTokens(address _to, uint256 _value)
       public
       addressNotEmpty(_to)
-      uintNotEmpty(_value)
+      numberNotZero(_value)
       onlyMinter
       returns (bool)
     {

@@ -12,11 +12,12 @@ pragma solidity ^0.4.18;
 
 
 import './SafeMath.sol';
+import './Validated.sol';
 import './Token.sol';
 import './Fee.sol';
 
 
-contract Stake {
+contract Stake is Validated {
   using SafeMath for uint256;
 
   //fixme: index action? or have distinct events?
@@ -84,16 +85,6 @@ contract Stake {
     _;
   }
 
-  modifier addressNotEmpty(address a) {
-    require(a != address(0));
-    _;
-  }
-
-  modifier uintNotEmpty(uint256 number) {
-    require(number != 0);
-    _;
-  }
-
   function() public payable {
     //        weiAsFee = weiAsFee.add(msg.value);
   }
@@ -109,7 +100,7 @@ contract Stake {
   addressNotEmpty(_wallet)
   addressNotEmpty(_owner)
   addressNotEmpty(_levToken)
-  uintNotEmpty(_weiPerFee)
+  numberNotZero(_weiPerFee)
   {
     setLevToken(_levToken);
     owner = _owner;
@@ -149,7 +140,7 @@ contract Stake {
   /// @param _quantity How many LEV tokens to lock for staking
   function stakeTokens(uint256 _quantity)
   public
-  uintNotEmpty(_quantity)
+  numberNotZero(_quantity)
   started
   notExpired
   returns (bool result)
@@ -222,8 +213,8 @@ contract Stake {
   /// @param _end When the new staking-interval ends in block.number
   function startNewStakingInterval(uint256 _start, uint256 _end)
   external
-  uintNotEmpty(_start)
-  uintNotEmpty(_end)
+  numberNotZero(_start)
+  numberNotZero(_end)
   onlyOwner
   hasExpired
   returns (bool result)
