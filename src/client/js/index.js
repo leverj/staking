@@ -49,7 +49,7 @@ class App extends React.Component {
 		return amount / 10e9;
 	}
 
-   async getInfo (account) {
+  async getInfo (account) {
 		return new Promise(async (resolve, reject) => {
 			let startBlock = await stake.methods.startBlock().call()
 			let endBlock = await stake.methods.expiryBlock().call()
@@ -151,6 +151,7 @@ class App extends React.Component {
 						transactionFieldsAmount={this.state.transactionFieldsAmount}
 						transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
 						transactionFieldsData={this.state.transactionFieldsData}
+						account={this.state.account}
 					/>
 				</div>
       </div>
