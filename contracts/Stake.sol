@@ -114,12 +114,7 @@ contract Stake is Owned, Validated {
 
   /// @notice To set the wallet address by the owner only
   /// @param _wallet The wallet address
-  function setWallet(address _wallet)
-    external
-    addressNotEmpty(_wallet)
-    onlyOwner
-    returns (bool)
-  {
+  function setWallet(address _wallet) external addressNotEmpty(_wallet) onlyOwner returns (bool) {
     wallet = _wallet;
     return true;
   }
@@ -128,12 +123,7 @@ contract Stake is Owned, Validated {
   /// has to approve the staking contract on token before calling this function.
   /// Refer to the tests for more information
   /// @param _quantity How many LEV tokens to lock for staking
-  function stakeTokens(uint256 _quantity)
-    public
-    isStaking
-    numberNotZero(_quantity)
-    returns (bool result)
-  {
+  function stakeTokens(uint256 _quantity) external isStaking numberNotZero(_quantity) returns (bool) {
     require(levToken.balanceOf(msg.sender) >= _quantity);
 
     levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
@@ -147,7 +137,7 @@ contract Stake is Owned, Validated {
 
   /// @notice To update the price of FEE tokens to the current value. Executable
   /// by the owner only
-  function updateFeeForCurrentStakingInterval() public onlyOwner isDoneStaking returns (bool result) {
+  function updateFeeForCurrentStakingInterval() external onlyOwner isDoneStaking returns (bool result) {
     require(feeCalculated == false);
 
     uint256 feeFromExchange = feeToken.balanceOf(this);
@@ -161,16 +151,16 @@ contract Stake is Owned, Validated {
 
   /// @notice To unlock and recover your LEV and FEE tokens after staking
   /// and fee to any user
-  function redeemLevAndFee() public returns (bool) {
+  function redeemLevAndFee() external returns (bool) {
     return redeemLevAndFeeInternal(msg.sender);
   }
 
-  function sendLevAndFeeToUsers(address[] _users) public onlyOwner returns (bool) {
+  function sendLevAndFeeToUsers(address[] _users) external onlyOwner returns (bool) {
     for (uint i = 0; i < _users.length; i++) redeemLevAndFeeInternal(_users[i]);
     return true;
   }
 
-  function redeemLevAndFeeInternal(address _user)
+  function redeemLevAndFeeInternal(address _user) //what does the Internal in the method name means?
     internal //fixme: why internal? should be private (as there are no subclasses)
     addressNotEmpty(_user)
     isDoneStaking
@@ -178,6 +168,7 @@ contract Stake is Owned, Validated {
   {
     require(feeCalculated);
     require(totalLevBlocks > 0);
+
     uint256 levBlock = levBlocks[_user];
     uint256 stake = stakes[_user];
     require(stake > 0);
@@ -212,15 +203,4 @@ contract Stake is Owned, Validated {
     return true;
   }
 
-  /// @notice To get how many LEV blocks has an address
-  /// @param _for The owner of the blocks
-  function getLevBlocks(address _for) public constant returns (uint256 levBlock) {
-    return levBlocks[_for];
-  }
-
-  /// @notice To get how many LEV blocks has an address
-  /// @param _for The owner of the blocks
-  function getStakes(address _for) public constant returns (uint256 stake) {
-    return stakes[_for];
-  }
 }

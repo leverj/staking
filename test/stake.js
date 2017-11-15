@@ -44,10 +44,10 @@ contract('Stake Levs', (accounts) => {
     expect(await balance(stake.address, token)).to.be.eql(1060);
     expect((await stake.totalLevs()).toNumber()).to.be.eql(60);
     expect((await stake.totalLevBlocks()).toNumber()).to.be.eql(10 * 98 + 15 * 48 + 15 * 96 + 20 * 46);
-    expect((await stake.getStakes(user1)).toNumber()).to.be.eql(25);
-    expect((await stake.getStakes(user2)).toNumber()).to.be.eql(35);
-    expect((await stake.getLevBlocks(user1)).toNumber()).to.be.eql(10 * 98 + 15 * 48);
-    expect((await stake.getLevBlocks(user2)).toNumber()).to.be.eql(15 * 96 + 20 * 46);
+    expect((await stake.stakes(user1)).toNumber()).to.be.eql(25);
+    expect((await stake.stakes(user2)).toNumber()).to.be.eql(35);
+    expect((await stake.levBlocks(user1)).toNumber()).to.be.eql(10 * 98 + 15 * 48);
+    expect((await stake.levBlocks(user2)).toNumber()).to.be.eql(15 * 96 + 20 * 46);
   });
 });
 
@@ -106,8 +106,8 @@ contract('Circulate Fee Tokens', (accounts) => {
     await stake.redeemLevAndFee({from:user1});
     expect((await token.balanceOf(user1)).toNumber()).to.eql(100);
     expect((await fee.balanceOf(user1)).toNumber()).to.eql(409);
-    expect((await stake.getStakes(user1)).toNumber()).to.eql(0);
-    expect((await stake.getLevBlocks(user1)).toNumber()).to.eql(0);
+    expect((await stake.stakes(user1)).toNumber()).to.eql(0);
+    expect((await stake.levBlocks(user1)).toNumber()).to.eql(0);
     expect((await stake.totalLevs()).toNumber()).to.eql(15);
   });
 });
