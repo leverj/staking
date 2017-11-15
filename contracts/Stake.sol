@@ -19,28 +19,28 @@ import './Fee.sol';
 
 
 contract Stake is Owned, Validating {
-  using SafeMath for uint256;
+  using SafeMath for uint;
 
   //fixme: index action? or have distinct events?
-  event StakeEvent(address indexed user, uint256 levs, string action, uint256 startBlock, uint256 endBlock);
+  event StakeEvent(address indexed user, uint levs, string action, uint startBlock, uint endBlock);
 
   // User address to (lev tokens)*(blocks left to end)
-  mapping (address => uint256) public levBlocks;
+  mapping (address => uint) public levBlocks;
 
   // User address to lev tokens at stake
-  mapping (address => uint256) public stakes;
+  mapping (address => uint) public stakes;
 
   // fixme: total lev tokens. This may not be required ... use or delete
-  uint256 public totalLevs;
+  uint public totalLevs;
 
   // Total lev blocks. this will be help not to iterate through full mapping
-  uint256 public totalLevBlocks;
+  uint public totalLevBlocks;
 
   // Wei for each Fee token
-  uint256 public weiPerFee;
+  uint public weiPerFee;
 
   // Total fee to be distributed
-  uint256 public feeForTheStakingInterval;
+  uint public feeForTheStakingInterval;
 
   // Lev token reference
   Token public levToken;
@@ -48,9 +48,9 @@ contract Stake is Owned, Validating {
   // FEE token reference
   Fee public feeToken;
 
-  uint256 public startBlock;
+  uint public startBlock;
 
-  uint256 public endBlock;
+  uint public endBlock;
 
   // fixme: not really used ... use or delete
   uint public currentStakingInterval;
@@ -59,7 +59,7 @@ contract Stake is Owned, Validating {
 
   // fixme: not really used ... use or delete
   // Wei owned by the contract
-  uint256 public weiAsFee;
+  uint public weiAsFee;
 
   bool public feeCalculated = false;
 
@@ -82,7 +82,7 @@ contract Stake is Owned, Validating {
   function Stake(
     address _owner,
     address _wallet,
-    uint256 _weiPerFee,
+    uint _weiPerFee,
     address _levToken
   ) public
     validAddress(_wallet)
@@ -114,7 +114,7 @@ contract Stake is Owned, Validating {
 
   /// @notice To set the wallet address by the owner only
   /// @param _wallet The wallet address
-  function setWallet(address _wallet) external validAddress(_wallet) onlyOwner returns (bool) {
+  function setWallet(address _wallet) external validAddress(_wallet) onlyOwner returns (bool) { //fixme: why the boolean?
     wallet = _wallet;
     return true;
   }
@@ -123,13 +123,13 @@ contract Stake is Owned, Validating {
   /// has to approve the staking contract on token before calling this function.
   /// Refer to the tests for more information
   /// @param _quantity How many LEV tokens to lock for staking
-  function stakeTokens(uint256 _quantity) external isStaking notZero(_quantity) returns (bool) {
+  function stakeTokens(uint _quantity) external isStaking notZero(_quantity) returns (bool) { //fixme: why the boolean?
     require(levToken.balanceOf(msg.sender) >= _quantity);
 
-    levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
-    stakes[msg.sender] = SafeMath.add(stakes[msg.sender], _quantity);
-    totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
-    totalLevs = SafeMath.add(totalLevs, _quantity);
+    levBlocks[msg.sender] = levBlocks[msg.sender].add(_quantity.mul(endBlock.sub(block.number)));
+    stakes[msg.sender] = stakes[msg.sender].add(_quantity);
+    totalLevBlocks = totalLevBlocks.add(_quantity.mul(endBlock.sub(block.number)));
+    totalLevs = totalLevs.add(_quantity);
     require(levToken.transferFrom(msg.sender, this, _quantity));
     StakeEvent(msg.sender, _quantity, 'STAKED', startBlock, endBlock);
     return true;
@@ -137,11 +137,11 @@ contract Stake is Owned, Validating {
 
   /// @notice To update the price of FEE tokens to the current value. Executable
   /// by the owner only
-  function updateFeeForCurrentStakingInterval() external onlyOwner isDoneStaking returns (bool result) {
+  function updateFeeForCurrentStakingInterval() external onlyOwner isDoneStaking returns (bool) { //fixme: why the boolean?
     require(feeCalculated == false);
 
-    uint256 feeFromExchange = feeToken.balanceOf(this);
-    feeForTheStakingInterval = SafeMath.add(feeFromExchange, SafeMath.div(this.balance, weiPerFee));
+    uint feeFromExchange = feeToken.balanceOf(this);
+    feeForTheStakingInterval = feeFromExchange.add(this.balance.div(weiPerFee));
     feeCalculated = true;
     require(feeToken.burnTokens(feeFromExchange));
     wallet.transfer(this.balance);
@@ -155,7 +155,7 @@ contract Stake is Owned, Validating {
     return redeemLevAndFeeInternal(msg.sender);
   }
 
-  function sendLevAndFeeToUsers(address[] _users) external onlyOwner returns (bool) {
+  function sendLevAndFeeToUsers(address[] _users) external onlyOwner returns (bool) { //fixme: why the boolean?
     for (uint i = 0; i < _users.length; i++) redeemLevAndFeeInternal(_users[i]);
     return true;
   }
@@ -164,20 +164,22 @@ contract Stake is Owned, Validating {
     internal //fixme: why internal? should be private (as there are no subclasses)
     validAddress(_user)
     isDoneStaking
-    returns (bool)
+    returns (bool) //fixme: why the boolean?
   {
     require(feeCalculated);
     require(totalLevBlocks > 0);
 
-    uint256 levBlock = levBlocks[_user];
-    uint256 stake = stakes[_user];
-    require(stake > 0);
-    uint256 feeEarned = SafeMath.div(SafeMath.mul(levBlock, feeForTheStakingInterval), totalLevBlocks);
+    uint levBlock = levBlocks[_user];
+    uint stake = stakes[_user];
+    require(stake > 0); //fixme: use assert?
+
+    uint feeEarned = levBlock.mul(feeForTheStakingInterval).div(totalLevBlocks);
     delete stakes[_user];
     delete levBlocks[_user];
-    totalLevs = SafeMath.sub(totalLevs, stake);
+    totalLevs = totalLevs.sub(stake);
     if (feeEarned > 0) require(feeToken.sendTokens(_user, feeEarned));
     require(levToken.transfer(_user, stake));
+
     StakeEvent(_user, stake, 'CLAIMED', startBlock, endBlock);
     return true;
   }
@@ -185,22 +187,27 @@ contract Stake is Owned, Validating {
   /// @notice To start a new trading staking-interval where the price of the FEE will be updated
   /// @param _start The starting block.number of the new staking-interval
   /// @param _end When the new staking-interval ends in block.number
-  function startNewStakingInterval(uint256 _start, uint256 _end)
+  function startNewStakingInterval(uint _start, uint _end)
     external
     notZero(_start)
     notZero(_end)
     onlyOwner
     isDoneStaking
-    returns (bool result)
+    returns (bool)  //fixme: why the boolean?
   {
     require(totalLevs == 0);
+
     startBlock = _start;
     endBlock = _end;
+    reset();
+    return true;
+  }
+
+  function reset() private {
     totalLevBlocks = 0;
     feeForTheStakingInterval = 0;
     weiAsFee = 0;
     feeCalculated = false;
-    return true;
   }
 
 }
