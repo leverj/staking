@@ -28,7 +28,7 @@ contract('Stake Levs', (accounts) => {
     stake = await Stake.deployed();
     await stake.startNewStakingInterval(100, 300);
     await token.transfer(stake.address, 1000);
-    await stake.setToken(token.address);
+    await stake.setLevToken(token.address);
     await forceMine(new BN(200))
   });
 
@@ -60,7 +60,7 @@ contract('Calculate Fee Tokens', (accounts) => {
 
   before(async function () {
     [stake, fee, token] = await setup(accounts);
-    await stake.setToken(token.address);
+    await stake.setLevToken(token.address);
     wallet = await stake.wallet();
     await web3.eth.sendTransaction({from: wallet, to: user3, value: new BN("999999999990000000000000000", 10)});
     await forceMine(new BN(200));
@@ -121,7 +121,7 @@ contract('Stake setup', (accounts) => {
 
   before(async function () {
     [stake, fee, token] = await setup(accounts);
-    await stake.setToken(token.address);
+    await stake.setLevToken(token.address);
     await forceMine(new BN(200));
     await stakeit(10, user1, stake, token);
     await stakeit(15, user2, stake, token);
@@ -202,7 +202,7 @@ async function setup(accounts) {
   await token.transfer(user1, 100);
   await token.transfer(user2, 200);
   await stake.startNewStakingInterval(100, 300);
-  await stake.setToken(token.address);
+  await stake.setLevToken(token.address);
   await forceMine(new BN(200));
   return [stake, fee, token];
 }

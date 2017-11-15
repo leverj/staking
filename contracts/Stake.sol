@@ -41,7 +41,10 @@ contract Stake {
   uint256 public feeForTheStakingInterval;
 
   // Lev token reference
-  address public tokenid;
+  Token public levToken;
+
+  // FEE token reference
+  Fee public feeToken;
 
   uint256 public startBlock;
 
@@ -54,9 +57,6 @@ contract Stake {
   address public owner;
 
   address public wallet;
-
-  // FEE token reference
-  address public feeTokenId;
 
   // fixme: not really used ... use or delete
   // Wei owned by the contract
@@ -104,14 +104,14 @@ contract Stake {
   address _owner,
   address _wallet,
   uint256 _weiPerFee,
-  address _tokenid
+  address _levToken
   ) public
   addressNotEmpty(_wallet)
   addressNotEmpty(_owner)
-  addressNotEmpty(_tokenid)
+  addressNotEmpty(_levToken)
   uintNotEmpty(_weiPerFee)
   {
-    tokenid = _tokenid;
+    setLevToken(_levToken);
     owner = _owner;
     wallet = _wallet;
     weiPerFee = _weiPerFee;
@@ -120,15 +120,15 @@ contract Stake {
   function version() external constant returns (string) {return "1.0.0";}
 
   /// @notice To set the the address of the LEV token
-  /// @param _tokenid The token address
-  function setToken(address _tokenid) external addressNotEmpty(_tokenid) onlyOwner {
-    tokenid = _tokenid;
+  /// @param _levToken The token address
+  function setLevToken(address _levToken) external addressNotEmpty(_levToken) onlyOwner {
+    levToken = Token(_tokenId);
   }
 
   /// @notice To set the FEE token address
-  /// @param _feeTokenId The address of that token
-  function setFeeToken(address _feeTokenId) external addressNotEmpty(_feeTokenId) onlyOwner {
-    feeTokenId = _feeTokenId;
+  /// @param _feeToken The address of that token
+  function setFeeToken(address _feeToken) external addressNotEmpty(_feeToken) onlyOwner {
+    feeToken = Fee(_tokenId);
   }
 
   /// @notice To set the wallet address by the owner only
@@ -154,13 +154,13 @@ contract Stake {
   notExpired
   returns (bool result)
   {
-    require(Token(tokenid).balanceOf(msg.sender) >= _quantity);
+    require(levToken.balanceOf(msg.sender) >= _quantity);
 
     levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
     stakes[msg.sender] = SafeMath.add(stakes[msg.sender], _quantity);
     totalLevBlocks = SafeMath.add(totalLevBlocks, SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
     totalLevs = SafeMath.add(totalLevs, _quantity);
-    require(Token(tokenid).transferFrom(msg.sender, this, _quantity));
+    require(levToken.transferFrom(msg.sender, this, _quantity));
     StakeEvent(msg.sender, _quantity, 'STAKED', startBlock, endBlock);
     return true;
   }
@@ -170,10 +170,10 @@ contract Stake {
   function updateFeeForCurrentStakingInterval() public onlyOwner hasExpired returns (bool result){
     require(feeCalculated == false);
 
-    uint256 feeFromExchange = Fee(feeTokenId).balanceOf(this);
+    uint256 feeFromExchange = feeToken.balanceOf(this);
     feeForTheStakingInterval = SafeMath.add(feeFromExchange, SafeMath.div(this.balance, weiPerFee));
     feeCalculated = true;
-    require(Fee(feeTokenId).burnTokens(feeFromExchange));
+    require(feeToken.burnTokens(feeFromExchange));
     wallet.transfer(this.balance);
     weiAsFee = 0;
     return true;
@@ -211,8 +211,8 @@ contract Stake {
     delete stakes[_user];
     delete levBlocks[_user];
     totalLevs = SafeMath.sub(totalLevs, stake);
-    if (feeEarned > 0) require(Fee(feeTokenId).sendTokens(_user, feeEarned));
-    require(Token(tokenid).transfer(_user, stake));
+    if (feeEarned > 0) require(feeToken.sendTokens(_user, feeEarned));
+    require(levToken.transfer(_user, stake));
     StakeEvent(_user, stake, 'CLAIMED', startBlock, endBlock);
     return true;
   }

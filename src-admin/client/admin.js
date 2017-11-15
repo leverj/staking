@@ -30,7 +30,7 @@ module.exports = (function () {
     $("#feeid").val(config.fee);
     $("#fee-setup").click(setupfee);
     displayDetails("current block", block);
-    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "tokenid", "startBlock", "endBlock", "owner", "wallet", "feeTokenId", "weiAsFee", "feeCalculated"];
+    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "startBlock", "endBlock", "owner", "wallet", "feeToken", "weiAsFee", "feeCalculated"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
       let value = await stake.methods[prop]().call();
