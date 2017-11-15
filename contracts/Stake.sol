@@ -96,20 +96,20 @@ contract Stake is Owned, Validated {
     setLevToken(_levToken);
   }
 
-  function version() external constant returns (string) {
+  function version() external pure returns (string) {
     return "1.0.0";
   }
 
   /// @notice To set the the address of the LEV token
   /// @param _levToken The token address
-  function setLevToken(address _levToken) external addressNotEmpty(_levToken) onlyOwner {
-    levToken = Token(_tokenId);
+  function setLevToken(address _levToken) public addressNotEmpty(_levToken) onlyOwner {
+    levToken = Token(_levToken);
   }
 
   /// @notice To set the FEE token address
   /// @param _feeToken The address of that token
   function setFeeToken(address _feeToken) external addressNotEmpty(_feeToken) onlyOwner {
-    feeToken = Fee(_tokenId);
+    feeToken = Fee(_feeToken);
   }
 
   /// @notice To set the wallet address by the owner only

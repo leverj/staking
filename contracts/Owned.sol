@@ -6,12 +6,13 @@ contract Owned {
   // owner address to enable admin functions
   address public owner;
 
-  modifier stringNotEmpty(string _string) {
-    require(bytes(_string).length != 0);
+  modifier onlyOwner {
+    require(msg.sender == owner);
     _;
   }
 
-  function setOwner(address _owner) external onlyOwner addressNotEmpty(_owner) returns (bool) {
+  function setOwner(address _owner) external onlyOwner returns (bool) {
+    require(_owner != address(0));
     owner = _owner;
     return true;
   }
