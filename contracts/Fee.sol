@@ -30,15 +30,15 @@ contract Fee is Owned, Validating, StandardToken {
 
   /// @notice Constructor to set the owner, tokenName, decimals and symbol
   function Fee(
-    address _owner,
-    string _tokenName,
-    uint8 _decimalUnits,
-    string _tokenSymbol
+  address _owner,
+  string _tokenName,
+  uint8 _decimalUnits,
+  string _tokenSymbol
   )
-    public
-    validAddress(_owner)
-    notEmpty(_tokenName)
-    notEmpty(_tokenSymbol)
+  public
+  validAddress(_owner)
+  notEmpty(_tokenName)
+  notEmpty(_tokenSymbol)
   {
     owner = _owner;
     name = _tokenName;
@@ -48,30 +48,27 @@ contract Fee is Owned, Validating, StandardToken {
 
   /// @notice To set a new minter address
   /// @param _minter The address of the minter
-  function setMinter(address _minter) external onlyOwner validAddress(_minter) returns (bool) { //fixme: why the boolean?
+  function setMinter(address _minter) external onlyOwner validAddress(_minter) {
     minter = _minter;
-    return true;
   }
 
   /// @notice To eliminate tokens and adjust the price of the FEE tokens
   /// @param _value Amount of tokens to delete
-  function burnTokens(uint _value) public notZero(_value) returns (bool) { //fixme: why the boolean?
+  function burnTokens(uint _value) public notZero(_value) {
     require(balances[msg.sender] >= _value);
 
     balances[msg.sender] = SafeMath.sub(balances[msg.sender], _value);
     feeInCirculation = SafeMath.sub(feeInCirculation, _value);
     Burn(msg.sender, _value);
-    return true;
   }
 
   /// @notice To send tokens to another user. New FEE tokens are generated when
   /// doing this process by the minter
   /// @param _to The receiver of the tokens
   /// @param _value The amount o
-  function sendTokens(address _to, uint _value) public onlyMinter validAddress(_to) notZero(_value) returns (bool) { //fixme: why the boolean?
+  function sendTokens(address _to, uint _value) public onlyMinter validAddress(_to) notZero(_value) {
     balances[_to] = SafeMath.add(balances[_to], _value);
     feeInCirculation = SafeMath.add(feeInCirculation, _value);
     Transfer(msg.sender, _to, _value);
-    return true;
   }
 }
