@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node test.js",
     "start": " BLUEBIRD_DEBUG=1 NODE_ENV=dev node src/server/index.js",
-    "dev": "./node_modules/.bin/webpack-dev-server --content-base src/server/index.js --port 8888 --inline --hot"
+    "dev": "webpack-dev-server --content-base src/server/index.js --port 8888 --inline --hot"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,6 @@
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
-    "bignumber.js": "^4.1.0",
     "bip39": "2.4.0",
     "bluebird": "^3.5.1",
     "bn.js": "4.11.6",
@@ -59,20 +58,14 @@
     "solc": "^0.4.18",
     "truffle": "4.0.1",
     "truffle-hdwallet-provider": "0.0.3",
-    "uuid": "^3.1.0",
     "webpack": "3.8.1",
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
-    "affirm.js": "^1.0.0",
-    "binary-search-tree": "^0.2.6",
-    "body-parser": "latest",
     "compression": "^1.7.1",
     "config": "^1.28.1",
-    "debug": "^3.1.0",
     "express": "^4.15.4",
     "helmet": "^3.8.2",
-    "rest.js": "^0.2.1",
     "serve-favicon": "^2.4.5",
     "socket.io": "^2.0.4",
     "style-loader": "^0.19.0",
