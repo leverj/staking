@@ -13,12 +13,12 @@ pragma solidity ^0.4.18;
 
 import './SafeMath.sol';
 import './Owned.sol';
-import './Validated.sol';
+import './Validating.sol';
 import './Token.sol';
 import './Fee.sol';
 
 
-contract Stake is Owned, Validated {
+contract Stake is Owned, Validating {
   using SafeMath for uint256;
 
   //fixme: index action? or have distinct events?
@@ -85,10 +85,10 @@ contract Stake is Owned, Validated {
     uint256 _weiPerFee,
     address _levToken
   ) public
-    addressNotEmpty(_wallet)
-    addressNotEmpty(_owner)
-    addressNotEmpty(_levToken)
-    numberNotZero(_weiPerFee)
+    validAddress(_wallet)
+    validAddress(_owner)
+    validAddress(_levToken)
+    notZero(_weiPerFee)
   {
     owner = _owner;
     wallet = _wallet;
@@ -102,19 +102,19 @@ contract Stake is Owned, Validated {
 
   /// @notice To set the the address of the LEV token
   /// @param _levToken The token address
-  function setLevToken(address _levToken) public addressNotEmpty(_levToken) onlyOwner {
+  function setLevToken(address _levToken) public validAddress(_levToken) onlyOwner {
     levToken = Token(_levToken);
   }
 
   /// @notice To set the FEE token address
   /// @param _feeToken The address of that token
-  function setFeeToken(address _feeToken) external addressNotEmpty(_feeToken) onlyOwner {
+  function setFeeToken(address _feeToken) external validAddress(_feeToken) onlyOwner {
     feeToken = Fee(_feeToken);
   }
 
   /// @notice To set the wallet address by the owner only
   /// @param _wallet The wallet address
-  function setWallet(address _wallet) external addressNotEmpty(_wallet) onlyOwner returns (bool) {
+  function setWallet(address _wallet) external validAddress(_wallet) onlyOwner returns (bool) {
     wallet = _wallet;
     return true;
   }
@@ -123,7 +123,7 @@ contract Stake is Owned, Validated {
   /// has to approve the staking contract on token before calling this function.
   /// Refer to the tests for more information
   /// @param _quantity How many LEV tokens to lock for staking
-  function stakeTokens(uint256 _quantity) external isStaking numberNotZero(_quantity) returns (bool) {
+  function stakeTokens(uint256 _quantity) external isStaking notZero(_quantity) returns (bool) {
     require(levToken.balanceOf(msg.sender) >= _quantity);
 
     levBlocks[msg.sender] = SafeMath.add(levBlocks[msg.sender], SafeMath.mul(_quantity, SafeMath.sub(endBlock, block.number)));
@@ -162,7 +162,7 @@ contract Stake is Owned, Validated {
 
   function redeemLevAndFeeInternal(address _user) //what does the Internal in the method name means?
     internal //fixme: why internal? should be private (as there are no subclasses)
-    addressNotEmpty(_user)
+    validAddress(_user)
     isDoneStaking
     returns (bool)
   {
@@ -187,8 +187,8 @@ contract Stake is Owned, Validated {
   /// @param _end When the new staking-interval ends in block.number
   function startNewStakingInterval(uint256 _start, uint256 _end)
     external
-    numberNotZero(_start)
-    numberNotZero(_end)
+    notZero(_start)
+    notZero(_end)
     onlyOwner
     isDoneStaking
     returns (bool result)

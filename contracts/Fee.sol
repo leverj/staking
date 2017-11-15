@@ -6,10 +6,10 @@ pragma solidity ^0.4.18;
 
 import './SafeMath.sol';
 import './Owned.sol';
-import './Validated.sol';
+import './Validating.sol';
 import './StandardToken.sol';
 
-contract Fee is Owned, Validated, StandardToken {
+contract Fee is Owned, Validating, StandardToken {
 
     /* This notifies clients about the amount burnt */
     event Burn(address indexed from, uint256 value);
@@ -34,9 +34,9 @@ contract Fee is Owned, Validated, StandardToken {
       string _tokenSymbol
     )
       public
-      addressNotEmpty(_owner)
-      stringNotEmpty(_tokenName)
-      stringNotEmpty(_tokenSymbol)
+      validAddress(_owner)
+      notEmpty(_tokenName)
+      notEmpty(_tokenSymbol)
     {
       owner = _owner;
       name = _tokenName;
@@ -48,7 +48,7 @@ contract Fee is Owned, Validated, StandardToken {
     /// @param _minter The address of the minter
     function setMinter(address _minter)
       public
-      addressNotEmpty(_minter)
+      validAddress(_minter)
       onlyOwner
       returns (bool)
     {
@@ -60,7 +60,7 @@ contract Fee is Owned, Validated, StandardToken {
     /// @param _value Amount of tokens to delete
     function burnTokens(uint256 _value)
       public
-      numberNotZero(_value)
+      notZero(_value)
       returns (bool)
     {
       require(balances[msg.sender] >= _value);
@@ -77,8 +77,8 @@ contract Fee is Owned, Validated, StandardToken {
     /// @param _value The amount o
     function sendTokens(address _to, uint256 _value)
       public
-      addressNotEmpty(_to)
-      numberNotZero(_value)
+      validAddress(_to)
+      notZero(_value)
       onlyMinter
       returns (bool)
     {
