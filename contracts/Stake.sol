@@ -63,17 +63,12 @@ contract Stake is Owned, Validated {
 
   bool public feeCalculated = false;
 
-  modifier started {
-    require(block.number >= startBlock);
+  modifier isStaking {
+    require(startBlock <= block.number && block.number < endBlock);
     _;
   }
 
-  modifier notExpired {
-    require(block.number < endBlock);
-    _;
-  }
-
-  modifier hasExpired {
+  modifier isDoneStaking {
     require(block.number >= endBlock);
     _;
   }
@@ -95,10 +90,10 @@ contract Stake is Owned, Validated {
     addressNotEmpty(_levToken)
     numberNotZero(_weiPerFee)
   {
-    setLevToken(_levToken);
     owner = _owner;
     wallet = _wallet;
     weiPerFee = _weiPerFee;
+    setLevToken(_levToken);
   }
 
   function version() external constant returns (string) {
@@ -135,9 +130,8 @@ contract Stake is Owned, Validated {
   /// @param _quantity How many LEV tokens to lock for staking
   function stakeTokens(uint256 _quantity)
     public
+    isStaking
     numberNotZero(_quantity)
-    started
-    notExpired
     returns (bool result)
   {
     require(levToken.balanceOf(msg.sender) >= _quantity);
@@ -153,7 +147,7 @@ contract Stake is Owned, Validated {
 
   /// @notice To update the price of FEE tokens to the current value. Executable
   /// by the owner only
-  function updateFeeForCurrentStakingInterval() public onlyOwner hasExpired returns (bool result) {
+  function updateFeeForCurrentStakingInterval() public onlyOwner isDoneStaking returns (bool result) {
     require(feeCalculated == false);
 
     uint256 feeFromExchange = feeToken.balanceOf(this);
@@ -179,7 +173,7 @@ contract Stake is Owned, Validated {
   function redeemLevAndFeeInternal(address _user)
     internal //fixme: why internal? should be private (as there are no subclasses)
     addressNotEmpty(_user)
-    hasExpired
+    isDoneStaking
     returns (bool)
   {
     require(feeCalculated);
@@ -205,7 +199,7 @@ contract Stake is Owned, Validated {
     numberNotZero(_start)
     numberNotZero(_end)
     onlyOwner
-    hasExpired
+    isDoneStaking
     returns (bool result)
   {
     require(totalLevs == 0);
