@@ -12,12 +12,13 @@ pragma solidity ^0.4.18;
 
 
 import './SafeMath.sol';
+import './Owned.sol';
 import './Validated.sol';
 import './Token.sol';
 import './Fee.sol';
 
 
-contract Stake is Validated {
+contract Stake is Owned, Validated {
   using SafeMath for uint256;
 
   //fixme: index action? or have distinct events?
@@ -54,9 +55,6 @@ contract Stake is Validated {
   // fixme: not really used ... use or delete
   uint public currentStakingInterval;
 
-  // Owner address for admin functions
-  address public owner;
-
   address public wallet;
 
   // fixme: not really used ... use or delete
@@ -65,22 +63,17 @@ contract Stake is Validated {
 
   bool public feeCalculated = false;
 
-  modifier onlyOwner {
-    require(msg.sender == owner);
-    _;
-  }
-
-  modifier started{
+  modifier started {
     require(block.number >= startBlock);
     _;
   }
 
-  modifier notExpired{
+  modifier notExpired {
     require(block.number < endBlock);
     _;
   }
 
-  modifier hasExpired{
+  modifier hasExpired {
     require(block.number >= endBlock);
     _;
   }
@@ -92,15 +85,15 @@ contract Stake is Validated {
   /// @notice Constructor to set all the default values for the owner, wallet,
   /// weiPerFee, tokenID and endBlock
   function Stake(
-  address _owner,
-  address _wallet,
-  uint256 _weiPerFee,
-  address _levToken
+    address _owner,
+    address _wallet,
+    uint256 _weiPerFee,
+    address _levToken
   ) public
-  addressNotEmpty(_wallet)
-  addressNotEmpty(_owner)
-  addressNotEmpty(_levToken)
-  numberNotZero(_weiPerFee)
+    addressNotEmpty(_wallet)
+    addressNotEmpty(_owner)
+    addressNotEmpty(_levToken)
+    numberNotZero(_weiPerFee)
   {
     setLevToken(_levToken);
     owner = _owner;
@@ -108,7 +101,9 @@ contract Stake is Validated {
     weiPerFee = _weiPerFee;
   }
 
-  function version() external constant returns (string) {return "1.0.0";}
+  function version() external constant returns (string) {
+    return "1.0.0";
+  }
 
   /// @notice To set the the address of the LEV token
   /// @param _levToken The token address
@@ -125,10 +120,10 @@ contract Stake is Validated {
   /// @notice To set the wallet address by the owner only
   /// @param _wallet The wallet address
   function setWallet(address _wallet)
-  external
-  addressNotEmpty(_wallet)
-  onlyOwner
-  returns (bool)
+    external
+    addressNotEmpty(_wallet)
+    onlyOwner
+    returns (bool)
   {
     wallet = _wallet;
     return true;
@@ -139,11 +134,11 @@ contract Stake is Validated {
   /// Refer to the tests for more information
   /// @param _quantity How many LEV tokens to lock for staking
   function stakeTokens(uint256 _quantity)
-  public
-  numberNotZero(_quantity)
-  started
-  notExpired
-  returns (bool result)
+    public
+    numberNotZero(_quantity)
+    started
+    notExpired
+    returns (bool result)
   {
     require(levToken.balanceOf(msg.sender) >= _quantity);
 
@@ -158,7 +153,7 @@ contract Stake is Validated {
 
   /// @notice To update the price of FEE tokens to the current value. Executable
   /// by the owner only
-  function updateFeeForCurrentStakingInterval() public onlyOwner hasExpired returns (bool result){
+  function updateFeeForCurrentStakingInterval() public onlyOwner hasExpired returns (bool result) {
     require(feeCalculated == false);
 
     uint256 feeFromExchange = feeToken.balanceOf(this);
@@ -176,22 +171,16 @@ contract Stake is Validated {
     return redeemLevAndFeeInternal(msg.sender);
   }
 
-  function sendLevAndFeeToUsers(address[] _users)
-  public
-  onlyOwner
-  returns (bool)
-  {
-    for (uint i = 0; i < _users.length; i++) {
-      redeemLevAndFeeInternal(_users[i]);
-    }
+  function sendLevAndFeeToUsers(address[] _users) public onlyOwner returns (bool) {
+    for (uint i = 0; i < _users.length; i++) redeemLevAndFeeInternal(_users[i]);
     return true;
   }
 
   function redeemLevAndFeeInternal(address _user)
-  internal
-  addressNotEmpty(_user)
-  hasExpired
-  returns (bool)
+    internal //fixme: why internal? should be private (as there are no subclasses)
+    addressNotEmpty(_user)
+    hasExpired
+    returns (bool)
   {
     require(feeCalculated);
     require(totalLevBlocks > 0);
@@ -212,12 +201,12 @@ contract Stake is Validated {
   /// @param _start The starting block.number of the new staking-interval
   /// @param _end When the new staking-interval ends in block.number
   function startNewStakingInterval(uint256 _start, uint256 _end)
-  external
-  numberNotZero(_start)
-  numberNotZero(_end)
-  onlyOwner
-  hasExpired
-  returns (bool result)
+    external
+    numberNotZero(_start)
+    numberNotZero(_end)
+    onlyOwner
+    hasExpired
+    returns (bool result)
   {
     require(totalLevs == 0);
     startBlock = _start;
@@ -231,13 +220,13 @@ contract Stake is Validated {
 
   /// @notice To get how many LEV blocks has an address
   /// @param _for The owner of the blocks
-  function getLevBlocks(address _for) public constant returns (uint256 levBlock){
+  function getLevBlocks(address _for) public constant returns (uint256 levBlock) {
     return levBlocks[_for];
   }
 
   /// @notice To get how many LEV blocks has an address
   /// @param _for The owner of the blocks
-  function getStakes(address _for) public constant returns (uint256 stake){
+  function getStakes(address _for) public constant returns (uint256 stake) {
     return stakes[_for];
   }
 }
