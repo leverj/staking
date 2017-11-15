@@ -5,12 +5,11 @@ body {
   font-family: 'raleway';
   margin: 0;
 }
-span {
-  padding: 10px;
-  border-radius: 3px;
-}
 .hidden {
   display: none;
+}
+.inline {
+  display: inline-block;
 }
 
 .boxes-container {
@@ -51,7 +50,6 @@ span {
 }
 .logo {
    width: 55px;
-   height: 100%;
 }
 .logo-text {
    color: orange;
@@ -89,4 +87,11 @@ span {
 }
 .stake-button {
    float: right;
+}
+.bar-container table {
+   padding-left: 100px;
+   padding-bottom: 20px;
+}
+.bar-container table span {
+   font-weight: bold;
 }
