@@ -6,11 +6,11 @@
   "scripts": {
     "test": "node test.js",
     "start": " BLUEBIRD_DEBUG=1 NODE_ENV=dev node src/server/index.js",
-    "dev": "nodemon src/server/index.js"
+    "dev": "./node_modules/.bin/webpack-dev-server --content-base src/server/index.js --port 8888 --inline --hot"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bharathrao/staking.git"
+    "url": "git+https://github.com/leverj/staking.git"
   },
   "keywords": [
     "leverj",
@@ -20,12 +20,12 @@
     "leverage",
     "trading"
   ],
-  "author": "coinpit",
+  "author": "leverj",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bharathrao/staking/issues"
+    "url": "https://github.com/leverj/staking/issues"
   },
-  "homepage": "https://github.com/bharathrao/staking#readme",
+  "homepage": "https://github.com/leverj/staking#readme",
   "devDependencies": {
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
@@ -60,7 +60,8 @@
     "truffle": "4.0.1",
     "truffle-hdwallet-provider": "0.0.3",
     "uuid": "^3.1.0",
-    "webpack": "3.8.1"
+    "webpack": "3.8.1",
+    "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
     "affirm.js": "^1.0.0",
@@ -81,6 +82,6 @@
     "serve-favicon": "^2.4.5",
     "socket.io": "^2.0.4",
     "style-loader": "^0.19.0",
-    "web3": "github:ethereum/web3.js"
+    "web3": "^1.0.0-beta.26"
   }
 }
