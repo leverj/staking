@@ -36,7 +36,8 @@ module.exports = {
       {from: path.join(__dirname, "build"), to: path.join(__dirname, "dist", "build")},
       {from: path.join(__dirname, "src", "server"), to: path.join(__dirname, "dist", "src", "server")},
       {from: path.join(__dirname, "src", "client", "img"), to: path.join(__dirname, "dist", "src", "client", "img")},
-      {from: path.join(__dirname, "package.json"), to: path.join(__dirname, "dist")}
+      {from: path.join(__dirname, "package.json"), to: path.join(__dirname, "dist")},
+			{from: path.join(__dirname, "config"), to: path.join(__dirname, "dist", "config")}
     ]),
     new htmlPlugin({
       title: "Staking User Interface",
