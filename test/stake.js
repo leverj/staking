@@ -101,7 +101,7 @@ contract('Circulate Fee Tokens', (accounts) => {
 
 
   it('Stake contract should be able to send Fee and Lev to User', async function () {
-    await stake.redeemLevAndFee({from:user1});
+    await stake.redeemLevAndFeeByStaker({from:user1});
     expect((await token.balanceOf(user1)).toNumber()).to.eql(100);
     expect((await fee.balanceOf(user1)).toNumber()).to.eql(409);
     expect((await stake.stakes(user1)).toNumber()).to.eql(0);
@@ -139,13 +139,12 @@ contract('Stake setup', (accounts) => {
 
   it('should reset after all the stakes have been returned', async function () {
     await stake.updateFeeForCurrentStakingInterval();
-    await stake.sendLevAndFeeToUsers([user1, user2]);
+    await stake.redeemLevAndFeeToStakers([user1, user2]);
     await stake.startNewStakingInterval(1000, 2000);
     expect((await stake.startBlock()).toNumber()).to.eql(1000);
     expect((await stake.endBlock()).toNumber()).to.eql(2000);
     expect((await stake.totalLevBlocks()).toNumber()).to.eql(0);
     expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(0);
-    expect((await stake.weiAsFee()).toNumber()).to.eql(0);
     expect((await stake.feeCalculated())).to.eql(false);
   })
 });

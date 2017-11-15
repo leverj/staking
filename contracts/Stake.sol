@@ -21,7 +21,7 @@ import './Fee.sol';
 contract Stake is Owned, Validating {
   using SafeMath for uint;
 
-  event StakeEvent(address indexed user, string indexed action, uint levs, uint startBlock, uint endBlock);
+  event StakeEvent(address indexed user, string action, uint levs, uint startBlock, uint endBlock);
 
   // User address to (lev tokens)*(blocks left to end)
   mapping (address => uint) public levBlocks;
@@ -65,7 +65,6 @@ contract Stake is Owned, Validating {
   }
 
   function() public payable {
-    //        weiAsFee = weiAsFee.add(msg.value);
   }
 
   /// @notice Constructor to set all the default values for the owner, wallet,
@@ -139,39 +138,31 @@ contract Stake is Owned, Validating {
     return true;
   }
 
-  /// @notice To unlock and recover your LEV and FEE tokens after staking
-  /// and fee to any user
-  function redeemLevAndFee() external returns (bool) {
-    return redeemLevAndFeeInternal(msg.sender);
+  /// @notice To unlock and recover your LEV and FEE tokens after staking and fee to any user
+  function redeemLevAndFeeByStaker() external {
+    redeemLevAndFee(msg.sender);
   }
 
-  function sendLevAndFeeToUsers(address[] _users) external onlyOwner returns (bool) { //fixme: why the boolean?
-    for (uint i = 0; i < _users.length; i++) redeemLevAndFeeInternal(_users[i]);
-    return true;
+  function redeemLevAndFeeToStakers(address[] _stakers) external onlyOwner {
+    for (uint i = 0; i < _stakers.length; i++) redeemLevAndFee(_stakers[i]);
   }
 
-  function redeemLevAndFeeInternal(address _user) //what does the Internal in the method name means?
-    private //fixme: why internal? should be private (as there are no subclasses)
-    validAddress(_user)
-    isDoneStaking
-    returns (bool) //fixme: why the boolean?
-  {
+  function redeemLevAndFee(address _staker) private validAddress(_staker) isDoneStaking {
     require(feeCalculated);
     require(totalLevBlocks > 0);
 
-    uint levBlock = levBlocks[_user];
-    uint stake = stakes[_user];
+    uint levBlock = levBlocks[_staker];
+    uint stake = stakes[_staker];
     require(stake > 0);
 
     uint feeEarned = levBlock.mul(feeForTheStakingInterval).div(totalLevBlocks);
-    delete stakes[_user];
-    delete levBlocks[_user];
+    delete stakes[_staker];
+    delete levBlocks[_staker];
     totalLevs = totalLevs.sub(stake);
-    if (feeEarned > 0) require(feeToken.sendTokens(_user, feeEarned));
-    require(levToken.transfer(_user, stake));
+    if (feeEarned > 0) feeToken.sendTokens(_staker, feeEarned);
+    require(levToken.transfer(_staker, stake));
 
-    StakeEvent(_user, 'CLAIMED', stake, startBlock, endBlock);
-    return true;
+    StakeEvent(_staker, 'CLAIMED', stake, startBlock, endBlock);
   }
 
   /// @notice To start a new trading staking-interval where the price of the FEE will be updated
@@ -183,17 +174,13 @@ contract Stake is Owned, Validating {
     notZero(_end)
     onlyOwner
     isDoneStaking
-    returns (bool)  //fixme: why the boolean?
   {
     require(totalLevs == 0);
 
     startBlock = _start;
     endBlock = _end;
-    reset();
-    return true;
-  }
 
-  function reset() private {
+    // reset
     totalLevBlocks = 0;
     feeForTheStakingInterval = 0;
     feeCalculated = false;
