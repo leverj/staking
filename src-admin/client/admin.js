@@ -9,7 +9,7 @@ module.exports = (function () {
   let lev, stake, fee, user;
 
   async function populate() {
-    web3 = new Web3(web3.currentProvider || new Web3.providers.HttpProvider('https://ropsten.infura.io'));
+    web3 = new Web3(web3.currentProvider || config.network);
     user = (await web3.eth.getAccounts())[0];
     stake = new web3.eth.Contract(stakeABI, config.stake);
     lev = new web3.eth.Contract(levABI, config.lev);
@@ -30,7 +30,9 @@ module.exports = (function () {
     $("#feeid").val(config.fee);
     $("#fee-setup").click(setupfee);
     displayDetails("current block", block);
-    let props = ["totalLevs", "totalLevBlocks", "feeForTheStakingInterval", "levToken", "startBlock", "endBlock", "owner", "wallet", "feeToken", "feeCalculated"];
+
+
+    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated","owner", "operator"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
       let value = await stake.methods[prop]().call();
@@ -56,30 +58,30 @@ module.exports = (function () {
     displayDetails("Fee Minter", await fee.methods.minter().call());
     displayDetails("Stake", config.stake);
 
-    let ropsten = new Web3(new Web3.providers.HttpProvider("http://51.15.173.167:8545"));
-    let levRopsten = new ropsten.eth.Contract(levABI, config.lev);
-    console.log(await levRopsten.getPastEvents("allEvents"));
-/*
-    levRopsten.events.Approval({fromBlock: 0, toBlock: 'latest'}, (error, result) => {
-      if (error) {
-        console.error(error);
-      }
-      console.log(result);
-    });
-*/
-    try {
-      displayDetails("user lev balance", await lev.methods.balanceOf(user).call());
-      displayDetails("user levRopsten balance", await levRopsten.methods.balanceOf(user).call());
-    } catch (e) {
-      console.log(e);
-    }
+    // let ropsten = new Web3(new Web3.providers.HttpProvider("http://51.15.173.167:8545"));
+    // let levRopsten = new ropsten.eth.Contract(levABI, config.lev);
+    // console.log(await levRopsten.getPastEvents("allEvents"));
+    /*
+        levRopsten.events.Approval({fromBlock: 0, toBlock: 'latest'}, (error, result) => {
+          if (error) {
+            console.error(error);
+          }
+          console.log(result);
+        });
+    */
+    // try {
+    //   displayDetails("user lev balance", await lev.methods.balanceOf(user).call());
+    //   displayDetails("user levRopsten balance", await levRopsten.methods.balanceOf(user).call());
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
 
     // console.log("events", await stake.getPastEvents("StakeEvent", {fromBlock: 0, toBlock: 'latest'}));
   }
 
   function displayDetails(key, value) {
-    $("#stake-details").append("<div>" + key + ": " + value + "</div>");
+    $("#stake-details").append("<div><code>" + key + ": " + value + "</code></div>");
   }
 
   async function approveLEV() {

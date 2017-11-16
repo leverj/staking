@@ -3,6 +3,5 @@
   "wallet": "0xaa653b7e0fc2fbd01391779bee8b637447d8264f",
   "levid": "0x8091adff56526626a4def7803368f057e70c7959",
   "operator": "0xbc91b8f2e82c9b54eb7445d2d28d4978f278b557",
-  "freezeBlock": "2645318",
   "weiPerFee": "1000000"
 }
