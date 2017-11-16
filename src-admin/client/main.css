@@ -33,3 +33,7 @@ body {
   /*color            : var(--normal);*/
   /*background-color : var(--normal-bg);*/
 }
+
+section{
+  padding: 5px;
+}

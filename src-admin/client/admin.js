@@ -31,6 +31,7 @@ module.exports = (function () {
     $("#levid").val(config.lev);
     $("#fee-setup").click(setupfee);
     $("#lev-setup").click(setuplev);
+    $("#set-operator").click(setOperator);
     displayDetails("current block", block);
 
 
@@ -125,6 +126,10 @@ module.exports = (function () {
 
   async function setuplev() {
     await stake.methods.setLevToken($("#levid").val()).send({from: user});
+  }
+
+  async function setOperator() {
+    await stake.methods.setOperator($("#operator").val()).send({from: user});
   }
 
   async function setupStake() {
