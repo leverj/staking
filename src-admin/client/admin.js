@@ -28,11 +28,13 @@ module.exports = (function () {
     $("#end-block").val(block + blocks(35));
     $("#stake-setup").click(setupStake);
     $("#feeid").val(config.fee);
+    $("#levid").val(config.lev);
     $("#fee-setup").click(setupfee);
+    $("#lev-setup").click(setuplev);
     displayDetails("current block", block);
 
 
-    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated","owner", "operator"];
+    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated", "owner", "operator"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
       let value = await stake.methods[prop]().call();
@@ -121,10 +123,14 @@ module.exports = (function () {
     await stake.methods.setFeeToken($("#feeid").val()).send({from: user});
   }
 
+  async function setuplev() {
+    await stake.methods.setLevToken($("#levid").val()).send({from: user});
+  }
+
   async function setupStake() {
     let start = $("#start-block").val() - 0;
     let end = $("#end-block").val() - 0;
-    await stake.methods.setBlocks(start, end).send({from: user});
+    await stake.methods.startNewStakingInterval(start, end).send({from: user});
   }
 
 
