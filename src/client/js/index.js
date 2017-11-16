@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Web3 from 'web3'
-import conf from './conf'
 import './../css/index.css'
 import {abi as stakeABI} from '../../../build/contracts/Stake.json'
 import {abi as levABI} from '../../../build/contracts/Token.json'
@@ -9,29 +8,29 @@ import UserInformation from './UserInformation'
 import ProgressBar from './ProgressBar'
 import Header from './Header'
 import Actions from './Actions'
+import StatusBar from "./StatusBar"
 
 class App extends React.Component {
   constructor () {
     super()
 
-    window.web3 = new Web3(web3.currentProvider || new Web3.providers.HttpProvider(conf.network));
-    window.stake = new web3.eth.Contract(stakeABI, conf.stake);
-    window.lev = new web3.eth.Contract(levABI, conf.lev);
+		this.state = {
+			loadingInitialData: true
+		}
 
-    this.state = {
-      loadingInitialData: true,
-			stakeAddress: conf.stake,
-			levAddress: conf.lev,
-			feeAddress: conf.fee
-    }
-
-    this.init().then(() => {
-      this.setState({loadingInitialData: false});
-    })
+    this.init()
   }
 
 	async init () {
-		return new Promise(async (resolve, reject) => {
+			let response = await fetch('/api/v1/config', {
+				method: 'GET'
+			})
+			let config = await response.json()
+
+			window.web3 = new Web3(web3.currentProvider || new Web3.providers.HttpProvider(config.network));
+			window.stake = new web3.eth.Contract(stakeABI, config.stake);
+			window.lev = new web3.eth.Contract(levABI, config.lev);
+
 			let startBlock = await stake.methods.startBlock().call()
 			let endBlock = await stake.methods.endBlock().call()
 			let currentBlock = (await web3.eth.getBlock('latest')).number
@@ -40,9 +39,13 @@ class App extends React.Component {
 			this.setState({
 			  startBlock: startBlock,
 			  endBlock: endBlock,
-			  barPercentage: percentage
-			}, resolve)
-		})
+			  barPercentage: percentage,
+				stakeAddress: config.stake,
+				levAddress: config.lev,
+				feeAddress: config.fee,
+				loadingInitialData: false,
+				sale: config.sale,
+			})
 	}
 
 	toLev (amount) {
@@ -150,6 +153,7 @@ class App extends React.Component {
 						showTransactionFields={this.state.showTransactionFields}
 						account={this.state.account}
 					/>
+					<StatusBar sale={this.state.sale}	/>
 				</div>
       </div>
     )
