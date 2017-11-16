@@ -1,0 +1,44 @@
+machine:
+  node:
+    version: 8.9.1
+  services:
+    - docker
+
+test:
+  override:
+    - npm test
+    - npm install bower
+    - bower install
+    - truffle compile
+    - webpack
+
+
+deployment:
+  hub:
+    branch: consolidate
+    commands:
+      - docker info
+      - docker build -t leverj/stake:consolidate .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push leverj/stake
+#  grid-ui:
+#    branch: hw
+#    commands:
+#      - docker info
+#      - docker build -t bharathrao/coinpit:develop .
+#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#      - docker push bharathrao/coinpit
+#  master:
+#    branch: master
+#    commands:
+#      - docker info
+#      - docker build -t bharathrao/coinpit:master .
+#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#      - docker push bharathrao/coinpit
+#  testnet:
+#    branch: testnet
+#    commands:
+#      - docker info
+#      - docker build -t bharathrao/coinpit:testnet .
+#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#      - docker push bharathrao/coinpit

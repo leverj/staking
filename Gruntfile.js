@@ -56,7 +56,7 @@ module.exports = function (grunt) {
       browserify: {
         dist: {
           files: {
-            "dist/src-admin/client/client.js": client + "client.js"
+            "dist/src-admin/client/admin.js": client + "admin.js"
           }
         }
       },

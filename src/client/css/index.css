@@ -1,0 +1,97 @@
+* {
+   box-sizing: border-box;
+}
+body {
+  font-family: 'raleway';
+  margin: 0;
+}
+.hidden {
+  display: none;
+}
+.inline {
+  display: inline-block;
+}
+
+.boxes-container {
+   width: 60%;
+   margin: auto;
+}
+.stake {
+   float: left;
+   width: 50%;
+}
+.actions-box {
+   float: left;
+   border: 1px solid grey;
+   width: 50%;
+   padding: 20px;
+}
+.actions-box p, .actions-box span {
+   word-wrap: break-word;
+}
+.centered {
+  text-align: center;
+  display: block;
+}
+.box {
+   word-wrap: break-word;
+   width: 50%;
+   padding: 10px;
+   border: 1px solid grey;
+}
+.big-lines {
+   word-wrap: break-word;
+}
+.logo-container p {
+   position: relative;
+   top: -23px;
+   margin-right: 10px;
+   display: inline-block;
+}
+.logo {
+   width: 55px;
+}
+.logo-text {
+   color: orange;
+}
+.bar-container {
+   width: 60%;
+   margin: auto;
+   position: relative;
+}
+.bar {
+   border-radius: 25px;
+   height: 50px;
+   background-color: rgb(227, 227, 227);
+   margin-bottom: 10px;
+}
+.bar-content {
+   background: linear-gradient(to right, rgba(255,162,150,1) 0%, rgba(250,180,3,1) 100%);
+   width: 44%;
+   height: 50px;
+   border-radius: 25px;
+   text-align: center;
+   color: white;
+   line-height: 50px;
+}
+.bar-start-block {
+   display: inline-block;
+}
+.bar-end-block {
+   display: inline-block;
+   float: right;
+}
+.user-information p {
+   display: block;
+   margin-bottom: 10px;
+}
+.stake-button {
+   float: right;
+}
+.bar-container table {
+   padding-left: 100px;
+   padding-bottom: 20px;
+}
+.bar-container table span {
+   font-weight: bold;
+}
