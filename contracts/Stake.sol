@@ -71,16 +71,19 @@ contract Stake is Owned, Validating {
   /// weiPerFee, tokenID and endBlock
   function Stake(
   address _owner,
+  address _operator,
   address _wallet,
   uint _weiPerFee,
   address _levToken
   ) public
   validAddress(_wallet)
   validAddress(_owner)
+  validAddress(_operator)
   validAddress(_levToken)
   notZero(_weiPerFee)
   {
     owner = _owner;
+    operator = _operator;
     wallet = _wallet;
     weiPerFee = _weiPerFee;
     levToken = Token(_levToken);
@@ -123,9 +126,13 @@ contract Stake is Owned, Validating {
     StakeEvent(msg.sender, 'STAKED', _quantity, startBlock, endBlock);
   }
 
+  function revertFeeCalculatedFlag(bool _flag) external onlyOwner isDoneStaking{
+    feeCalculated = _flag;
+  }
+
   /// @notice To update the price of FEE tokens to the current value.
   /// Executable by the owner only
-  function updateFeeForCurrentStakingInterval() external onlyOwner isDoneStaking {
+  function updateFeeForCurrentStakingInterval() external onlyOperator isDoneStaking {
     uint feeFromExchange = feeToken.balanceOf(this);
     feeForTheStakingInterval = feeFromExchange.add(this.balance.div(weiPerFee));
     feeCalculated = true;
@@ -138,7 +145,7 @@ contract Stake is Owned, Validating {
     redeemLevAndFee(msg.sender);
   }
 
-  function redeemLevAndFeeToStakers(address[] _stakers) external onlyOwner {
+  function redeemLevAndFeeToStakers(address[] _stakers) external onlyOperator {
     for (uint i = 0; i < _stakers.length; i++) redeemLevAndFee(_stakers[i]);
   }
 
@@ -167,7 +174,7 @@ contract Stake is Owned, Validating {
   external
   notZero(_start)
   notZero(_end)
-  onlyOwner
+  onlyOperator
   isDoneStaking
   {
     require(totalLevs == 0);
