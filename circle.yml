@@ -15,10 +15,10 @@ test:
 
 deployment:
   hub:
-    branch: consolidate
+    branch: operator
     commands:
       - docker info
-      - docker build -t leverj/stake:consolidate .
+      - docker build -t leverj/stake:develop .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
 #  grid-ui:

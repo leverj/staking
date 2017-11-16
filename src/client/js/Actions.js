@@ -1,10 +1,6 @@
 import React from 'react'
 
 class Actions extends React.Component {
-	componentDidUpdate() {
-		console.log('account', this.props.account)
-	}
-
 	render() {
 		return (
 			<div className={this.props.className}>

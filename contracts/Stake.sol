@@ -21,7 +21,9 @@ import './Fee.sol';
 contract Stake is Owned, Validating {
   using SafeMath for uint;
 
-  event StakeEvent(address indexed user, string action, uint levs, uint startBlock, uint endBlock);
+  event StakeEvent(address indexed user, uint levs, uint startBlock, uint endBlock);
+
+  event RedeemEvent(address indexed user, uint levs, uint feeEarned, uint startBlock, uint endBlock);
 
   // User address to (lev tokens)*(blocks left to end)
   mapping (address => uint) public levBlocks;
@@ -64,23 +66,26 @@ contract Stake is Owned, Validating {
     _;
   }
 
-  function () public payable {
+  function() public payable {
   }
 
   /// @notice Constructor to set all the default values for the owner, wallet,
   /// weiPerFee, tokenID and endBlock
   function Stake(
   address _owner,
+  address _operator,
   address _wallet,
   uint _weiPerFee,
   address _levToken
   ) public
   validAddress(_wallet)
   validAddress(_owner)
+  validAddress(_operator)
   validAddress(_levToken)
   notZero(_weiPerFee)
   {
     owner = _owner;
+    operator = _operator;
     wallet = _wallet;
     weiPerFee = _weiPerFee;
     levToken = Token(_levToken);
@@ -113,21 +118,26 @@ contract Stake is Owned, Validating {
   /// Refer to the tests for more information
   /// @param _quantity How many LEV tokens to lock for staking
   function stakeTokens(uint _quantity) external isStaking notZero(_quantity) {
-    require(levToken.balanceOf(msg.sender) >= _quantity);
+    require(levToken.allowance(msg.sender, this) >= _quantity);
 
     levBlocks[msg.sender] = levBlocks[msg.sender].add(_quantity.mul(endBlock.sub(block.number)));
     stakes[msg.sender] = stakes[msg.sender].add(_quantity);
     totalLevBlocks = totalLevBlocks.add(_quantity.mul(endBlock.sub(block.number)));
     totalLevs = totalLevs.add(_quantity);
     require(levToken.transferFrom(msg.sender, this, _quantity));
-    StakeEvent(msg.sender, 'STAKED', _quantity, startBlock, endBlock);
+    StakeEvent(msg.sender, _quantity, startBlock, endBlock);
+  }
+
+  function revertFeeCalculatedFlag(bool _flag) external onlyOwner isDoneStaking {
+    feeCalculated = _flag;
   }
 
   /// @notice To update the price of FEE tokens to the current value.
-  /// Executable by the owner only
-  function updateFeeForCurrentStakingInterval() external onlyOwner isDoneStaking {
+  /// Executable by the operator only
+  function updateFeeForCurrentStakingInterval() external onlyOperator isDoneStaking {
+    require(feeCalculated == false);
     uint feeFromExchange = feeToken.balanceOf(this);
-    feeForTheStakingInterval = feeFromExchange.add(this.balance.div(weiPerFee));
+    feeForTheStakingInterval = feeForTheStakingInterval.add(feeFromExchange.add(this.balance.div(weiPerFee)));
     feeCalculated = true;
     feeToken.burnTokens(feeFromExchange);
     wallet.transfer(this.balance);
@@ -138,7 +148,7 @@ contract Stake is Owned, Validating {
     redeemLevAndFee(msg.sender);
   }
 
-  function redeemLevAndFeeToStakers(address[] _stakers) external onlyOwner {
+  function redeemLevAndFeeToStakers(address[] _stakers) external onlyOperator {
     for (uint i = 0; i < _stakers.length; i++) redeemLevAndFee(_stakers[i]);
   }
 
@@ -156,8 +166,7 @@ contract Stake is Owned, Validating {
     totalLevs = totalLevs.sub(stake);
     if (feeEarned > 0) feeToken.sendTokens(_staker, feeEarned);
     require(levToken.transfer(_staker, stake));
-
-    StakeEvent(_staker, 'CLAIMED', stake, startBlock, endBlock);
+    RedeemEvent(_staker, stake, feeEarned, startBlock, endBlock);
   }
 
   /// @notice To start a new trading staking-interval where the price of the FEE will be updated
@@ -167,7 +176,7 @@ contract Stake is Owned, Validating {
   external
   notZero(_start)
   notZero(_end)
-  onlyOwner
+  onlyOperator
   isDoneStaking
   {
     require(totalLevs == 0);
