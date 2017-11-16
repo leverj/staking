@@ -33,7 +33,7 @@ class App extends React.Component {
 	async init () {
 		return new Promise(async (resolve, reject) => {
 			let startBlock = await stake.methods.startBlock().call()
-			let endBlock = await stake.methods.expiryBlock().call()
+			let endBlock = await stake.methods.endBlock().call()
 			let currentBlock = (await web3.eth.getBlock('latest')).number
 			let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock)
 
@@ -52,7 +52,7 @@ class App extends React.Component {
   async getInfo (account) {
 		return new Promise(async (resolve, reject) => {
 			let startBlock = await stake.methods.startBlock().call()
-			let endBlock = await stake.methods.expiryBlock().call()
+			let endBlock = await stake.methods.endBlock().call()
 			let currentBlock = (await web3.eth.getBlock('latest')).number
 			let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock)
 
@@ -148,9 +148,6 @@ class App extends React.Component {
 						customAccount={this.state.customAccount}
 						stakeAmount={this.state.stakeAmount}
 						showTransactionFields={this.state.showTransactionFields}
-						transactionFieldsAmount={this.state.transactionFieldsAmount}
-						transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
-						transactionFieldsData={this.state.transactionFieldsData}
 						account={this.state.account}
 					/>
 				</div>
