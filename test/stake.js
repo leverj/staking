@@ -9,7 +9,6 @@ const HttpProvider = require('ethjs-provider-http');
 const EthRPC = require('ethjs-rpc');
 const EthQuery = require('ethjs-query');
 const Web3 = require('web3');
-const debug = require('../lib').Debug(__filename);
 
 
 const ethRPC = new EthRPC(new HttpProvider('http://localhost:8545'));
@@ -26,9 +25,9 @@ contract('Stake Levs', (accounts) => {
     await token.transfer(user1, 100);
     await token.transfer(user2, 200);
     stake = await Stake.deployed();
-    await stake.startNewTradingPeriod(100, 300);
+    await stake.startNewStakingInterval(100, 300);
     await token.transfer(stake.address, 1000);
-    await stake.setToken(token.address);
+    await stake.setLevToken(token.address);
     await forceMine(new BN(200))
   });
 
@@ -44,10 +43,10 @@ contract('Stake Levs', (accounts) => {
     expect(await balance(stake.address, token)).to.be.eql(1060);
     expect((await stake.totalLevs()).toNumber()).to.be.eql(60);
     expect((await stake.totalLevBlocks()).toNumber()).to.be.eql(10 * 98 + 15 * 48 + 15 * 96 + 20 * 46);
-    expect((await stake.getStakes(user1)).toNumber()).to.be.eql(25);
-    expect((await stake.getStakes(user2)).toNumber()).to.be.eql(35);
-    expect((await stake.getLevBlocks(user1)).toNumber()).to.be.eql(10 * 98 + 15 * 48);
-    expect((await stake.getLevBlocks(user2)).toNumber()).to.be.eql(15 * 96 + 20 * 46);
+    expect((await stake.stakes(user1)).toNumber()).to.be.eql(25);
+    expect((await stake.stakes(user2)).toNumber()).to.be.eql(35);
+    expect((await stake.levBlocks(user1)).toNumber()).to.be.eql(10 * 98 + 15 * 48);
+    expect((await stake.levBlocks(user2)).toNumber()).to.be.eql(15 * 96 + 20 * 46);
   });
 });
 
@@ -60,7 +59,7 @@ contract('Calculate Fee Tokens', (accounts) => {
 
   before(async function () {
     [stake, fee, token] = await setup(accounts);
-    await stake.setToken(token.address);
+    await stake.setLevToken(token.address);
     wallet = await stake.wallet();
     await web3.eth.sendTransaction({from: wallet, to: user3, value: new BN("999999999990000000000000000", 10)});
     await forceMine(new BN(200));
@@ -74,10 +73,9 @@ contract('Calculate Fee Tokens', (accounts) => {
 
   it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
     let walletBalance = (await web3.eth.getBalance(wallet));
-    debug("after", walletBalance);
     stake = await Stake.deployed();
-    await stake.updateFeeForCurrentPeriod();
-    expect((await stake.feeForThePeriod()).toNumber()).to.eql(1010);
+    await stake.updateFeeForCurrentStakingInterval();
+    expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(1010);
     expect((await fee.balanceOf(stake.address)).toNumber()).to.eql(0);
     let walletNewBalance = (await web3.eth.getBalance(wallet));
     expect(walletNewBalance - walletBalance).to.eql(10000000);
@@ -98,16 +96,16 @@ contract('Circulate Fee Tokens', (accounts) => {
     await forceMine(new BN(300));
     await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
     await web3.eth.sendTransaction({from: user1, to: stake.address, value: 10000000});
-    await stake.updateFeeForCurrentPeriod();
+    await stake.updateFeeForCurrentStakingInterval();
   });
 
 
   it('Stake contract should be able to send Fee and Lev to User', async function () {
-    await stake.redeemLevAndFee({from:user1});
+    await stake.redeemLevAndFeeByStaker({from:user1});
     expect((await token.balanceOf(user1)).toNumber()).to.eql(100);
     expect((await fee.balanceOf(user1)).toNumber()).to.eql(409);
-    expect((await stake.getStakes(user1)).toNumber()).to.eql(0);
-    expect((await stake.getLevBlocks(user1)).toNumber()).to.eql(0);
+    expect((await stake.stakes(user1)).toNumber()).to.eql(0);
+    expect((await stake.levBlocks(user1)).toNumber()).to.eql(0);
     expect((await stake.totalLevs()).toNumber()).to.eql(15);
   });
 });
@@ -121,7 +119,7 @@ contract('Stake setup', (accounts) => {
 
   before(async function () {
     [stake, fee, token] = await setup(accounts);
-    await stake.setToken(token.address);
+    await stake.setLevToken(token.address);
     await forceMine(new BN(200));
     await stakeit(10, user1, stake, token);
     await stakeit(15, user2, stake, token);
@@ -132,7 +130,7 @@ contract('Stake setup', (accounts) => {
 
   it('should fail to reset if there are stakes left', async function () {
     try {
-      await stake.startNewTradingPeriod(1000, 2000);
+      await stake.startNewStakingInterval(1000, 2000);
       expect().fail("should not pass");
     } catch (e) {
       expect(e.message).to.not.eql("should not pass")
@@ -140,14 +138,13 @@ contract('Stake setup', (accounts) => {
   });
 
   it('should reset after all the stakes have been returned', async function () {
-    await stake.updateFeeForCurrentPeriod();
-    await stake.sendLevAndFeeToUsers([user1, user2]);
-    await stake.startNewTradingPeriod(1000, 2000);
+    await stake.updateFeeForCurrentStakingInterval();
+    await stake.redeemLevAndFeeToStakers([user1, user2]);
+    await stake.startNewStakingInterval(1000, 2000);
     expect((await stake.startBlock()).toNumber()).to.eql(1000);
-    expect((await stake.expiryBlock()).toNumber()).to.eql(2000);
+    expect((await stake.endBlock()).toNumber()).to.eql(2000);
     expect((await stake.totalLevBlocks()).toNumber()).to.eql(0);
-    expect((await stake.feeForThePeriod()).toNumber()).to.eql(0);
-    expect((await stake.weiAsFee()).toNumber()).to.eql(0);
+    expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(0);
     expect((await stake.feeCalculated())).to.eql(false);
   })
 });
@@ -201,8 +198,8 @@ async function setup(accounts) {
   // token = await HumanStandardToken.at(token.address);
   await token.transfer(user1, 100);
   await token.transfer(user2, 200);
-  await stake.startNewTradingPeriod(100, 300);
-  await stake.setToken(token.address);
+  await stake.startNewStakingInterval(100, 300);
+  await stake.setLevToken(token.address);
   await forceMine(new BN(200));
   return [stake, fee, token];
 }

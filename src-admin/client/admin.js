@@ -30,7 +30,7 @@ module.exports = (function () {
     $("#feeid").val(config.fee);
     $("#fee-setup").click(setupfee);
     displayDetails("current block", block);
-    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForThePeriod", "tokenid", "startBlock", "expiryBlock", "owner", "wallet", "feeTokenId", "weiAsFee", "feeCalculated"];
+    let props = ["totalLevs", "totalLevBlocks", "feeForTheStakingInterval", "levToken", "startBlock", "endBlock", "owner", "wallet", "feeToken", "feeCalculated"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
       let value = await stake.methods[prop]().call();
@@ -93,11 +93,11 @@ module.exports = (function () {
   }
 
   async function updateFee() {
-    await stake.methods.updateFeeForCurrentPeriod().send({from: user});
+    await stake.methods.updateFeeForCurrentStakingInterval().send({from: user});
   }
 
   async function redeem() {
-    await stake.methods.redeemLevAndFee(user).send({from: user});
+    await stake.methods.redeemLevAndFeeByStaker(user).send({from: user});
   }
 
   async function setMinter() {
@@ -107,7 +107,7 @@ module.exports = (function () {
   async function restartStake() {
     let start = $("#start-block").val() - 0;
     let end = $("#end-block").val() - 0;
-    await stake.methods.startNewTradingPeriod(start, end).send({from: user});
+    await stake.methods.startNewStakingInterval(start, end).send({from: user});
   }
 
   async function sendFeeTokens() {
