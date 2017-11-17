@@ -50,6 +50,7 @@ module.exports = (function () {
     $("#redeem-lev-fee").click(redeem);
     $("#set-minter").click(setMinter);
     $("#restart-stake").click(restartStake);
+    $("#flip-calculated").click(flipCalculated);
     $("#send-fee").click(sendFeeTokens);
     displayDetails("user lev balance", await lev.methods.balanceOf(user).call());
     displayDetails("user lev approve", await lev.methods.allowance(user, config.stake).call());
@@ -102,7 +103,7 @@ module.exports = (function () {
   }
 
   async function redeem() {
-    await stake.methods.redeemLevAndFeeByStaker(user).send({from: user});
+    await stake.methods.redeemLevAndFeeByStaker().send({from: user});
   }
 
   async function setMinter() {
@@ -113,6 +114,11 @@ module.exports = (function () {
     let start = $("#start-block").val() - 0;
     let end = $("#end-block").val() - 0;
     await stake.methods.startNewStakingInterval(start, end).send({from: user});
+  }
+
+  async function flipCalculated() {
+    let current = await stake.methods.feeCalculated().call();
+    await stake.methods.revertFeeCalculatedFlag(!current).send({from: user});
   }
 
   async function sendFeeTokens() {

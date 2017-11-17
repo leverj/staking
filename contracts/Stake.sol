@@ -139,8 +139,8 @@ contract Stake is Owned, Validating {
     uint feeFromExchange = feeToken.balanceOf(this);
     feeForTheStakingInterval = feeForTheStakingInterval.add(feeFromExchange.add(this.balance.div(weiPerFee)));
     feeCalculated = true;
-    feeToken.burnTokens(feeFromExchange);
-    wallet.transfer(this.balance);
+    if (feeFromExchange > 0) feeToken.burnTokens(feeFromExchange);
+    if (this.balance > 0) wallet.transfer(this.balance);
   }
 
   /// @notice To unlock and recover your LEV and FEE tokens after staking and fee to any user
