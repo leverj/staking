@@ -81,6 +81,39 @@ contract('Calculate Fee Tokens', (accounts) => {
   });
 });
 
+contract('Calculate fee tokens when no eth and fee has been collected', (accounts) => {
+  let token, stake, fee;
+  let wallet;
+
+  before(async function () {
+    [stake, fee, token] = await setup(accounts);
+    await stake.setLevToken(token.address);
+    wallet = await stake.wallet();
+    await web3.eth.sendTransaction({
+      from: wallet,
+      to: user3(accounts),
+      value: new BN("999999999990000000000000000", 10)
+    });
+    await forceMine(new BN(200));
+    await stakeit(10, user1(accounts), stake, token);
+    await stakeit(15, user2(accounts), stake, token);
+    await forceMine(new BN(300));
+    // await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
+    // await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
+  });
+
+
+  it('Stake contract should be able to calculate total Fee Tokens  even if there is no eth as commission', async function () {
+    let walletBalance = (await web3.eth.getBalance(wallet));
+    stake = await Stake.deployed();
+    await stake.updateFeeForCurrentStakingInterval({from: operator(accounts)});
+    expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(0);
+    expect((await fee.balanceOf(stake.address)).toNumber()).to.eql(0);
+    let walletNewBalance = (await web3.eth.getBalance(wallet));
+    expect(walletNewBalance - walletBalance).to.eql(0);
+    expect()
+  });
+});
 
 contract('Circulate Fee Tokens', (accounts) => {
   let token, stake, fee;
