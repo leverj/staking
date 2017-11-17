@@ -23,7 +23,7 @@ class ProgressBar extends React.Component {
 				</table>
 
 				<div className="bar">
-					<div className="bar-content" ref="bar-content">{this.props.barPercentage}%</div>
+					<div className="bar-content" ref="bar-content">{this.props.barPercentage? this.props.barPercentage.toFixed(2): this.props.barPercentage}%</div>
 				</div>
 				<p className="bar-start-block">Start: {this.props.startBlock}</p>
 				<p className="bar-end-block">End: {this.props.endBlock}</p>
