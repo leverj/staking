@@ -1,14 +1,46 @@
 const Web3 = require("web3");
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io'));
-const web3 = new Web3();
+const config = require('config');
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+const stakeABI = require('./../build/contracts/Stake.json');
 
+class App {
+	constructor () {
+		this.init()
+	}
 
-async function generateOperatorKey(){
-  let key = await web3.eth.accounts.create();
-  console.log(JSON.stringify(key));
+	async init() {
+		this.operator = await web3.eth.accounts.privateKeyToAccount(
+			process.env.OPERATOR_KEY || process.argv[2]);
+		this.stake = new web3.eth.Contract(stakeABI, config.stake);
+	}
+
+	// To calculate the new Fee price depending on the state of the Smart Contract
+	async updateFeeForCurrentStakingInterval() {
+		await this.stake.methods.updateFeeForCurrentStakingInterval().sendTransaction({
+			from: this.operator.address
+		})
+	}
+
+	// This will execute the function `redeemLevAndFeeToStakers` from the stake
+	// contract once the block.timestamp is bigger or equal the current block must
+	// be executed after that manually
+	async redeemLevAndFeeToStakers() {
+		let stakers = await this.stake.methods.stakers().call()
+		await this.stake.methods.redeemLevAndFeeToStakers(stakers).sendTransaction({
+			from: this.operator.address
+		})
+	}
+
+	// This will start a new staking interval automatically made of 100,000 blocks
+	async startNewStakingInterval(blockSize) {
+		let start = (await web3.eth.getBlock('latest')).number
+		let end = this.currentBlock + blockSize
+		await this.stake.methods.startNewStakingInterval(start, end).sendTransaction({
+			from: this.operator.address
+		})
+	}
 }
 
+new App()
 
-async function setupStake(){
-
-}
+module.exports = App
