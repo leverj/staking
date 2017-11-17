@@ -3,9 +3,6 @@ const config = require('config');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 const stakeABI = require('./../build/contracts/Stake.json');
 
-// done - calculate Fee tokens after endBlock
-// done - automatically set next staking interval
-// redeem lev and fee tokens for users
 class App {
 	constructor () {
 		this.init()

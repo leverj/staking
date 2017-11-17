@@ -28,7 +28,10 @@ function generateAccounts(mnemonic, hdPathIndex, totalToGenerate, accumulatedAdd
 
 function start() {
 	accounts = generateAccounts(mnemonic, 0, 100, [])
-	const testRPCInput = { accounts };
+	const testRPCInput = {
+		accounts,
+		locked: false
+	};
 	testrpc.server(testRPCInput).listen(8545);
 }
 
@@ -38,5 +41,8 @@ function stop() {
 
 module.exports = {
 	start,
-	stop
+	stop,
+	account: function(index){
+		return accounts[index];
+	}
 }
