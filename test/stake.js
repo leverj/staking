@@ -81,6 +81,30 @@ contract('Calculate Fee Tokens', (accounts) => {
   });
 });
 
+contract('Fee Earned - totalLevBlocks > feeForTheStakingInterval', (accounts) => {
+  let token, stake, fee;
+
+  before(async function () {
+    [stake, fee, token] = await setup(accounts);
+    await stakeit(10, user1(accounts), stake, token);
+    await stakeit(15, user2(accounts), stake, token);
+    await forceMine(new BN(300));
+    // await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
+    await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000});
+    await stake.updateFeeForCurrentStakingInterval({from: operator(accounts)});
+  });
+
+
+  it.only('Stake contract should be able to send Fee and Lev to User', async function () {
+    await stake.redeemLevAndFeeByStaker({from: user1(accounts)});
+    expect((await token.balanceOf(user1(accounts))).toNumber()).to.eql(100);
+    expect((await fee.balanceOf(user1(accounts))).toNumber()).to.eql(409);
+    expect((await stake.stakes(user1(accounts))).toNumber()).to.eql(0);
+    expect((await stake.levBlocks(user1(accounts))).toNumber()).to.eql(0);
+    expect((await stake.totalLevs()).toNumber()).to.eql(15);
+  });
+});
+
 contract('Calculate fee tokens when no eth and fee has been collected', (accounts) => {
   let token, stake, fee;
   let wallet;

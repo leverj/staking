@@ -34,7 +34,6 @@ module.exports = (function () {
     $("#set-operator").click(setOperator);
     displayDetails("current block", block);
 
-
     let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated", "owner", "operator"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
