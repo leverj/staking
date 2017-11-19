@@ -72,19 +72,18 @@ contract Stake is Owned, Validating {
   /// @notice Constructor to set all the default values for the owner, wallet,
   /// weiPerFee, tokenID and endBlock
   function Stake(
-  address _owner,
+  address[] _owners,
   address _operator,
   address _wallet,
   uint _weiPerFee,
   address _levToken
   ) public
   validAddress(_wallet)
-  validAddress(_owner)
   validAddress(_operator)
   validAddress(_levToken)
   notZero(_weiPerFee)
   {
-    owner = _owner;
+    setOwners(_owners);
     operator = _operator;
     wallet = _wallet;
     weiPerFee = _weiPerFee;

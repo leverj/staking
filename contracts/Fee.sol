@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 
+
 import './SafeMath.sol';
 import './Owned.sol';
 import './Validating.sol';
@@ -30,17 +31,16 @@ contract Fee is Owned, Validating, StandardToken {
 
   /// @notice Constructor to set the owner, tokenName, decimals and symbol
   function Fee(
-  address _owner,
+  address[] _owners,
   string _tokenName,
   uint8 _decimalUnits,
   string _tokenSymbol
   )
   public
-  validAddress(_owner)
   notEmpty(_tokenName)
   notEmpty(_tokenSymbol)
   {
-    owner = _owner;
+    setOwners(_owners);
     name = _tokenName;
     decimals = _decimalUnits;
     symbol = _tokenSymbol;
