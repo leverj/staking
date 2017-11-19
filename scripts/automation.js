@@ -1,19 +1,16 @@
 const Web3 = require("web3");
 const conf = require('./conf');
-
 const stakeABI = require('./../build/contracts/Stake.json');
-
-
 
 async function automate() {
   let web3, socketWeb3, stake, socketStake;
   let sendOptions = {}, state = {};
 
   async function getContracts() {
-    web3 = new Web3(new Web3.providers.HttpProvider(conf.provider));
     socketWeb3 = new Web3(new Web3.providers.WebsocketProvider(conf.socketProvider));
-    stake = new web3.eth.Contract(stakeABI.abi, conf.stake);
     socketStake = new socketWeb3.eth.Contract(stakeABI.abi, conf.stake);
+    web3 = new Web3(new Web3.providers.HttpProvider(conf.provider));
+    stake = new web3.eth.Contract(stakeABI.abi, conf.stake);
   }
 
   async function createAccount() {
@@ -26,36 +23,61 @@ async function automate() {
     await getContracts();
     await createAccount();
     await updateContractState();
-    await updateFeeForCurrentStakingInterval();
-    await redeemToUsers();
-    // await startNewStakingInterval();
-    // startListening();
-    // await getAllStakes();
+    await operateStake();
+    startListening();
   }
 
-  function startListening() {
+  async function operateStake() {
+    await updateFeeForCurrentStakingInterval();
+    await redeemToUsers();
+    await startNewStakingInterval();
+  }
 
+  async function startListening() {
+    while(true){
+      await updateContractState();
+      if(state.currentBlock > state.endBlock) {
+        try {
+          await operateStake()
+        } catch(error) {
+          console.error(error)
+        }
+        await delay(10000)
+      }
+    }
+  }
 
+  function delay(time){
+    return new Promise(function(resolve, reject){
+      setTimeout(resolve, time)
+    })
   }
 
   async function updateFeeForCurrentStakingInterval() {
     if (state.endBlock >= state.currentBlock || state.feeCalculated)
       return console.log("skipping updateFeeForCurrentStakingInterval", JSON.stringify(state));
     await stake.methods.updateFeeForCurrentStakingInterval().send(sendOptions);
+    await updateContractState();
   }
 
-  async function redeemToUsers() {
+  async function redeemToUsers(batch) {
     if (!state.feeCalculated)
       return console.log("skipping redeemToUsers", JSON.stringify(state));
     let users = await getAllStakingUsers();
     users = await getToBeRedeemed(users);
-    console.log(users);
+
+    let temporaryUsers = users.slice(batch);
+    await stake.methods.redeemLevAndFeeToStakers(temporaryUsers).send(sendOptions);
+    await updateContractState();
   }
 
   async function startNewStakingInterval() {
+    if (state.endBlock > state.currentBlock || state.totalLevs > 0)
+      return console.log("skipping startNewStakingInterval", JSON.stringify(state));
     let start = (await web3.eth.getBlock('latest')).number;
     let end = start + conf.blockInterval;
     await stake.methods.startNewStakingInterval(start, end).send(sendOptions);
+    await updateContractState();
   }
 
   async function updateContractState() {
