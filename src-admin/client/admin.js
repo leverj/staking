@@ -35,7 +35,7 @@ module.exports = (function () {
     displayDetails("current block", block);
 
 
-    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated", "owner", "operator"];
+    let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated", "getOwners", "operator"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
       let value = await stake.methods[prop]().call();
@@ -58,7 +58,7 @@ module.exports = (function () {
     displayDetails("user lev stake", await stake.methods.stakes(user).call());
     displayDetails("fee with stake", await fee.methods.balanceOf(config.stake).call());
     displayDetails("fee with user", await fee.methods.balanceOf(user).call());
-    displayDetails("Fee Owner", await fee.methods.owner().call());
+    displayDetails("Fee Owner", await fee.methods.getOwners().call());
     displayDetails("Fee Minter", await fee.methods.minter().call());
     displayDetails("Stake", config.stake);
 
