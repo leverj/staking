@@ -65,7 +65,7 @@ contract('Calculate Fee Tokens', (accounts) => {
     await stakeit(10, user1(accounts), stake, token);
     await stakeit(15, user2(accounts), stake, token);
     await forceMine(new BN(300));
-    await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
+    await sendFeesToSelf(stake.address, await stake.owners(0), fee, 1000);
     await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
   });
 
@@ -123,7 +123,7 @@ contract('Circulate Fee Tokens', (accounts) => {
     await stakeit(10, user1(accounts), stake, token);
     await stakeit(15, user2(accounts), stake, token);
     await forceMine(new BN(300));
-    await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
+    await sendFeesToSelf(stake.address, await stake.owners(0), fee, 1000);
     await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
     await stake.updateFeeForCurrentStakingInterval({from: operator(accounts)});
   });
@@ -150,7 +150,7 @@ contract('Stake setup', (accounts) => {
     await stakeit(10, user1(accounts), stake, token);
     await stakeit(15, user2(accounts), stake, token);
     await forceMine(new BN(300));
-    await sendFeesToSelf(stake.address, await stake.owner(), fee, 1000);
+    await sendFeesToSelf(stake.address, await stake.owners(0), fee, 1000);
     await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
   });
 
