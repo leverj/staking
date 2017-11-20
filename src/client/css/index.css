@@ -1,10 +1,6 @@
 * {
    box-sizing: border-box;
 }
-body {
-  font-family: 'raleway';
-  margin: 0;
-}
 .hidden {
   display: none;
 }
@@ -12,52 +8,20 @@ body {
   display: inline-block;
 }
 
-.boxes-container {
-   width: 60%;
-   margin: auto;
-}
-.stake {
-   float: left;
-   width: 50%;
+.user-information-box h2 {
+  padding-left: 20px;
 }
 .actions-box {
-   float: left;
-   border: 1px solid grey;
-   width: 50%;
    padding: 20px;
 }
 .actions-box p, .actions-box span {
    word-wrap: break-word;
 }
-.centered {
-  text-align: center;
-  display: block;
-}
-.box {
-   word-wrap: break-word;
-   width: 50%;
-   padding: 10px;
-   border: 1px solid grey;
-}
-.big-lines {
-   word-wrap: break-word;
-}
-.logo-container p {
-   position: relative;
-   top: -23px;
-   margin-right: 10px;
-   display: inline-block;
-}
 .logo {
    width: 55px;
 }
-.logo-text {
+.navbar-light .navbar-nav .active>.nav-link.logo-text {
    color: orange;
-}
-.bar-container {
-   width: 60%;
-   margin: auto;
-   position: relative;
 }
 .bar {
    border-radius: 25px;
@@ -79,11 +43,7 @@ body {
 }
 .bar-end-block {
    display: inline-block;
-   float: right;
-}
-.user-information p {
-   display: block;
-   margin-bottom: 10px;
+   text-align: right;
 }
 .stake-button {
    float: right;
