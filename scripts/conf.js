@@ -1,0 +1,22 @@
+module.exports = {
+  "address": process.env.ADDRESS ,
+  "privateKey": process.env.PRIVATEKEY ,
+  "stake": process.env.STAKE ,
+  "provider": process.env.PROVIDER ,
+  "socketProvider": process.env.SOCKETPROVIDER ,
+  "blockInterval": process.env.BLOCKINTERVAL - 0,
+  "gas": process.env.GAS -0 ,
+};
+
+
+/*
+module.exports = {
+  "address": "0xDaa1A6c972d4b8d57dce119E48C6ABB19BaF8402",
+  "privateKey": "0x1485e9840653a6230b94c8a83310c5001a7c09405aca874ee76a6633879fae4c",
+  "stake": "0x965cd3c90a18b46c4684b8e1d35859fdcd9c3be1",
+  "provider": "https://ropsten.infura.io",
+  "socketProvider": "ws://51.15.134.155:8546",
+  "blockInterval": 300,
+  "gas": 3e5
+
+};*/
