@@ -3,7 +3,7 @@ const conf = require('./conf');
 const stakeABI = require('./../build/contracts/Stake.json');
 
 async function automate() {
-  let web3, socketWeb3, stake, socketStake;
+  let web3, socketWeb3, stake, socketStake, currentBlock, operationActive;
   let sendOptions = {}, state = {};
 
   async function getContracts() {
@@ -23,7 +23,6 @@ async function automate() {
     await getContracts();
     await createAccount();
     await updateContractState();
-    await operateStake();
     startListening();
   }
 
@@ -37,18 +36,24 @@ async function automate() {
     console.log("startNewStakingInterval done")
   }
 
-  async function startListening() {
-    while (true) {
-      await updateContractState();
-      if (state.currentBlock > state.endBlock) {
+  function startListening() {
+    socketWeb3.eth.subscribe('newBlockHeaders', async function (error, data) {
+      if (error) console.error(e);
+      console.log('################ current block', data.number);
+      currentBlock = data.number;
+      if (currentBlock > state.endBlock && !operationActive) {
+        operationActive = false;
         try {
-          await operateStake()
-        } catch (error) {
-          console.error(error)
+          operationActive = true;
+          await operateStake();
+        } catch (e) {
+          console.log('operateStake ERROR', e);
+          await handleNoUserError(e);
+        } finally {
+          operationActive = false;
         }
-        await delay(10000)
       }
-    }
+    });
   }
 
   function delay(time) {
@@ -58,7 +63,7 @@ async function automate() {
   }
 
   async function updateFeeForCurrentStakingInterval() {
-    if (state.endBlock >= state.currentBlock || state.feeCalculated)
+    if (state.endBlock >= currentBlock || state.feeCalculated)
       return console.log("skipping updateFeeForCurrentStakingInterval", JSON.stringify(state));
     await stake.methods.updateFeeForCurrentStakingInterval().send(sendOptions);
     await updateContractState();
@@ -76,7 +81,7 @@ async function automate() {
   }
 
   async function startNewStakingInterval() {
-    if (state.endBlock > state.currentBlock || state.totalLevs > 0)
+    if (state.endBlock > currentBlock || state.totalLevs > 0)
       return console.log("skipping startNewStakingInterval", JSON.stringify(state));
     let start = (await web3.eth.getBlock('latest')).number;
     let end = start + conf.blockInterval;
@@ -87,9 +92,13 @@ async function automate() {
   async function updateContractState() {
     let props = ["totalLevs", "startBlock", "endBlock", "feeCalculated"];
     let promises = props.map(prop => stake.methods[prop]().call());
-    promises.push(web3.eth.getBlockNumber());
-    let [totalLevs, startBlock, endBlock, feeCalculated, currentBlock] = await Promise.all(promises);
-    state = {totalLevs, startBlock, endBlock, feeCalculated, currentBlock};
+    let [totalLevs, startBlock, endBlock, feeCalculated] = await Promise.all(promises);
+    state = {
+      totalLevs: totalLevs - 0,
+      startBlock: startBlock - 0,
+      endBlock: endBlock - 0,
+      feeCalculated: feeCalculated - 0
+    };
   }
 
   async function getToBeRedeemed(users) {
@@ -107,6 +116,12 @@ async function automate() {
       stakes[event.returnValues.user] = true;
     }
     return Object.keys(stakes);
+  }
+
+  async function handleNoUserError(e) {
+    if (e.message === 'No "from" address specified in neither the given options, nor the default options.') {
+      await createAccount();
+    }
   }
 
   await init();
