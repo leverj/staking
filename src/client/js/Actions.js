@@ -4,29 +4,43 @@ class Actions extends React.Component {
 	render() {
 		return (
 			<div className={this.props.className}>
-				<h2>Actions</h2>
+				<div className="row">
+					<h2 className="col-12">Actions</h2>
+				</div>
 
-				<div className="actions-stake">
-					<p>Amount to stake: &nbsp;</p>
-					<input type="number" ref="stakeAmount-amount" onChange={() => {
+				<div className="row">
+					<input className="col-12 form-control" type="number" placeholder="Amount to stake" ref="stakeAmount-amount" onChange={() => {
 						this.props.setState({stakeAmount: this.refs['stakeAmount-amount'].value})
-					}} disabled={this.props.account ? false : true}
-					/>&nbsp;<span className={this.props.account ? 'hidden' : ''}>Set your address to stake</span>
+					}} disabled={this.props.account ? false : true} />
+				</div>
+				<div>
+					<span className={this.props.account ? 'hidden' : 'col-12'}>Set your address to start staking</span>
+				</div>
 
-					<br/>
-
-					<button className="approve-button" onClick={() => {
+				<div className="row">
+					<button className="col-4 btn btn-secondary" onClick={() => {
 						this.props.approve(this.props.stakeAmount)
 					}} disabled={this.props.account ? false : true}>Approve</button>
-					<button className="stake-button" onClick={() => {
+
+					<button className="col-4 btn btn-secondary offset-4" onClick={() => {
 						this.props.stakeTokens(this.props.stakeAmount)
 					}} disabled={this.props.account ? false : true}>Stake</button><br/>
 				</div>
 
-				<p>To address: <span>{this.props.transactionFieldsTo}</span></p><br/>
-				<p>Amount: <span>{this.props.transactionFieldsAmount}</span></p><br/>
-				<p>Gas limit: <span>{this.props.transactionFieldsGasLimit}</span></p><br/>
-				<p>Data: </p><span>{this.props.transactionFieldsData}</span><br/>
+				<br/>
+
+				<div className="row">
+					<p className="col-12">To address: <span>{this.props.transactionFieldsTo}</span></p>
+				</div>
+				<div className="row">
+					<p className="col-12">Amount: <span>{this.props.transactionFieldsAmount}</span></p>
+				</div>
+				<div className="row">
+					<p className="col-12">Gas limit: <span>{this.props.transactionFieldsGasLimit}</span></p>
+				</div>
+				<div className="row">
+					<p className="col-12">Data: <span>{this.props.transactionFieldsData}</span></p>
+				</div>
 			</div>
 		)
 	}

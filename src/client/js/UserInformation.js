@@ -2,24 +2,44 @@ import React from 'react'
 
 class UserInformation extends React.Component {
 	render() {
-		const {classStake, approvedLev, numberOfLev, stakedLev} = this.props
+		const {className, approvedLev, numberOfLev, stakedLev} = this.props
 		return (
-			<div className={classStake}>
-				<h2>User Information</h2>
-
-				<div>
-					<p className="inline">Enter address: </p>&nbsp;
-					<input type="text" ref="custom-account" />&nbsp;
-					<button onClick={() => {
-						this.props.getInfo(this.refs['custom-account'].value)
-					}}>Get Info</button><br/>
+			<div className={className}>
+				<div className="row">
+					<h2>User Information</h2>
 				</div>
 
-				<div className="user-information">
-					<p>Number of LEV: {numberOfLev}</p>
-					<p>Staked LEV: {stakedLev}</p>
-					<p>Approved LEV: {approvedLev}</p>
-					<p>LEV available to withdraw: Unknown</p>
+				<br/>
+
+				<div className="row">
+					<div className="col-12">
+						<div className="input-group">
+							<input className="form-control" type="text" placeholder="Ethereum address..." ref="custom-account" />
+							<span className="input-group-btn">
+								<button className="btn btn-secondary" type="button" onClick={() => {
+									this.props.getInfo(this.refs['custom-account'].value)
+								}}>Get Info</button><br/>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<br/>
+
+				<div className="row">
+					<p className="col-12">Number of LEV: {numberOfLev}</p>
+				</div>
+
+				<div className="row">
+					<p className="col-12">Staked LEV: {stakedLev}</p>
+				</div>
+
+				<div className="row">
+					<p className="col-12">Approved LEV: {approvedLev}</p>
+				</div>
+
+				<div className="row">
+					<p className="col-12">LEV available to withdraw: Unknown</p>
 				</div>
 			</div>
 		)
