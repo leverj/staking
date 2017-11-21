@@ -8,16 +8,15 @@ import UserInformation from './UserInformation'
 import ProgressBar from './ProgressBar'
 import Header from './Header'
 import Actions from './Actions'
-import StatusBar from "./StatusBar"
 import Helper from './Helper'
 
 class App extends React.Component {
   constructor() {
-    super()
+    super();
 
     this.state = {
       loadingInitialData: true
-    }
+    };
 
     this.init()
   }
@@ -25,17 +24,17 @@ class App extends React.Component {
   async init() {
     let response = await fetch('/api/v1/config', {
       method: 'GET'
-    })
-    let config = await response.json()
+    });
+    let config = await response.json();
 
     window.web3 = new Web3(window.web3 ? window.web3.currentProvider : new Web3.providers.HttpProvider(config.network));
     window.stake = new web3.eth.Contract(stakeABI, config.stake);
     window.lev = new web3.eth.Contract(levABI, config.lev);
 
-    let startBlock = await stake.methods.startBlock().call()
-    let endBlock = await stake.methods.endBlock().call()
-    let currentBlock = (await web3.eth.getBlock('latest')).number
-    let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock)
+    let startBlock = await stake.methods.startBlock().call();
+    let endBlock = await stake.methods.endBlock().call();
+    let currentBlock = (await web3.eth.getBlock('latest')).number;
+    let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock);
 
     this.setState({
       startBlock: startBlock,
@@ -55,10 +54,10 @@ class App extends React.Component {
 
   async getInfo(account) {
     return new Promise(async (resolve, reject) => {
-      let startBlock = await stake.methods.startBlock().call()
-      let endBlock = await stake.methods.endBlock().call()
-      let currentBlock = (await web3.eth.getBlock('latest')).number
-      let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock)
+      let startBlock = await stake.methods.startBlock().call();
+      let endBlock = await stake.methods.endBlock().call();
+      let currentBlock = (await web3.eth.getBlock('latest')).number;
+      let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock);
 
       this.setState({
         account: account,
@@ -121,53 +120,49 @@ class App extends React.Component {
         </div>
 
         <div className={this.state.loadingInitialData ? 'hidden' : 'container'}>
-					<div className="row">
-						<UserInformation
-							className="col-md-6 user-information-box"
-							isUpdatingStakeData={this.state.isUpdatingStakeData}
-							getInfo={account => {
-								this.getInfo(account)
-							}}
-							account={this.state.account}
-							numberOfLev={this.state.numberOfLev}
-							stakedLev={this.state.stakedLev}
-							approvedLev={this.state.approvedLev}
-						/>
+          <div className="row">
+            <UserInformation
+              className="col-md-6 user-information-box"
+              isUpdatingStakeData={this.state.isUpdatingStakeData}
+              getInfo={account => {
+                this.getInfo(account)
+              }}
+              account={this.state.account}
+              numberOfLev={this.state.numberOfLev}
+              stakedLev={this.state.stakedLev}
+              approvedLev={this.state.approvedLev}
+            />
 
-						<Actions
-							className="col-md-6 actions-box border border-secondary rounded"
-							setState={state => {
-								this.setState(state)
-							}}
-							approve={amount => {
-								this.approve(amount)
-							}}
-							stakeTokens={amount => {
-								this.stakeTokens(amount)
-							}}
-							transactionFieldsTo={this.state.transactionFieldsTo}
-							transactionFieldsAmount={this.state.transactionFieldsAmount}
-							transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
-							transactionFieldsData={this.state.transactionFieldsData}
-							isUpdatingAllowance={this.state.isUpdatingAllowance}
-							allowance={this.state.allowance}
-							customAccount={this.state.customAccount}
-							stakeAmount={this.state.stakeAmount}
-							showTransactionFields={this.state.showTransactionFields}
-							account={this.state.account}
-						/>
-					</div>
+            <Actions
+              className="col-md-6 actions-box border border-secondary rounded"
+              setState={state => {
+                this.setState(state)
+              }}
+              approve={amount => {
+                this.approve(amount)
+              }}
+              stakeTokens={amount => {
+                this.stakeTokens(amount)
+              }}
+              transactionFieldsTo={this.state.transactionFieldsTo}
+              transactionFieldsAmount={this.state.transactionFieldsAmount}
+              transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
+              transactionFieldsData={this.state.transactionFieldsData}
+              isUpdatingAllowance={this.state.isUpdatingAllowance}
+              allowance={this.state.allowance}
+              customAccount={this.state.customAccount}
+              stakeAmount={this.state.stakeAmount}
+              showTransactionFields={this.state.showTransactionFields}
+              account={this.state.account}
+            />
+          </div>
 
-					<div className="row">
-						<StatusBar sale={this.state.sale}/>
-					</div>
+          <br/>
 
-					<br/>
-
-					<div className="row">
-						<Helper />
-					</div>
-				</div>
+          <div className="row">
+            <Helper sale={this.state.sale}/>
+          </div>
+        </div>
       </div>
     )
   }
