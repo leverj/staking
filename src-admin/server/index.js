@@ -8,7 +8,7 @@ module.exports = (async function () {
   const server = getServer();
   const helmet = require('helmet');
   const ip = '0.0.0.0';
-  const port = 8888;
+  const port = 8889;
 
   function getServer() {
     return require('http').Server(app)

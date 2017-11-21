@@ -28,18 +28,22 @@ async function automate() {
   }
 
   async function operateStake() {
+    console.log("updateFeeForCurrentStakingInterval start");
     await updateFeeForCurrentStakingInterval();
+    console.log("redeemToUsers start");
     await redeemToUsers();
+    console.log("startNewStakingInterval start");
     await startNewStakingInterval();
+    console.log("startNewStakingInterval done")
   }
 
   async function startListening() {
-    while(true){
+    while (true) {
       await updateContractState();
-      if(state.currentBlock > state.endBlock) {
+      if (state.currentBlock > state.endBlock) {
         try {
           await operateStake()
-        } catch(error) {
+        } catch (error) {
           console.error(error)
         }
         await delay(10000)
@@ -47,8 +51,8 @@ async function automate() {
     }
   }
 
-  function delay(time){
-    return new Promise(function(resolve, reject){
+  function delay(time) {
+    return new Promise(function (resolve, reject) {
       setTimeout(resolve, time)
     })
   }
@@ -60,14 +64,14 @@ async function automate() {
     await updateContractState();
   }
 
-  async function redeemToUsers(batch) {
+  async function redeemToUsers() {
     if (!state.feeCalculated)
       return console.log("skipping redeemToUsers", JSON.stringify(state));
     let users = await getAllStakingUsers();
+    if (users.length === 0) return;
     users = await getToBeRedeemed(users);
-
-    let temporaryUsers = users.slice(batch);
-    await stake.methods.redeemLevAndFeeToStakers(temporaryUsers).send(sendOptions);
+    if (users.length === 0) return;
+    await stake.methods.redeemLevAndFeeToStakers(users).send(sendOptions);
     await updateContractState();
   }
 
