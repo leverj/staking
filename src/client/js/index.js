@@ -8,16 +8,15 @@ import UserInformation from './UserInformation'
 import ProgressBar from './ProgressBar'
 import Header from './Header'
 import Actions from './Actions'
-import StatusBar from "./StatusBar"
 import Helper from './Helper'
 
 class App extends React.Component {
   constructor() {
-    super()
+    super();
 
     this.state = {
       loadingInitialData: true
-    }
+    };
 
     this.init()
   }
@@ -25,17 +24,17 @@ class App extends React.Component {
   async init() {
     let response = await fetch('/api/v1/config', {
       method: 'GET'
-    })
-    let config = await response.json()
+    });
+    let config = await response.json();
 
     window.web3 = new Web3(window.web3 ? window.web3.currentProvider : new Web3.providers.HttpProvider(config.network));
     window.stake = new web3.eth.Contract(stakeABI, config.stake);
     window.lev = new web3.eth.Contract(levABI, config.lev);
 
-    let startBlock = await stake.methods.startBlock().call()
-    let endBlock = await stake.methods.endBlock().call()
-    let currentBlock = (await web3.eth.getBlock('latest')).number
-    let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock)
+    let startBlock = await stake.methods.startBlock().call();
+    let endBlock = await stake.methods.endBlock().call();
+    let currentBlock = (await web3.eth.getBlock('latest')).number;
+    let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock);
 
     this.setState({
       startBlock: startBlock,
@@ -56,10 +55,10 @@ class App extends React.Component {
 
   async getInfo(account) {
     return new Promise(async (resolve, reject) => {
-      let startBlock = await stake.methods.startBlock().call()
-      let endBlock = await stake.methods.endBlock().call()
-      let currentBlock = (await web3.eth.getBlock('latest')).number
-      let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock)
+      let startBlock = await stake.methods.startBlock().call();
+      let endBlock = await stake.methods.endBlock().call();
+      let currentBlock = (await web3.eth.getBlock('latest')).number;
+      let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock);
 
       this.setState({
         account: account,
