@@ -10,7 +10,8 @@ class Actions extends React.Component {
 
 				<div className="row">
 					<input className="col-12 form-control" type="number" placeholder="Amount to stake" ref="stakeAmount-amount" onChange={() => {
-						this.props.setState({stakeAmount: this.refs['stakeAmount-amount'].value})
+						console.log(this.refs['stakeAmount-amount'].value)
+						this.props.setStakeAmount({stakeAmount: this.refs['stakeAmount-amount'].value})
 					}} disabled={this.props.account ? false : true} />
 				</div>
 				<div>

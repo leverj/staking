@@ -46,6 +46,7 @@ class App extends React.Component {
       feeAddress: config.fee,
       loadingInitialData: false,
       sale: config.sale,
+			decimals: 9,
     })
   }
 
@@ -62,9 +63,9 @@ class App extends React.Component {
 
       this.setState({
         account: account,
-        numberOfLev: await lev.methods.balanceOf(account).call(),
-        stakedLev: await stake.methods.stakes(account).call(),
-        approvedLev: this.toLev(await lev.methods.allowance(account, stake._address).call()),
+        numberOfLev: `${this.toLev(await lev.methods.balanceOf(account).call())}e${this.state.decimals}`,
+        stakedLev: `${this.toLev(await stake.methods.stakes(account).call())}e${this.state.decimals}`,
+        approvedLev: `${this.toLev(await lev.methods.allowance(account, stake._address).call())}e${this.state.decimals}`,
         startBlock: startBlock,
         endBlock: endBlock,
         barPercentage: percentage
@@ -136,7 +137,8 @@ class App extends React.Component {
 
 						<Actions
 							className="col-md-6 actions-box border border-secondary rounded"
-							setState={state => {
+							setStakeAmount={state => {
+								state.stakeAmount = `${toLev(state.stakeAmount)}e${this.state.decimals}`
 								this.setState(state)
 							}}
 							approve={amount => {
