@@ -8,7 +8,7 @@ secrets.json
 node_modules/
 dist
 bower_components
-src-admin/client/conf.js
+#src-admin/client/conf.js
 .DS_Store
 conf.ropsten/stake.json
 migrations/config/
