@@ -15,7 +15,7 @@ describe('Component: App', () => {
 	})
 	it('initializes the Smart Contract stake, lev and fee in the client')
 	it('gets the initial start, end block, bar percentage, stake, lev and fee addresses, initial data')
-	it('converts the amounts to lev with the method `toLev()`')
+	it('converts the amounts to lev with the method `levActualToDisplay()`')
 	it('gets the user specific information once you set your address and click on get info')
 	it('approves the selected amount')
 	it('should not approve more than the user\'s balance')

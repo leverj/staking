@@ -25,8 +25,8 @@ class App extends React.Component {
     let response = await fetch('/api/v1/config', {
       method: 'GET'
     });
-    let config = await response.json();
 
+    window.config = await response.json();
     window.web3 = new Web3(window.web3 ? window.web3.currentProvider : new Web3.providers.HttpProvider(config.network));
     window.stake = new web3.eth.Contract(stakeABI, config.stake);
     window.lev = new web3.eth.Contract(levABI, config.lev);
@@ -45,12 +45,25 @@ class App extends React.Component {
       feeAddress: config.fee,
       loadingInitialData: false,
       sale: config.sale,
-			decimals: 9,
+      feeDecimals: config.feeDecimals,
+      levDecimals: config.levDecimals,
     })
   }
 
-  toLev(amount) {
-    return amount / 10e9;
+  static levActualToDisplay(amount) {
+    return (amount / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals);
+  }
+
+  static feeActualToDisplay(amount) {
+    return (amount / Math.pow(10, config.feeDecimals)).toFixed(config.feeDecimals);
+  }
+
+  static levDisplayToActuals(amount) {
+    Math.floor(amount * Math.pow(10, config.levDecimals));
+  }
+
+  static feeDisplayToActuals(amount) {
+    Math.floor(amount * Math.pow(10, config.feeDecimals));
   }
 
   async getInfo(account) {
@@ -62,9 +75,9 @@ class App extends React.Component {
 
       this.setState({
         account: account,
-        numberOfLev: `${this.toLev(await lev.methods.balanceOf(account).call())}e${this.state.decimals}`,
-        stakedLev: `${this.toLev(await stake.methods.stakes(account).call())}e${this.state.decimals}`,
-        approvedLev: `${this.toLev(await lev.methods.allowance(account, stake._address).call())}e${this.state.decimals}`,
+        numberOfLev: `${App.levActualToDisplay(await lev.methods.balanceOf(account).call())}`,
+        stakedLev: `${App.levActualToDisplay(await stake.methods.stakes(account).call())}`,
+        approvedLev: `${App.levActualToDisplay(await lev.methods.allowance(account, stake._address).call())}`,
         startBlock: startBlock,
         endBlock: endBlock,
         barPercentage: percentage
@@ -74,8 +87,9 @@ class App extends React.Component {
 
   // To approve 100 LEV tokens to the stake contract from the user address
   async approve(amount) {
-    const estimateGas = await lev.methods.approve(this.state.account, this.toLev(amount)).estimateGas();
-    const data = await lev.methods.approve(this.state.account, this.toLev(amount)).encodeABI();
+    let tx = await lev.methods.approve(this.state.account, App.levDisplayToActuals(amount));
+    const estimateGas = tx.estimateGas();
+    const data = tx.encodeABI();
 
     this.setState({
       transactionFieldsTo: stake._address,
@@ -87,10 +101,9 @@ class App extends React.Component {
   }
 
   async stakeTokens(stakeAmount) {
-    const estimateGas = await stake.methods.stakeTokens(
-      web3.utils.toWei(stakeAmount, 'ether')).estimateGas();
-    const data = await stake.methods.stakeTokens(
-      web3.utils.toWei(stakeAmount, 'ether')).encodeABI();
+    let tx = await stake.methods.stakeTokens(App.levDisplayToActuals(stakeAmount));
+    const estimateGas = tx.estimateGas();
+    const data = tx.encodeABI();
 
     this.setState({
       transactionFieldsTo: stake._address,
@@ -121,49 +134,49 @@ class App extends React.Component {
         </div>
 
         <div className={this.state.loadingInitialData ? 'hidden' : 'container'}>
-					<div className="row">
-						<UserInformation
-							className="col-md-6 user-information-box"
-							isUpdatingStakeData={this.state.isUpdatingStakeData}
-							getInfo={account => {
-								this.getInfo(account)
-							}}
-							account={this.state.account}
-							numberOfLev={this.state.numberOfLev}
-							stakedLev={this.state.stakedLev}
-							approvedLev={this.state.approvedLev}
-						/>
+          <div className="row">
+            <UserInformation
+              className="col-md-6 user-information-box"
+              isUpdatingStakeData={this.state.isUpdatingStakeData}
+              getInfo={account => {
+                this.getInfo(account)
+              }}
+              account={this.state.account}
+              numberOfLev={this.state.numberOfLev}
+              stakedLev={this.state.stakedLev}
+              approvedLev={this.state.approvedLev}
+            />
 
-						<Actions
-							className="col-md-6 actions-box border border-secondary rounded"
-							setStakeAmount={state => {
-								state.stakeAmount = `${toLev(state.stakeAmount)}e${this.state.decimals}`
-								this.setState(state)
-							}}
-							approve={amount => {
-								this.approve(amount)
-							}}
-							stakeTokens={amount => {
-								this.stakeTokens(amount)
-							}}
-							transactionFieldsTo={this.state.transactionFieldsTo}
-							transactionFieldsAmount={this.state.transactionFieldsAmount}
-							transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
-							transactionFieldsData={this.state.transactionFieldsData}
-							isUpdatingAllowance={this.state.isUpdatingAllowance}
-							allowance={this.state.allowance}
-							customAccount={this.state.customAccount}
-							stakeAmount={this.state.stakeAmount}
-							showTransactionFields={this.state.showTransactionFields}
-							account={this.state.account}
-						/>
-					</div>
+            <Actions
+              className="col-md-6 actions-box border border-secondary rounded"
+              setStakeAmount={state => {
+                state.stakeAmount = `${App.levActualToDisplay(state.stakeAmount)}`;
+                this.setState(state)
+              }}
+              approve={amount => {
+                this.approve(amount)
+              }}
+              stakeTokens={amount => {
+                this.stakeTokens(amount)
+              }}
+              transactionFieldsTo={this.state.transactionFieldsTo}
+              transactionFieldsAmount={this.state.transactionFieldsAmount}
+              transactionFieldsGasLimit={this.state.transactionFieldsGasLimit}
+              transactionFieldsData={this.state.transactionFieldsData}
+              isUpdatingAllowance={this.state.isUpdatingAllowance}
+              allowance={this.state.allowance}
+              customAccount={this.state.customAccount}
+              stakeAmount={this.state.stakeAmount}
+              showTransactionFields={this.state.showTransactionFields}
+              account={this.state.account}
+            />
+          </div>
           <br/>
 
-					<div className="row">
-						<Helper />
-					</div>
-				</div>
+          <div className="row">
+            <Helper/>
+          </div>
+        </div>
       </div>
     )
   }
