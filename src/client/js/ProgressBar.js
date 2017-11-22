@@ -18,12 +18,6 @@ class ProgressBar extends React.Component {
 						{this.props.stakeAddress}
 					</div>
 				</div>
-<<<<<<< HEAD
-
-				<br/>
-=======
->>>>>>> 61650c96192685404d26b58e0b010848e21ced8f
-
 				<div className="row">
 					<div className="col-md-1">
 						LEV
@@ -32,12 +26,6 @@ class ProgressBar extends React.Component {
 						{this.props.levAddress}
 					</div>
 				</div>
-<<<<<<< HEAD
-
-				<br/>
-=======
->>>>>>> 61650c96192685404d26b58e0b010848e21ced8f
-
 				<div className="row">
 					<div className="col-md-1">
 						FEE
@@ -46,24 +34,13 @@ class ProgressBar extends React.Component {
 						{this.props.feeAddress}
 					</div>
 				</div>
-<<<<<<< HEAD
-
-				<br/>
-=======
->>>>>>> 61650c96192685404d26b58e0b010848e21ced8f
-
 				<div className="row bar no-gutters">
 					<div className="bar-content" ref="bar-content">{this.props.barPercentage? this.props.barPercentage.toFixed(2): this.props.barPercentage}%</div>
 				</div>
 
 				<div className="row">
-<<<<<<< HEAD
-					<p className="col-2 bar-start-block">Start: {this.props.startBlock}</p>
-					<p className="col-2 offset-8 bar-end-block">End: {this.props.endBlock}</p>
-=======
 					<div className="col-2 bar-start-block">Start: {this.props.startBlock}</div>
 					<div className="col-2 offset-8 bar-end-block">End: {this.props.endBlock}</div>
->>>>>>> 61650c96192685404d26b58e0b010848e21ced8f
 				</div>
 			</div>
 		)

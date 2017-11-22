@@ -158,12 +158,7 @@ class App extends React.Component {
 							account={this.state.account}
 						/>
 					</div>
-
-					<div className="row">
-						<StatusBar sale={this.state.sale}/>
-					</div>
-
-					<br/>
+          <br/>
 
 					<div className="row">
 						<Helper />

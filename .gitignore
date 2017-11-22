@@ -13,5 +13,5 @@ bower_components
 conf.ropsten/stake.json
 migrations/config/
 scripts/stake.sh
-config/
-conf/
+#config/
+#conf/
