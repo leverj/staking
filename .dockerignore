@@ -2,14 +2,11 @@
 bower_components
 build
 conf*
-contracts
 migrations
 node_modules
-scripts
 src*
 *.log*
 test
 bower.json
 circle.yml
-package.json
 README.md
