@@ -35,3 +35,10 @@ deployment:
       - docker build -t leverj/stake:testnet .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
+  operator:
+    branch: operator
+    commands:
+      - docker info
+      - cd scripts && docker build -t leverj/stake-automatin:operstaor .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push leverj/stake-automation
