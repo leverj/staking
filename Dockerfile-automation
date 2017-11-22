@@ -1,3 +1,3 @@
 FROM coinpit/nodejs:v8
 COPY scripts/automation.js package.json scripts/conf.js contracts dist/
-RUN apt-get update && apt-get install -y git && cd dist && npm iinstall --production
+RUN apt-get update && apt-get install -y git && cd dist && npm iinstall -production
