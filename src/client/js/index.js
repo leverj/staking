@@ -21,6 +21,12 @@ class App extends React.Component {
     this.init()
   }
 
+  // Special function from React that gets executed when the component is loaded
+  componentDidMount() {
+    // To activate additional information when the user hovers the data-toggle="tooltip" element
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
   async init() {
     let response = await fetch('/api/v1/config', {
       method: 'GET'

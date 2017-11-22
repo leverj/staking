@@ -66,6 +66,7 @@
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "compression": "^1.7.1",
     "config": "^1.28.1",
     "ethereumjs-abi": "^0.6.4",

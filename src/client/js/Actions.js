@@ -1,4 +1,5 @@
 import React from 'react'
+import Tooltip from './Tooltip'
 
 class Actions extends React.Component {
 	render() {
@@ -8,13 +9,17 @@ class Actions extends React.Component {
 					<h2 className="col-12">Actions</h2>
 				</div>
 
-				<div className="row">
-					<input className="col-12 form-control" type="number" placeholder="Amount to stake" ref="stakeAmount-amount" onChange={() => {
+				<div className="row align-items-center">
+					<input className="col-11 form-control" type="number" placeholder="Amount to stake" ref="stakeAmount-amount" onChange={() => {
 						this.props.setState({stakeAmount: this.refs['stakeAmount-amount'].value})
 					}} disabled={this.props.account ? false : true} />
-				</div>
-				<div>
-					<span className={this.props.account ? 'hidden' : 'col-12'}>Set your address to start staking</span>
+
+					<div className="col-1">
+						<Tooltip
+							position="top"
+							message="You need to set you address before being able to stake, do so on the left panel"
+						/>
+					</div>
 				</div>
 
 				<div className="row">
