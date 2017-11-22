@@ -59,11 +59,11 @@ class App extends React.Component {
   }
 
   static levDisplayToActuals(amount) {
-    Math.floor(amount * Math.pow(10, config.levDecimals));
+    return Math.floor(amount * Math.pow(10, config.levDecimals));
   }
 
   static feeDisplayToActuals(amount) {
-    Math.floor(amount * Math.pow(10, config.feeDecimals));
+    return Math.floor(amount * Math.pow(10, config.feeDecimals));
   }
 
   async getInfo(account) {
@@ -72,6 +72,27 @@ class App extends React.Component {
       let endBlock = await stake.methods.endBlock().call();
       let currentBlock = (await web3.eth.getBlock('latest')).number;
       let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock);
+			let feeCalculated = await stake.methods.feeCalculated().call();
+			let levToWithdraw;
+			let feeToWithdraw;
+
+			const stakingExpired = currentBlock > endBlock;
+
+			if(!stakingExpired || (stakingExpired && !feeCalculated)) {
+				levToWithdraw = 0
+				feeToWithdraw = 0
+			} else if(stakingExpired && feeCalculated) {
+				const levBlock = await stake.methods.levBlocks(account).call();
+				const feeForTheStakingInterval = await stake.methods.feeForTheStakingInterval().call();
+				const totalLevBlocks = await stake.methods.totalLevBlocks().call();
+
+				levToWithdraw = App.levActualToDisplay(await stake.methods.stakes(account).call());
+				if(Number(levBlock) === 0 || Number(feeForTheStakingInterval) === 0 || Number(totalLevBlocks) === 0) {
+					feeToWithdraw = App.feeActualToDisplay(0)
+				} else {
+					feeToWithdraw = App.feeActualToDisplay(levBlock * feeForTheStakingInterval / totalLevBlocks);
+				}
+			}
 
       this.setState({
         account: account,
@@ -80,7 +101,9 @@ class App extends React.Component {
         approvedLev: `${App.levActualToDisplay(await lev.methods.allowance(account, stake._address).call())}`,
         startBlock: startBlock,
         endBlock: endBlock,
-        barPercentage: percentage
+        barPercentage: percentage,
+				levToWithdraw,
+				feeToWithdraw,
       }, resolve)
     })
   }
@@ -145,12 +168,14 @@ class App extends React.Component {
               numberOfLev={this.state.numberOfLev}
               stakedLev={this.state.stakedLev}
               approvedLev={this.state.approvedLev}
+							levToWithdraw={this.state.levToWithdraw}
+							feeToWithdraw={this.state.feeToWithdraw}
             />
 
             <Actions
               className="col-md-6 actions-box border border-secondary rounded"
               setStakeAmount={state => {
-                state.stakeAmount = `${App.levActualToDisplay(state.stakeAmount)}`;
+                state.stakeAmount = App.levDisplayToActuals(state.stakeAmount);
                 this.setState(state)
               }}
               approve={amount => {

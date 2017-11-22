@@ -2,7 +2,7 @@ import React from 'react'
 
 class UserInformation extends React.Component {
 	render() {
-		const {className, approvedLev, numberOfLev, stakedLev} = this.props
+		const {className, approvedLev, numberOfLev, stakedLev, feeToWithdraw, levToWithdraw} = this.props
 		return (
 			<div className={className}>
 				<div className="row">
@@ -39,7 +39,11 @@ class UserInformation extends React.Component {
 				</div>
 
 				<div className="row">
-					<p className="col-12">LEV available to withdraw: Unknown</p>
+					<p className="col-12">LEV available to withdraw: {levToWithdraw}</p>
+				</div>
+
+				<div className="row">
+					<p className="col-12">FEE available to withdraw: {feeToWithdraw}</p>
 				</div>
 			</div>
 		)
