@@ -21,6 +21,12 @@ class App extends React.Component {
     this.init()
   }
 
+  // Special function from React that gets executed when the component is loaded
+  componentDidMount() {
+    // To activate additional information when the user hovers the data-toggle="tooltip" element
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
   async init() {
     let response = await fetch('/api/v1/config', {
       method: 'GET'
@@ -111,7 +117,7 @@ class App extends React.Component {
   // To approve 100 LEV tokens to the stake contract from the user address
   async approve(amount) {
     let tx = await lev.methods.approve(this.state.account, App.levDisplayToActuals(amount));
-    const estimateGas = tx.estimateGas();
+    const estimateGas = await tx.estimateGas();
     const data = tx.encodeABI();
 
     this.setState({
@@ -125,7 +131,7 @@ class App extends React.Component {
 
   async stakeTokens(stakeAmount) {
     let tx = await stake.methods.stakeTokens(App.levDisplayToActuals(stakeAmount));
-    const estimateGas = tx.estimateGas();
+    const estimateGas = await tx.estimateGas();
     const data = tx.encodeABI();
 
     this.setState({
