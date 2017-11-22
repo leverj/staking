@@ -39,6 +39,6 @@ deployment:
     branch: operator
     commands:
       - docker info
-      - docker build -f Dockerfile-automation -t leverj/stake-automatin:develop .
+      - docker build -f Dockerfile-automation -t leverj/stake-automation:develop .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake-automation
