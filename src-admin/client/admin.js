@@ -52,6 +52,7 @@ module.exports = (function () {
     $("#restart-stake").click(restartStake);
     $("#flip-calculated").click(flipCalculated);
     $("#send-fee").click(sendFeeTokens);
+    $("#add-owner").click(addOwner);
     displayDetails("user lev balance", await lev.methods.balanceOf(user).call());
     displayDetails("user lev approve", await lev.methods.allowance(user, config.stake).call());
     displayDetails("user lev blocks", await stake.methods.levBlocks(user).call());
@@ -119,6 +120,11 @@ module.exports = (function () {
   async function flipCalculated() {
     let current = await stake.methods.feeCalculated().call();
     await stake.methods.revertFeeCalculatedFlag(!current).send({from: user});
+  }
+
+  async function addOwner() {
+    let owner = $("#new-owner").val();
+    await stake.methods.addOwner(owner).send({from: user});
   }
 
   async function sendFeeTokens() {

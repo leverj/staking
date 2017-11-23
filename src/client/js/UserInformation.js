@@ -1,8 +1,10 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
+import Tooltip from './Tooltip'
 
 class UserInformation extends React.Component {
 	render() {
-		const {className, approvedLev, numberOfLev, stakedLev} = this.props
+		const {className, approvedLev, numberOfLev, stakedLev, feeToWithdraw, levToWithdraw} = this.props
 		return (
 			<div className={className}>
 				<div className="row">
@@ -11,16 +13,17 @@ class UserInformation extends React.Component {
 
 				<br/>
 
-				<div className="row">
-					<div className="col-12">
-						<div className="input-group">
-							<input className="form-control" type="text" placeholder="Ethereum address..." ref="custom-account" />
-							<span className="input-group-btn">
-								<button className="btn btn-secondary" type="button" onClick={() => {
-									this.props.getInfo(this.refs['custom-account'].value)
-								}}>Get Info</button><br/>
-							</span>
-						</div>
+				<div className="row align-items-center">
+					<div className="col-11 input-group">
+						<input className="form-control" type="text" placeholder="Ethereum address..." ref="custom-account" />
+						<span className="input-group-btn">
+							<button className="btn btn-secondary" type="button" onClick={() => {
+								this.props.getInfo(this.refs['custom-account'].value)
+							}}>Get Info</button><br/>
+						</span>
+					</div>
+					<div className="col-1 left-padding-zero">
+						<Tooltip position="top" message="You'll see your LEV information once you set up your account here" />
 					</div>
 				</div>
 
@@ -39,7 +42,11 @@ class UserInformation extends React.Component {
 				</div>
 
 				<div className="row">
-					<p className="col-12">LEV available to withdraw: Unknown</p>
+					<p className="col-12">LEV available to withdraw: {levToWithdraw}</p>
+				</div>
+
+				<div className="row">
+					<p className="col-12">FEE available to withdraw: {feeToWithdraw}</p>
 				</div>
 			</div>
 		)
