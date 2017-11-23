@@ -18,7 +18,6 @@ class ProgressBar extends React.Component {
 						{this.props.stakeAddress}
 					</div>
 				</div>
-
 				<div className="row">
 					<div className="col-md-1">
 						LEV
@@ -27,7 +26,6 @@ class ProgressBar extends React.Component {
 						{this.props.levAddress}
 					</div>
 				</div>
-
 				<div className="row">
 					<div className="col-md-1">
 						FEE
@@ -36,7 +34,6 @@ class ProgressBar extends React.Component {
 						{this.props.feeAddress}
 					</div>
 				</div>
-
 				<div className="row bar no-gutters">
 					<div className="bar-content" ref="bar-content">{this.props.barPercentage? this.props.barPercentage.toFixed(2): this.props.barPercentage}%</div>
 				</div>
