@@ -21,12 +21,18 @@ class App extends React.Component {
     this.init()
   }
 
+  // Special function from React that gets executed when the component is loaded
+  componentDidMount() {
+    // To activate additional information when the user hovers the data-toggle="tooltip" element
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+
   async init() {
     let response = await fetch('/api/v1/config', {
       method: 'GET'
     });
-    let config = await response.json();
 
+    window.config = await response.json();
     window.web3 = new Web3(window.web3 ? window.web3.currentProvider : new Web3.providers.HttpProvider(config.network));
     window.stake = new web3.eth.Contract(stakeABI, config.stake);
     window.lev = new web3.eth.Contract(levABI, config.lev);
@@ -45,11 +51,25 @@ class App extends React.Component {
       feeAddress: config.fee,
       loadingInitialData: false,
       sale: config.sale,
+      feeDecimals: config.feeDecimals,
+      levDecimals: config.levDecimals,
     })
   }
 
-  toLev(amount) {
-    return amount / 10e9;
+  static levActualToDisplay(amount) {
+    return (amount / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals);
+  }
+
+  static feeActualToDisplay(amount) {
+    return (amount / Math.pow(10, config.feeDecimals)).toFixed(config.feeDecimals);
+  }
+
+  static levDisplayToActuals(amount) {
+    return Math.floor(amount * Math.pow(10, config.levDecimals));
+  }
+
+  static feeDisplayToActuals(amount) {
+    return Math.floor(amount * Math.pow(10, config.feeDecimals));
   }
 
   async getInfo(account) {
@@ -58,23 +78,47 @@ class App extends React.Component {
       let endBlock = await stake.methods.endBlock().call();
       let currentBlock = (await web3.eth.getBlock('latest')).number;
       let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock);
+			let feeCalculated = await stake.methods.feeCalculated().call();
+			let levToWithdraw;
+			let feeToWithdraw;
+
+			const stakingExpired = currentBlock > endBlock;
+
+			if(!stakingExpired || (stakingExpired && !feeCalculated)) {
+				levToWithdraw = 0
+				feeToWithdraw = 0
+			} else if(stakingExpired && feeCalculated) {
+				const levBlock = await stake.methods.levBlocks(account).call();
+				const feeForTheStakingInterval = await stake.methods.feeForTheStakingInterval().call();
+				const totalLevBlocks = await stake.methods.totalLevBlocks().call();
+
+				levToWithdraw = App.levActualToDisplay(await stake.methods.stakes(account).call());
+				if(Number(levBlock) === 0 || Number(feeForTheStakingInterval) === 0 || Number(totalLevBlocks) === 0) {
+					feeToWithdraw = App.feeActualToDisplay(0)
+				} else {
+					feeToWithdraw = App.feeActualToDisplay(levBlock * feeForTheStakingInterval / totalLevBlocks);
+				}
+			}
 
       this.setState({
         account: account,
-        numberOfLev: await lev.methods.balanceOf(account).call(),
-        stakedLev: await stake.methods.stakes(account).call(),
-        approvedLev: this.toLev(await lev.methods.allowance(account, stake._address).call()),
+        numberOfLev: `${App.levActualToDisplay(await lev.methods.balanceOf(account).call())}`,
+        stakedLev: `${App.levActualToDisplay(await stake.methods.stakes(account).call())}`,
+        approvedLev: `${App.levActualToDisplay(await lev.methods.allowance(account, stake._address).call())}`,
         startBlock: startBlock,
         endBlock: endBlock,
-        barPercentage: percentage
+        barPercentage: percentage,
+				levToWithdraw,
+				feeToWithdraw,
       }, resolve)
     })
   }
 
   // To approve 100 LEV tokens to the stake contract from the user address
   async approve(amount) {
-    const estimateGas = await lev.methods.approve(this.state.account, this.toLev(amount)).estimateGas();
-    const data = await lev.methods.approve(this.state.account, this.toLev(amount)).encodeABI();
+    let tx = await lev.methods.approve(this.state.account, App.levDisplayToActuals(amount));
+    const estimateGas = await tx.estimateGas();
+    const data = tx.encodeABI();
 
     this.setState({
       transactionFieldsTo: stake._address,
@@ -86,10 +130,9 @@ class App extends React.Component {
   }
 
   async stakeTokens(stakeAmount) {
-    const estimateGas = await stake.methods.stakeTokens(
-      web3.utils.toWei(stakeAmount, 'ether')).estimateGas();
-    const data = await stake.methods.stakeTokens(
-      web3.utils.toWei(stakeAmount, 'ether')).encodeABI();
+    let tx = await stake.methods.stakeTokens(App.levDisplayToActuals(stakeAmount));
+    const estimateGas = await tx.estimateGas();
+    const data = tx.encodeABI();
 
     this.setState({
       transactionFieldsTo: stake._address,
@@ -131,11 +174,14 @@ class App extends React.Component {
               numberOfLev={this.state.numberOfLev}
               stakedLev={this.state.stakedLev}
               approvedLev={this.state.approvedLev}
+							levToWithdraw={this.state.levToWithdraw}
+							feeToWithdraw={this.state.feeToWithdraw}
             />
 
             <Actions
               className="col-md-6 actions-box border border-secondary rounded"
-              setState={state => {
+              setStakeAmount={state => {
+                state.stakeAmount = App.levDisplayToActuals(state.stakeAmount);
                 this.setState(state)
               }}
               approve={amount => {
@@ -156,11 +202,10 @@ class App extends React.Component {
               account={this.state.account}
             />
           </div>
-
           <br/>
 
           <div className="row">
-            <Helper sale={this.state.sale}/>
+            <Helper/>
           </div>
         </div>
       </div>

@@ -55,3 +55,16 @@
 .bar-container table span {
    font-weight: bold;
 }
+.help-icon {
+  padding: 5px;
+  color: white;
+  border-radius: 2px;
+  background-color: orange;
+  cursor: pointer;
+}
+.help-icon:hover {
+  background-color: rgb(201, 109, 0);
+}
+.left-padding-zero {
+  padding-left: 0;
+}
