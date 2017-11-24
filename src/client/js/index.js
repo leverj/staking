@@ -36,8 +36,15 @@ class App extends React.Component {
     window.web3 = new Web3(window.web3 ? window.web3.currentProvider : new Web3.providers.HttpProvider(config.network));
     window.stake = new web3.eth.Contract(stakeABI, config.stake);
     window.lev = new web3.eth.Contract(levABI, config.lev);
+		const account = localStorage.account
 
-    let startBlock = await stake.methods.startBlock().call();
+		await this.updateInitialInformation()
+		if(account) await this.getInfo(account)
+  }
+
+	async updateInitialInformation() {
+		this.setState({updateInitialInformation: true})
+		let startBlock = await stake.methods.startBlock().call();
     let endBlock = await stake.methods.endBlock().call();
     let currentBlock = (await web3.eth.getBlock('latest')).number;
     let percentage = currentBlock >= endBlock ? 100 : (currentBlock - startBlock) * 100 / (endBlock - startBlock);
@@ -53,8 +60,9 @@ class App extends React.Component {
       sale: config.sale,
       feeDecimals: config.feeDecimals,
       levDecimals: config.levDecimals,
+			updateInitialInformation: false,
     })
-  }
+	}
 
   static levActualToDisplay(amount) {
     return (amount / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals);
@@ -100,6 +108,8 @@ class App extends React.Component {
 				}
 			}
 
+			localStorage.setItem('account', account)
+
       this.setState({
         account: account,
         numberOfLev: `${App.levActualToDisplay(await lev.methods.balanceOf(account).call())}`,
@@ -116,12 +126,12 @@ class App extends React.Component {
 
   // To approve 100 LEV tokens to the stake contract from the user address
   async approve(amount) {
-    let tx = await lev.methods.approve(this.state.account, App.levDisplayToActuals(amount));
+    let tx = await lev.methods.approve(this.state.stakeAddress, amount);
     const estimateGas = await tx.estimateGas();
     const data = tx.encodeABI();
 
     this.setState({
-      transactionFieldsTo: stake._address,
+      transactionFieldsTo: lev._address,
       transactionFieldsAmount: 0,
       transactionFieldsGasLimit: estimateGas,
       transactionFieldsData: data,
@@ -130,7 +140,7 @@ class App extends React.Component {
   }
 
   async stakeTokens(stakeAmount) {
-    let tx = await stake.methods.stakeTokens(App.levDisplayToActuals(stakeAmount));
+    let tx = await stake.methods.stakeTokens(stakeAmount);
     const estimateGas = await tx.estimateGas();
     const data = tx.encodeABI();
 
@@ -156,6 +166,12 @@ class App extends React.Component {
           barPercentage={this.state.barPercentage}
           startBlock={this.state.startBlock}
           endBlock={this.state.endBlock}
+					account={this.state.account}
+					updateInitialInformation={this.state.updateInitialInformation}
+					updateGetInfo={() => {
+						this.updateInitialInformation()
+						this.getInfo(this.state.account)
+					}}
         />
 
         <div className={this.state.loadingInitialData ? 'row justify-content-center' : 'hidden'}>
