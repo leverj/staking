@@ -47,6 +47,7 @@ contract Owned {
 
   function addOwner(address _owner) external onlyOwner {
     require(_owner != address(0));
+    if(isOwner[_owner]) return;
     isOwner[_owner] = true;
     owners.push(_owner);
     OwnerAddition(_owner);
