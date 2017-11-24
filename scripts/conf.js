@@ -20,6 +20,7 @@ module.exports = {
   "socketProvider": process.env.SOCKETPROVIDER,
   "blockInterval": process.env.BLOCKINTERVAL - 0,
   "gas": process.env.GAS - 0,
+  "maxRedeem": process.env.MAX_REDEEM ? process.env.MAX_REDEEM - 0 : 10,
 };
 
 

@@ -76,8 +76,25 @@ async function automate() {
     if (users.length === 0) return;
     users = await getToBeRedeemed(users);
     if (users.length === 0) return;
-    await stake.methods.redeemLevAndFeeToStakers(users).send(sendOptions);
+    let usersBatch = getUsersInBatches(users, conf.maxRedeem);
+    for (let i = 0; i < usersBatch.length; i++) {
+      let batch = usersBatch[i];
+      await stake.methods.redeemLevAndFeeToStakers(batch).send(sendOptions);
+    }
     await updateContractState();
+  }
+
+  function getUsersInBatches(users, maxRedeem) {
+    if (users.length <= maxRedeem) {
+      return [users];
+    }
+    let i = 0;
+    let result = [];
+    while (i < users.length) {
+      result.push(users.slice(i, i + maxRedeem));
+      i += maxRedeem;
+    }
+    return result;
   }
 
   async function startNewStakingInterval() {
