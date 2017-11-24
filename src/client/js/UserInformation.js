@@ -4,7 +4,7 @@ import Tooltip from './Tooltip'
 
 class UserInformation extends React.Component {
 	render() {
-		const {className, approvedLev, numberOfLev, stakedLev, feeToWithdraw, levToWithdraw} = this.props
+		const {className, approvedLev, numberOfLev, stakedLev, feeToWithdraw, levToWithdraw, account} = this.props
 		return (
 			<div className={className}>
 				<div className="row">
@@ -28,6 +28,10 @@ class UserInformation extends React.Component {
 				</div>
 
 				<br/>
+
+				<div className={account ? "row" : 'hidden'}>
+					<p className="col-12">Showing data for the account: {account}</p>
+				</div>
 
 				<div className="row">
 					<p className="col-12">Number of LEV: {numberOfLev}</p>
