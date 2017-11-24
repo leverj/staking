@@ -126,12 +126,12 @@ class App extends React.Component {
 
   // To approve 100 LEV tokens to the stake contract from the user address
   async approve(amount) {
-    let tx = await lev.methods.approve(this.state.account, amount);
+    let tx = await lev.methods.approve(this.state.stakeAddress, amount);
     const estimateGas = await tx.estimateGas();
     const data = tx.encodeABI();
 
     this.setState({
-      transactionFieldsTo: stake._address,
+      transactionFieldsTo: lev._address,
       transactionFieldsAmount: 0,
       transactionFieldsGasLimit: estimateGas,
       transactionFieldsData: data,
