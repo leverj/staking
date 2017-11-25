@@ -79,6 +79,7 @@ async function automate() {
     let usersBatch = getUsersInBatches(users, conf.maxRedeem);
     for (let i = 0; i < usersBatch.length; i++) {
       let batch = usersBatch[i];
+      console.log("redeem to", batch);
       await stake.methods.redeemLevAndFeeToStakers(batch).send(sendOptions);
     }
     await updateContractState();
