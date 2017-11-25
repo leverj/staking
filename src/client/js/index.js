@@ -221,7 +221,7 @@ class App extends React.Component {
           <br/>
 
           <div className="row">
-            <Helper/>
+            <Helper sale={this.state.sale}/>
           </div>
         </div>
       </div>
