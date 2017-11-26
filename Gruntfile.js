@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
   // Project configuration.
-  const dist = './dist/';
+  const dist = './dist1/';
   const server = './src-admin/server/';
   const common = './src-admin/common/';
   const client = './src-admin/client/';
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
       browserify: {
         dist: {
           files: {
-            "dist/src-admin/client/admin.js": client + "admin.js"
+            "dist1/src-admin/client/admin.js": client + "admin.js"
           }
         }
       },
