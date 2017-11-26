@@ -17,7 +17,7 @@ module.exports = function (grunt) {
             {
               expand: true,
               cwd: client,
-              src: ['**/*.html',"**/*.css"],
+              src: ['**/*.html', "**/*.css"],
               dest: dist + "/src-admin/client"
             },
             {
@@ -48,15 +48,30 @@ module.exports = function (grunt) {
               expand: true,
               cwd: "./config",
               src: ['**/*'],
-              dest: "./migrations/config"
+              dest: dist + "/config"
             }
           ]
         }
       },
+      /*cachebreaker: {
+        dev: {
+          options: {
+            match: [
+              {"bootstrap.min.css": "dist1/src/client/bootstrap/dist/css/bootstrap.min.css"},
+              {"main.css": "dist1/src/client/coinpit.css"},
+              {"coinpit.js": "dist/src/client/coinpit.js"},
+              {"chart.js": "dist/src/client/chart.js"},
+            ],
+            replacement: 'md5'
+          },
+          files: {src: ['dist/src/client/index.html']}
+        }
+      },*/
       browserify: {
         dist: {
           files: {
-            "dist1/src-admin/client/admin.js": client + "admin.js"
+            "dist1/src-admin/client/admin.js": client + "admin.js",
+            "dist1/src-admin/client/index.js": client + "index.js"
           }
         }
       },
