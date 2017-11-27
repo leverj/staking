@@ -1,11 +1,175 @@
 <html>
 <head>
 <title>Stake LEV</title>
-  <script src="./jquery/dist/jquery.min.js"></script>
-  <script src="index.js"></script>
+  <!-- <script src="./jquery/dist/jquery.min.js"></script> -->
+  <!-- <script src="index.js"></script> -->
   <link rel="stylesheet" type="text/css" href="./main.css">
 </head>
 <body>
-<a href="admin.html">admin </a>
-</body>
+  <a href="admin.html">admin </a>
+
+  <div class="logo">
+  <img src="img/logo.png" alt="">
+</div>
+
+<div class="help-button">
+  ?
+</div>
+<form id="stakingForm">
+<!-- progressbar -->
+<ul id="progressbar">
+  <li class="active">User Information</li>
+  <li>Approval</li>
+  <li>Staking</li>
+  <li>Confriamtion</li>
+</ul>
+<!-- fieldsets -->
+<fieldset>
+  <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+  <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the help icon at any point during the process</h3>
+  <input type="" name="cpass" placeholder="Etherum Address" />
+
+  <div class="eth-info">
+    <h4>Number of LEV: <span class="text-brand">10000</span></h4>
+
+    <h4>Staked LEV: <span class="text-brand">90</span></h4>
+
+    <h4>Approved LEV: <span class="text-brand">100</span></h4>
+
+    <h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>
+  </div>
+
+  <input type="button" name="show" class="show action-button" value="Show Info" />
+  <input type="button" name="next" class="next action-button hidden" value="Next" />
+</fieldset>
+<fieldset>
+  <h2 class="staking-title"></h2>
+  <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
+  <input type="text" name="gplus" placeholder="Amount to stake" />
+
+  <div class="eth-info">
+    <h4>To address: <span class="text-brand">0x24FF28Af80967625241848550711F70360b98689</span></h4>
+
+    <h4>Amount: <span class="text-brand">0</span></h4>
+
+    <h4>Gas limit: <span class="text-brand">4704624</span></h4>
+
+    <h4>Data: <span class="text-brand address">0x7547c7a300000000000000000000000000000000000000000000000b7e174cc69ed00000</span></h4>
+  </div>
+
+  <input type="button" name="previous" class="previous action-button" value="Previous" />
+  <input type="button" name="Approve" class="show approve action-button" value="Approve" />
+  <input type="button" name="next" class="next action-button hidden" value="Next" />
+</fieldset>
+<fieldset>
+  <h2 class="staking-title"></h2>
+  <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
+  <input type="text" name="gplus" placeholder="Amount to stake" />
+
+  <div class="eth-info">
+    <h4>To address: <span class="text-brand">0x24FF28Af80967625241848550711F70360b98689</span></h4>
+
+    <h4>Amount: <span class="text-brand">0</span></h4>
+
+    <h4>Gas limit: <span class="text-brand">4704624</span></h4>
+
+    <h4>Data: <span class="text-brand address">0x7547c7a300000000000000000000000000000000000000000000000b7e174cc69ed00000</span></h4>
+  </div>
+
+  <input type="button" name="previous" class="previous action-button" value="Previous" />
+  <input type="button" name="show" class="show approve action-button" value="Stake" />
+  <input type="button" name="next" class="next action-button hidden" value="Next" />
+</fieldset>
+</form>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+  <script>
+    let currentForm;
+    let nextForm;
+    let previousForm;
+    let left;
+    let opacity;
+    let scale;
+    let animating;
+
+
+    $(".show").click(function() {
+      $(this).addClass("hidden");
+      $(this).parent().find(".eth-info").addClass("active");
+      $(this).next(".next").removeClass("hidden");
+    })
+
+    $(".next").click(function(){
+      if(animating) return false;
+      animating = true;
+
+      currentForm = $(this).parent();
+      nextForm = $(this).parent().next();
+
+
+      $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
+
+      nextForm.show();
+      currentForm.animate({opacity: 0}, {
+        step: function(now, mx) {
+          //as the opacity of currentForm reduces to 0 - stored in "now"
+          //1. scale currentForm down to 80%
+          scale = 1 - (1 - now) * 0.2;
+          //2. bring nextForm from the right(50%)
+          left = (now * 50)+"%";
+          //3. increase opacity of nextForm to 1 as it moves in
+          opacity = 1 - now;
+          currentForm.css({
+            'transform': 'scale('+scale+')',
+            'position': 'absolute'
+          });
+          nextForm.css({'left': left, 'opacity': opacity});
+        },
+        duration: 800,
+        complete: function(){
+          currentForm.hide();
+          animating = false;
+        },
+        easing: 'easeInOutBack'
+      });
+    });
+
+    $(".previous").click(function(){
+      if(animating) return false;
+      animating = true;
+
+      currentForm = $(this).parent();
+      previousForm = $(this).parent().prev();
+
+      $("#progressbar li").eq($("fieldset").index(currentForm)).removeClass("active");
+
+      previousForm.show();
+      currentForm.animate({opacity: 0}, {
+        step: function(now, mx) {
+          //as the opacity of currentForm reduces to 0 - stored in "now"
+          //1. scale previousForm from 80% to 100%
+          scale = 0.8 + (1 - now) * 0.2;
+          //2. take currentForm to the right(50%) - from 0%
+          left = ((1-now) * 50)+"%";
+          //3. increase opacity of previousForm to 1 as it moves in
+          opacity = 1 - now;
+          currentForm.css({'left': left});
+          previousForm.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+        },
+        duration: 800,
+        complete: function(){
+          currentForm.hide();
+          animating = false;
+        },
+        //this comes from the custom easing plugin
+        easing: 'easeInOutBack'
+      });
+    });
+
+    $(".submit").click(function(){
+      return false;
+    })
+</script>
 </html>

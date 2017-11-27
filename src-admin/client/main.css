@@ -37,3 +37,194 @@ body {
 section{
   padding: 5px;
 }
+
+/*custom font*/
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+/*basic reset*/
+* {
+  margin: 0;
+  padding: 0; }
+
+html {
+  height: 100%;
+  /*Image only BG fallback*/
+  /*background = gradient + image pattern combo*/
+  background: #333; }
+
+body {
+  font-family: montserrat, arial, verdana; }
+
+h4 {
+  color: #fff;
+  text-align: left;
+  margin: 15px 0; }
+
+.text-brand {
+  color: #FD8900;
+  word-wrap: break-word; }
+
+.address {
+  word-wrap: break-word;
+  max-width: 750px;
+  font-size: 10px; }
+
+.eth-info {
+  height: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.7s ease; }
+
+.eth-info.active {
+  height: 150px;
+  visibility: visible;
+  opacity: 1; }
+
+.logo {
+  max-width: 100px;
+  margin: 0 auto;
+  padding-top: 50px; }
+  .logo img {
+    display: block;
+    max-width: 100%; }
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  display: none; }
+
+/*form styles*/
+#stakingForm {
+  width: 100%;
+  max-width: 750px;
+  margin: 50px auto;
+  text-align: center;
+  position: relative; }
+
+#stakingForm fieldset {
+  background: transparent;
+  border: 0 none;
+  border-radius: 3px;
+  border: 1px solid #FD8900;
+  padding: 20px 30px;
+  box-sizing: border-box;
+  width: 80%;
+  margin: 0 10%;
+  /*stacking fieldsets above each other*/
+  position: relative; }
+
+/*Hide all except first fieldset*/
+#stakingForm fieldset:not(:first-of-type) {
+  display: none; }
+
+/*inputs*/
+#stakingForm input, #stakingForm textarea {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: montserrat;
+  color: #2C3E50;
+  font-size: 13px; }
+
+/*buttons*/
+#stakingForm .action-button {
+  width: 100px;
+  background: #FD8900;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px 5px; }
+
+#stakingForm .action-button:hover, #stakingForm .action-button:focus {
+  box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60; }
+
+/*headings*/
+.staking-title {
+  font-size: 15px;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 10px; }
+
+.staking-subtitle {
+  font-weight: normal;
+  font-size: 13px;
+  color: #fff;
+  margin-bottom: 20px; }
+
+/*progressbar*/
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  /*CSS counters to number the steps*/
+  counter-reset: step; }
+
+#progressbar li {
+  list-style-type: none;
+  color: white;
+  text-transform: uppercase;
+  font-size: 9px;
+  width: 25%;
+  float: left;
+  position: relative; }
+
+#progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 20px;
+  line-height: 20px;
+  display: block;
+  font-size: 10px;
+  color: #fff;
+  background: #333;
+  border-radius: 3px;
+  margin: 0 auto 5px auto;
+  border-radius: 50%;
+  border: 1px solid #FD8900; }
+
+/*progressbar connectors*/
+#progressbar li:after {
+  content: '';
+  width: 100%;
+  height: 2px;
+  background: white;
+  position: absolute;
+  left: -50%;
+  top: 9px;
+  z-index: -1;
+  /*put it behind the numbers*/ }
+
+#progressbar li:first-child:after {
+  /*connector not needed before the first step*/
+  content: none; }
+
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before, #progressbar li.active:after {
+  background: #FD8900;
+  color: white;
+  border-radius: 50%; }
+
+.help-button {
+  background: #FD8900;
+  color: white;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  top: 40px;
+  left: 450px;
+  transition: all 0.2s ease;
+  cursor: pointer; }
+  .help-button:hover {
+    transform: scale(1.2); }
+
+/*# sourceMappingURL=style.css.map */
