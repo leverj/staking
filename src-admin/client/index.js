@@ -1,3 +1,5 @@
+const jQuery = require("jquery-easing");
+
 module.exports = (function () {
   let client = {};
   /*let response = await fetch('/api/v1/config', {
