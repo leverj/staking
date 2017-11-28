@@ -19,25 +19,38 @@ deployment:
     commands:
       - docker info
       - docker build -t leverj/stake:develop .
+      - docker build -f Dockerfile-newui -t leverj/staking:develop .
       - docker build -f Dockerfile-automation -t leverj/stake-automation:develop .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
+      - docker push leverj/staking
       - docker push leverj/stake-automation
   master:
     branch: master
     commands:
       - docker info
       - docker build -t leverj/stake:master .
+      - docker build -f Dockerfile-newui -t leverj/staking:master .
       - docker build -f Dockerfile-automation -t leverj/stake-automation:master .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
+      - docker push leverj/staking
       - docker push leverj/stake-automation
   testnet:
     branch: testnet
     commands:
       - docker info
       - docker build -t leverj/stake:testnet .
+      - docker build -f Dockerfile-newui -t leverj/staking:testnet .
       - docker build -f Dockerfile-automation -t leverj/stake-automation:testnet .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
+      - docker push leverj/staking
       - docker push leverj/stake-automation
+  staking-ui:
+      branch: staking-ui
+      commands:
+        - docker info
+        - docker build -f Dockerfile-newui -t leverj/staking:develop .
+        - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+        - docker push leverj/staking
