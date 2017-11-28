@@ -11,7 +11,7 @@ test:
     - bower install
     - truffle compile
     - webpack
-
+    - grunt
 
 deployment:
   hub:
@@ -47,7 +47,7 @@ deployment:
       - docker push leverj/stake
       - docker push leverj/staking
       - docker push leverj/stake-automation
-  stakingui:
+  staking:
       branch: staking-ui
       commands:
         - docker info
