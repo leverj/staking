@@ -1,4 +1,3 @@
-const $ = require("jquery");
 const jQuery = require("jquery-easing");
 
 module.exports = (function () {
