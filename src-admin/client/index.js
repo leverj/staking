@@ -170,7 +170,8 @@ module.exports = (function () {
       $("#approve-amount").text(info.amount);
       $("#approve-gas").text(info.gas);
       $("#approve-data").text(info.data);
-    })
+    });
+    contract.approve(tokens);
   }
 
   function stake() {
@@ -180,7 +181,8 @@ module.exports = (function () {
       $("#stake-amount").text(info.amount);
       $("#stake-gas").text(info.gas);
       $("#stake-data").text(info.data);
-    })
+    });
+    contract.stake(tokens);
   }
 
 

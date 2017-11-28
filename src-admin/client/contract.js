@@ -8,7 +8,7 @@ const stakeABI = require("../../build/contracts/Stake.json").abi;
 
 module.exports = (function () {
   let contract = {};
-  let isManual = browserUtil.getLocal("isManual") === "true";
+  contract.isManual = browserUtil.getLocal("isManual") === "true";
   contract.user = browserUtil.getLocal('userid');
   let stake, lev, fee;
   let userInfo = {};
@@ -17,8 +17,8 @@ module.exports = (function () {
   };
 
   contract.setManual = async function (_isManual) {
-    isManual = _isManual;
-    let provider = _isManual ? window.web3.currentProvider : new Web3.providers.HttpProvider(config.network);
+    contract.isManual = _isManual;
+    let provider = _isManual ? new Web3.providers.HttpProvider(config.network) : window.web3.currentProvider;
     window.web3 = new Web3(provider);
     await setUser();
     stake = new web3.eth.Contract(stakeABI, config.stake);
@@ -53,6 +53,13 @@ module.exports = (function () {
     };
   };
 
+  contract.approve = async function (levCounts) {
+    if (contract.isManual) return;
+    affirm(levCounts > 0, "Amount to approve must be greater than 0");
+    let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
+    await lev.methods.approve(config.stake, amount).send({from: user});
+  };
+
   contract.getStakeInfo = async function (levCounts) {
     affirm(levCounts > 0, "Amount to stake must be greater than 0");
     let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
@@ -65,12 +72,19 @@ module.exports = (function () {
     };
   };
 
+  contract.stake = async function (levCounts) {
+    if (contract.isManual) return;
+    affirm(levCounts > 0, "Amount to approve must be greater than 0");
+    let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
+    await stake.methods.stakeTokens(amount).send({from: user});
+  };
+
   contract.getUserInfo = function () {
     return userInfo;
   };
 
   async function setUser() {
-    if (!isManual) user = (await web3.eth.getAccounts())[0];
+    if (!contract.isManual) user = (await web3.eth.getAccounts())[0];
   }
 
   return contract;
