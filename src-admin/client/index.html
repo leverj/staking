@@ -2,7 +2,6 @@
   <head>
     <title>Stake LEV</title>
     <script src="./jquery/dist/jquery.min.js"></script>
-    <script src="index.js"></script>
     <link rel="stylesheet" type="text/css" href="./main.css">
   </head>
   <body>
@@ -13,7 +12,7 @@
     </div>
 
     <div class="help-button">
-    ?
+      ?
     </div>
 
     <form id="stakingForm">
@@ -24,6 +23,48 @@
         <li>Staking</li>
         <li>Confriamtion</li>
       </ul>
+
+
+
+      <fieldset>
+
+        <h2 class="staking-title">Would you like to use directly through Metamask or would you like to
+        go through the wizard?</h2>
+
+        <div class="form-field__container">
+          <div class="form-field">
+            <input type="radio" name="stake">
+            <label for="" class="text--white">Stake using Metamask</label>
+          </div>
+
+          <div class="form-field">
+            <input type="radio" name="stake">
+            <label for="" class="text--white">Stake manully</label>
+          </div>
+        </div>
+
+        <input type="button" name="next" class="next action-button" value="Next" />
+
+      </fieldset>
+
+      <fieldset>
+        <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+        <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the help icon at any point during the process</h3>
+        <input type="" name="cpass" placeholder="Etherum Address" />
+
+        <div class="eth-info">
+          <h4>Number of LEV: <span class="text-brand">10000</span></h4>
+
+          <h4>Staked LEV: <span class="text-brand">90</span></h4>
+
+          <h4>Approved LEV: <span class="text-brand">100</span></h4>
+
+          <h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>
+        </div>
+
+        <input type="button" name="show" class="show action-button" value="Show Info" />
+        <input type="button" name="next" class="next action-button hidden" value="Next" />
+      </fieldset>
 
       <fieldset>
         <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
@@ -84,7 +125,9 @@
         <input type="button" name="show" class="show approve action-button" value="Stake" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
       </fieldset>
-      
+
     </form>
+
+    <script src="index.js"></script>
   </body>
 </html>

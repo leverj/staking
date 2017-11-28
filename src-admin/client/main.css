@@ -227,4 +227,26 @@ h4 {
   .help-button:hover {
     transform: scale(1.2); }
 
+  .form-field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .form-field__container {
+    margin-top: 25px;
+  }
+
+  .form-field input {
+    display: inline;
+    flex-basis: 10%;
+    margin-bottom: 0 !important;
+  }
+
+  .form-field label {
+    color: #fff;
+    flex-basis: 80%;
+    text-align: left;
+  }
 /*# sourceMappingURL=style.css.map */
