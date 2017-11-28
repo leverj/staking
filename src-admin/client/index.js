@@ -149,7 +149,9 @@ module.exports = (function () {
   };
 
   function chooseMethod() {
-    contract.setManual($("#choice-manual").is(":checked"));
+    contract.setManual($("#choice-manual").is(":checked")).then(function(){
+      $("#user-id").val(contract.user);
+    });
   }
 
   function displayUserInfo() {

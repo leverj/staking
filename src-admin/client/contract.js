@@ -26,15 +26,15 @@ module.exports = (function () {
   };
 
   contract.setUser = function (_user) {
-    user = _user;
+    contract.user = _user;
     browserUtil.setLocal("userid", _user);
   };
 
   contract.updateUserInfo = async function () {
     let result = await Promise.all([
-      lev.methods.balanceOf(user).call(),
-      stake.methods.stakes(user).call(),
-      lev.methods.allowance(user, config.stake).call()
+      lev.methods.balanceOf(contract.user).call(),
+      stake.methods.stakes(contract.user).call(),
+      lev.methods.allowance(contract.user, config.stake).call()
     ]);
     result = result.map(num => ((num - 0) / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals) - 0);
     userInfo = {lev: result[0], staked: result[1], approved: result[2]};
@@ -56,7 +56,7 @@ module.exports = (function () {
     if (contract.isManual) return;
     affirm(levCounts > 0, "Amount to approve must be greater than 0");
     let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
-    await lev.methods.approve(config.stake, amount).send({from: user});
+    await lev.methods.approve(config.stake, amount).send({from: contract.user});
   };
 
   contract.getStakeInfo = async function (levCounts) {
@@ -75,7 +75,7 @@ module.exports = (function () {
     if (contract.isManual) return;
     affirm(levCounts > 0, "Amount to approve must be greater than 0");
     let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
-    await stake.methods.stakeTokens(amount).send({from: user});
+    await stake.methods.stakeTokens(amount).send({from: contract.user});
   };
 
   contract.getUserInfo = function () {
@@ -83,7 +83,7 @@ module.exports = (function () {
   };
 
   async function setUser() {
-    if (!contract.isManual) user = (await web3.eth.getAccounts())[0];
+    if (!contract.isManual) contract.user = (await web3.eth.getAccounts())[0];
   }
 
   async function init() {
