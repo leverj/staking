@@ -48,7 +48,7 @@ deployment:
       - docker push leverj/staking
       - docker push leverj/stake-automation
   staking:
-      branch: staking-ui
+      branch: feature/staking-ui
       commands:
         - docker info
         - docker build -f Dockerfile-newui -t leverj/staking:develop .
