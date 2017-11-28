@@ -17,7 +17,7 @@ module.exports = function (grunt) {
             {
               expand: true,
               cwd: client,
-              src: ['**/*.html', "**/*.css"],
+              src: ['**/*', '**/*.html'],
               dest: dist + "/src-admin/client"
             },
             {

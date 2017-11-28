@@ -5,10 +5,10 @@
     <link rel="stylesheet" type="text/css" href="./main.css">
   </head>
   <body>
-    <a href="admin.html">admin </a>
+    <!-- <a href="admin.html">admin </a> -->
 
     <div class="logo">
-      <img src="img/logo.png" alt="">
+      <img src="./img/logo.svg" alt="">
     </div>
 
     <div class="help-button">
@@ -29,7 +29,7 @@
       <fieldset>
 
         <h2 class="staking-title">Would you like to use directly through Metamask or would you like to
-        go through the wizard?</h2>
+        go through the advanced wizard?</h2>
 
         <div class="form-field__container">
           <div class="form-field">
@@ -67,11 +67,7 @@
       </fieldset>
 
       <fieldset>
-        <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-        <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the help icon at any point during the process</h3>
-        <input type="" name="cpass" placeholder="Etherum Address" />
-
-        <div class="eth-info">
+        <div class="eth-info active">
           <h4>Number of LEV: <span class="text-brand">10000</span></h4>
 
           <h4>Staked LEV: <span class="text-brand">90</span></h4>
@@ -80,12 +76,6 @@
 
           <h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>
         </div>
-
-        <input type="button" name="show" class="show action-button" value="Show Info" />
-        <input type="button" name="next" class="next action-button hidden" value="Next" />
-      </fieldset>
-
-      <fieldset>
         <h2 class="staking-title"></h2>
         <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
         <input type="text" name="gplus" placeholder="Amount to stake" />
