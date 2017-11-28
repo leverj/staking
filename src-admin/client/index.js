@@ -38,12 +38,8 @@ module.exports = (function () {
       nextForm.show();
       currentForm.animate({opacity: 0}, {
         step: function(now, mx) {
-          //as the opacity of currentForm reduces to 0 - stored in "now"
-          //1. scale currentForm down to 80%
           scale = 1 - (1 - now) * 0.2;
-          //2. bring nextForm from the right(50%)
           left = (now * 50)+"%";
-          //3. increase opacity of nextForm to 1 as it moves in
           opacity = 1 - now;
           currentForm.css({
             'transform': 'scale('+scale+')',
@@ -98,11 +94,26 @@ module.exports = (function () {
   }
 
   toggleModal = function () {
-    console.log("toggleModal function");
+    let openModal;
+    let closeButton;
+    let modalBody;
+
+    openModal = $(".js-open-modal");
+    modalBody = $(".modal__body");
+
+    openModal.on("click", function () {
+      modalBody.addClass("active");
+    });
+
+    closeButton.on("click", function () {
+      modalBody.removeClass("active");
+    })
   }
 
   copyData = function () {
-    console.log("copyData function");
+    let copyButton;
+    let copyString;
+
   }
 
   rememberState = function () {
