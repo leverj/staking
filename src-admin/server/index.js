@@ -1,14 +1,14 @@
 const express = require('express');
-const favicon = require('serve-favicon');
+const compress = require('compression');
+const helmet = require('helmet');
+const config = require('config');
+const util = require('util');
+const api = require('./api');
 
 module.exports = (async function () {
   let leverj = {};
   const app = express();
-  const compress = require('compression');
   const server = getServer();
-  const helmet = require('helmet');
-  const ip = '0.0.0.0';
-  const port = 8889;
 
   function getServer() {
     return require('http').Server(app)
@@ -17,7 +17,7 @@ module.exports = (async function () {
   app.use(helmet({frameguard: {action: 'deny'}}));
   app.use(helmet.noCache());
   app.use(helmet.xssFilter());
-
+  app.use("/api/v1", api);
   app.use(compress());
 
   let indexhtml = './dist1/src-admin/client/index.html';
@@ -28,21 +28,23 @@ module.exports = (async function () {
   });
 
   app.use(function (err, req, res, next) {
-    // util.log('FAIL', err);
-    // util.log('FAIL, stack:', err.stack);
+    util.log('FAIL', err.stack);
     res.status(err.statusCode || 500).send({error: err.message})
   });
 
   function init() {
-    server.listen(port, ip);
-    console.log(`Server listening on ${ip}:${port}`);
+    server.listen(config.port, config.ip);
+    util.log(`Server listening on ${config.ip}:${config.port}`);
     process.on('uncaughtException', (err) => {
-      console.log('################################## uncaught exception ######################################');
-      // util.log(err.stack);
-      console.log('################################## uncaught exception ######################################')
+      util.log('################################## uncaught exception ######################################');
+      util.log(err.stack);
+      util.log('################################## uncaught exception ######################################')
     })
   }
 
   init();
   return leverj
-})();
+})().catch(function(e){
+  console.log(e);
+  process.exit(1);
+});

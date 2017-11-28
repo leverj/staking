@@ -1,7 +1,6 @@
 const affirm = require("affirm.js");
 const browserUtil = require("./browserUtil");
 const Web3 = require('web3');
-const config = require("./conf");
 const feeABI = require("../../build/contracts/Fee.json").abi;
 const levABI = require("../../build/contracts/Token.json").abi;
 const stakeABI = require("../../build/contracts/Stake.json").abi;
@@ -10,7 +9,7 @@ module.exports = (function () {
   let contract = {};
   contract.isManual = browserUtil.getLocal("isManual") === "true";
   contract.user = browserUtil.getLocal('userid');
-  let stake, lev, fee;
+  let stake, lev, fee, config;
   let userInfo = {};
   contract.isMetaMask = function () {
     return !!(window.web3 && window.web3.currentProvider);
@@ -87,5 +86,13 @@ module.exports = (function () {
     if (!contract.isManual) user = (await web3.eth.getAccounts())[0];
   }
 
+  async function init() {
+    let response = await fetch('/api/v1/config', {
+      method: 'GET'
+    });
+    config = await response.json()
+  }
+
+  init();
   return contract;
 })();
