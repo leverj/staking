@@ -33,65 +33,65 @@
 
         <div class="form-field__container">
           <div class="form-field">
-            <input type="radio" name="stake">
-            <label for="" class="text--white">Stake using Metamask</label>
+            <input type="radio" checked id="choice-metamask" name="stake">
+            <label for="choice-metamask" class="text--white">Stake using Metamask</label>
           </div>
 
           <div class="form-field">
-            <input type="radio" name="stake">
-            <label for="" class="text--white">Stake manully</label>
+            <input type="radio" id="choice-manual" name="stake">
+            <label for="choice-manual" class="text--white">Stake manually</label>
           </div>
         </div>
 
-        <input type="button" name="next" class="next action-button" value="Next" />
+        <input type="button" name="next" id="choose-action" class="next action-button" value="Next" />
 
       </fieldset>
 
       <fieldset>
         <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
         <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the help icon at any point during the process</h3>
-        <input type="" name="cpass" placeholder="Etherum Address" />
+        <input type="" name="cpass" id="user-id" placeholder="Etherum Address" />
 
         <div class="eth-info">
-          <h4>Number of LEV: <span class="text-brand">10000</span></h4>
+          <h4>Number of LEV: <span class="text-brand" name="lev-count">&nbsp;</span></h4>
 
-          <h4>Staked LEV: <span class="text-brand">90</span></h4>
+          <h4>Staked LEV: <span class="text-brand" name="staked-count">&nbsp;</span></h4>
 
-          <h4>Approved LEV: <span class="text-brand">100</span></h4>
+          <h4>Approved LEV: <span class="text-brand" name="approved-count">&nbsp;</span></h4>
 
-          <h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>
+          <!--<h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>-->
         </div>
 
-        <input type="button" name="show" class="show action-button" value="Show Info" />
+        <input type="button" name="show" id="user-info-display-action" class="show action-button" value="Show Info" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
       </fieldset>
 
       <fieldset>
         <div class="eth-info active">
-          <h4>Number of LEV: <span class="text-brand">10000</span></h4>
+          <h4>Number of LEV: <span class="text-brand" name="lev-count">10000</span></h4>
 
-          <h4>Staked LEV: <span class="text-brand">90</span></h4>
+          <h4>Staked LEV: <span class="text-brand"  name="staked-count">90</span></h4>
 
-          <h4>Approved LEV: <span class="text-brand">100</span></h4>
+          <h4>Approved LEV: <span class="text-brand"  name="approved-count">100</span></h4>
 
-          <h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>
+          <!--<h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>-->
         </div>
         <h2 class="staking-title"></h2>
         <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
-        <input type="text" name="gplus" placeholder="Amount to stake" />
+        <input type="text" name="gplus" id="approve-count" placeholder="Amount to stake" />
 
         <div class="eth-info">
-        <h4>To address: <span class="text-brand">0x24FF28Af80967625241848550711F70360b98689</span></h4>
+        <h4>To address: <span class="text-brand" id="approve-address">&nbsp;</span></h4>
 
-        <h4>Amount: <span class="text-brand">0</span></h4>
+        <h4>Amount: <span class="text-brand" id="approve-amount">&nbsp;</span></h4>
 
-        <h4>Gas limit: <span class="text-brand">4704624</span></h4>
+        <h4>Gas limit: <span class="text-brand" id="approve-gas">&nbsp;</span></h4>
 
-        <h4>Data: <span class="text-brand address">0x7547c7a300000000000000000000000000000000000000000000000b7e174cc69ed00000</span></h4>
+        <h4>Data: <span class="text-brand address" id="approve-data">&nbsp;</span></h4>
         </div>
 
         <input type="button" name="previous" class="previous action-button" value="Previous" />
-        <input type="button" name="Approve" class="show approve action-button" value="Approve" />
+        <input type="button" name="Approve" id="approve-action" class="show approve action-button" value="Approve" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
       </fieldset>
 
@@ -99,20 +99,20 @@
         <h2 class="staking-title"></h2>
         <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
 
-        <input type="text" name="gplus" placeholder="Amount to stake" />
+        <input type="text" name="gplus" id="stake-count" placeholder="Amount to stake" />
 
         <div class="eth-info">
-          <h4>To address: <span class="text-brand">0x24FF28Af80967625241848550711F70360b98689</span></h4>
+          <h4>To address: <span class="text-brand" id="stake-address">&nbsp;</span></h4>
 
-          <h4>Amount: <span class="text-brand">0</span></h4>
+          <h4>Amount: <span class="text-brand" id="stake-amount">&nbsp;</span></h4>
 
-          <h4>Gas limit: <span class="text-brand">4704624</span></h4>
+          <h4>Gas limit: <span class="text-brand" id="stake-gas">&nbsp;</span></h4>
 
-          <h4>Data: <span class="text-brand address">0x7547c7a300000000000000000000000000000000000000000000000b7e174cc69ed00000</span></h4>
+          <h4>Data: <span class="text-brand address" id="stake-data">&nbsp;</span></h4>
         </div>
 
         <input type="button" name="previous" class="previous action-button" value="Previous" />
-        <input type="button" name="show" class="show approve action-button" value="Stake" />
+        <input type="button" name="show" class="show approve action-button" id="stake-action" value="Stake" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
       </fieldset>
 

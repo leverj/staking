@@ -1,16 +1,11 @@
 const $ = require("jquery");
 const jQuery = require("jquery-easing");
+const contract = require("./contract");
 
 module.exports = (function () {
   let client = {};
-  let init
-  let stakingForm;
-  let toggleModal;
-  let copyData;
-  let rememberState;
-  let detectDevice;
 
-  stakingForm = function() {
+  client.stakingForm = function () {
     let currentForm;
     let nextForm;
     let previousForm;
@@ -19,14 +14,14 @@ module.exports = (function () {
     let scale;
     let animating;
 
-    $(".show").click(function() {
+    $(".show").click(function () {
       $(this).addClass("hidden");
       $(this).parent().find(".eth-info").addClass("active");
       $(this).next(".next").removeClass("hidden");
-    })
+    });
 
-    $(".next").click(function(){
-      if(animating) return false;
+    $(".next").click(function () {
+      if (animating) return false;
       animating = true;
 
       currentForm = $(this).parent();
@@ -37,18 +32,18 @@ module.exports = (function () {
 
       nextForm.show();
       currentForm.animate({opacity: 0}, {
-        step: function(now, mx) {
+        step: function (now, mx) {
           scale = 1 - (1 - now) * 0.2;
-          left = (now * 50)+"%";
+          left = (now * 50) + "%";
           opacity = 1 - now;
           currentForm.css({
-            'transform': 'scale('+scale+')',
+            'transform': 'scale(' + scale + ')',
             'position': 'absolute'
           });
           nextForm.css({'left': left, 'opacity': opacity});
         },
         duration: 800,
-        complete: function(){
+        complete: function () {
           currentForm.hide();
           animating = false;
         },
@@ -56,8 +51,8 @@ module.exports = (function () {
       });
     });
 
-    $(".previous").click(function(){
-      if(animating) return false;
+    $(".previous").click(function () {
+      if (animating) return false;
       animating = true;
 
       currentForm = $(this).parent();
@@ -67,19 +62,19 @@ module.exports = (function () {
 
       previousForm.show();
       currentForm.animate({opacity: 0}, {
-        step: function(now, mx) {
+        step: function (now, mx) {
           //as the opacity of currentForm reduces to 0 - stored in "now"
           //1. scale previousForm from 80% to 100%
           scale = 0.8 + (1 - now) * 0.2;
           //2. take currentForm to the right(50%) - from 0%
-          left = ((1-now) * 50)+"%";
+          left = ((1 - now) * 50) + "%";
           //3. increase opacity of previousForm to 1 as it moves in
           opacity = 1 - now;
           currentForm.css({'left': left});
-          previousForm.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+          previousForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
         },
         duration: 800,
-        complete: function(){
+        complete: function () {
           currentForm.hide();
           animating = false;
         },
@@ -88,12 +83,12 @@ module.exports = (function () {
       });
     });
 
-    $(".submit").click(function(){
+    $(".submit").click(function () {
       return false;
     })
-  }
+  };
 
-  toggleModal = function () {
+  client.toggleModal = function () {
     let openModal;
     let closeButton;
     let modalBody;
@@ -105,34 +100,88 @@ module.exports = (function () {
       modalBody.addClass("active");
     });
 
-    closeButton.on("click", function () {
-      modalBody.removeClass("active");
-    })
-  }
+    // closeButton.on("click", function () {
+    //   modalBody.removeClass("active");
+    // })
+  };
 
-  copyData = function () {
+  client.copyData = function () {
     let copyButton;
     let copyString;
 
-  }
+  };
 
-  rememberState = function () {
-    console.log("rememberState function");
-  }
+  client.rememberState = function () {
+    console.log("client.rememberState function");
+  };
 
-  detectDevice = function () {
-    console.log("detectDevice function");
-  }
+  client.detectDevice = function () {
+    console.log("client.detectDevice function");
+  };
 
   $(document).ready(function () {
     init();
-  })
+  });
 
-  init = function () {
-    stakingForm();
-    toggleModal();
-    copyData();
-    detectDevice();
-    rememberState();
+  function init() {
+    client.stakingForm();
+    client.toggleModal();
+    client.copyData();
+    client.detectDevice();
+    client.rememberState();
+    if (!contract.isMetaMask()) {
+      $("#choice-metamask").attr("disabled", true);
+      $("#choice-manual").prop("checked", true)
+    }
+    client.setup();
+    client.setEvents();
   }
+
+  client.setup = function () {
+    $("#user-id").val(contract.user);
+  };
+
+  client.setEvents = function () {
+    $("#choose-action").click(chooseMethod);
+    $("#user-info-display-action").click(displayUserInfo);
+    $("#approve-action").click(approve);
+    $("#stake-action").click(stake);
+  };
+
+  function chooseMethod() {
+    contract.setManual($("#choice-manual").is(":checked"));
+  }
+
+  function displayUserInfo() {
+    let user = $("#user-id").val();
+    contract.setUser(user);
+    contract.updateUserInfo().then(function () {
+      let userInfo = contract.getUserInfo();
+      $("[name=lev-count]").text(userInfo.lev);
+      $("[name=staked-count]").text(userInfo.staked);
+      $("[name=approved-count]").text(userInfo.approved);
+    })
+  }
+
+  function approve() {
+    let tokens = $("#approve-count").val() - 0;
+    contract.getApproveInfo(tokens).then(function(info){
+      $("#approve-address").text(info.address);
+      $("#approve-amount").text(info.amount);
+      $("#approve-gas").text(info.gas);
+      $("#approve-data").text(info.data);
+    })
+  }
+
+  function stake() {
+    let tokens = $("#stake-count").val() - 0;
+    contract.getStakeInfo(tokens).then(function(info){
+      $("#stake-address").text(info.address);
+      $("#stake-amount").text(info.amount);
+      $("#stake-gas").text(info.gas);
+      $("#stake-data").text(info.data);
+    })
+  }
+
+
 })();
