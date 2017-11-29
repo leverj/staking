@@ -119,6 +119,15 @@ module.exports = (function () {
     console.log("client.detectDevice function");
   };
 
+  client.removeLoading = function () {
+    let overlay;
+
+    overlay = $('.overlay');
+    setTimeout( function(){
+      overlay.addClass('overlay__invisible');
+    }, 3000);
+  }
+
   $(document).ready(function () {
     init();
   });
@@ -135,6 +144,7 @@ module.exports = (function () {
     }
     client.setup();
     client.setEvents();
+    client.removeLoading();
   }
 
   client.setup = function () {
