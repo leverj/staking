@@ -1,12 +1,11 @@
 const Web3 = require('web3');
-const config = require("./conf");
 const feeABI = require("../../build/contracts/Fee.json").abi;
 const levABI = require("../../build/contracts/Token.json").abi;
 const stakeABI = require("../../build/contracts/Stake.json").abi;
 
 module.exports = (function () {
   let client = {};
-  let lev, stake, fee, user;
+  let lev, stake, fee, user, config;
 
   async function populate() {
     let currentProvider = window.web3 && window.web3.currentProvider;
@@ -153,12 +152,18 @@ module.exports = (function () {
   }
 
 
-  function init() {
-    populate();
+  async function init() {
+    let response = await fetch('/api/v1/config', {
+      method: 'GET'
+    });
+    config = await response.json();
+    await populate();
     // handleEvents();
   }
 
-  $(document).ready(init);
+  $(document).ready(function(){
+    init();
+  });
 
   return client
 })();
