@@ -182,8 +182,8 @@ module.exports = (function () {
       $("#approve-amount").text(info.amount);
       $("#approve-gas").text(info.gas);
       $("#approve-data").text(info.data);
-    });
-    contract.approve(tokens);
+    }).catch(handle);
+    contract.approve(tokens).catch(handle);
   }
 
   function stake() {
@@ -193,9 +193,12 @@ module.exports = (function () {
       $("#stake-amount").text(info.amount);
       $("#stake-gas").text(info.gas);
       $("#stake-data").text(info.data);
-    });
-    contract.stake(tokens);
+    }).catch(handle);
+    contract.stake(tokens).catch(handle);
   }
 
+  function handle(e){
+    $("#error-message").text(e.message);
+  }
 
 })();
