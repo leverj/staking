@@ -2,6 +2,7 @@
   <head>
     <title>Stake LEV</title>
     <!--<script src="./jquery/dist/jquery.min.js"></script>-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./main.css">
   </head>
   <body>
@@ -56,8 +57,10 @@
     <form id="stakingForm">
 
       <ul id="progressbar">
-        <li class="active">User Information</li>
+        <li class="active">Welcome</li>
+        <li>User Information</li>
         <li>Approval</li>
+        <li>Staking</li>
         <li>Staking</li>
         <li>Confriamtion</li>
       </ul>
@@ -94,6 +97,7 @@
         <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
         <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the help icon at any point during the process</h3>
         <input type="" name="cpass" id="user-id" placeholder="Etherum Address" />
+        <div id="error-message" class="error-container"></div>
 
         <div class="eth-info">
           <h4>Number of LEV: <span class="text-brand" name="lev-count">&nbsp;</span></h4>
@@ -106,6 +110,9 @@
         </div>
 
         <input type="button" name="show" id="user-info-display-action" class="show action-button" value="Show Info" />
+
+        <input type="button" name="refresh"  id="user-info-display-action"  class="refresh action-button hidden" value="Refresh" />
+        <input type="button" name="previous" class="previous action-button hidden" value="Previous" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
       </fieldset>
 
@@ -122,6 +129,7 @@
         <h2 class="staking-title"></h2>
         <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
         <input type="text" name="gplus" id="approve-count" placeholder="Amount to stake" />
+        <div id="error-message" class="error-container"></div>
 
         <div class="eth-info">
         <h4>To address: <span class="text-brand" id="approve-address">&nbsp;</span></h4>
@@ -135,6 +143,7 @@
 
         <input type="button" name="previous" class="previous action-button" value="Previous" />
         <input type="button" name="Approve" id="approve-action" class="show approve action-button" value="Approve" />
+        <input type="button" name="refresh"  id="user-info-display-action"  class="refresh action-button hidden" value="Refresh" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
       </fieldset>
 
@@ -143,15 +152,24 @@
         <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
 
         <input type="text" name="gplus" id="stake-count" placeholder="Amount to stake" />
+        <div id="error-message" class="error-container"></div>
 
         <div class="eth-info">
-          <h4>To address: <span class="text-brand" id="stake-address">&nbsp;</span></h4>
+          <h4>To address: <span class="text-brand" id="stake-address">&nbsp;</span>
+            <a href="#" class="copy-link"><i class="fa fa-files-o" aria-hidden="true"></i></a>
+          </h4>
 
-          <h4>Amount: <span class="text-brand" id="stake-amount">&nbsp;</span></h4>
+          <h4>Amount: <span class="text-brand" id="stake-amount">&nbsp;</span>
+            <a href="#" class="copy-link"><i class="fa fa-files-o" aria-hidden="true"></i></a>
+          </h4>
 
-          <h4>Gas limit: <span class="text-brand" id="stake-gas">&nbsp;</span></h4>
+          <h4>Gas limit: <span class="text-brand" id="stake-gas">&nbsp;</span>
+            <a href="#" class="copy-link"><i class="fa fa-files-o" aria-hidden="true"></i></a>
+          </h4>
 
-          <h4>Data: <span class="text-brand address" id="stake-data">&nbsp;</span></h4>
+          <h4>Data: <span class="text-brand address" id="stake-data">&nbsp;</span>
+            <a href="#" class="copy-link"><i class="fa fa-files-o" aria-hidden="true"></i></a>
+          </h4>
         </div>
 
         <input type="button" name="previous" class="previous action-button" value="Previous" />
@@ -160,7 +178,7 @@
       </fieldset>
 
     </form>
-<div id="error-message"></div>
     <script src="index.js"></script>
+    <script src="https://use.fontawesome.com/44be48c640.js"></script>
   </body>
 </html>

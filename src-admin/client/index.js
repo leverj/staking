@@ -1,5 +1,6 @@
 const $ = require("jquery");
 const jQuery = require("jquery-easing");
+const clip = require("clipboard-js");
 const contract = require("./contract");
 
 module.exports = (function () {
@@ -17,8 +18,13 @@ module.exports = (function () {
     $(".show").click(function () {
       $(this).addClass("hidden");
       $(this).parent().find(".eth-info").addClass("active");
-      $(this).next(".next").removeClass("hidden");
+      $(this).nextAll(".action-button").removeClass("hidden");
     });
+
+    $(".clipboard").click(function (e) {
+      e.preventDefault();
+      alert("chopied");
+    })
 
     $(".next").click(function () {
       if (animating) return false;
@@ -105,11 +111,21 @@ module.exports = (function () {
     // })
   };
 
-  client.copyData = function () {
-    let copyButton;
-    let copyString;
-
+  client.copyData = function (element) {
+    const input = document.createElement('input');
+    input.setAttribute('value', element.innerText);
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input)
   };
+
+  client.copyClick = function() {
+    const copyButton = $(".copy-link");
+    const copyButtonData = copyButton.data();
+
+    // copyButton.click(copyData($(this).data('info')));
+  }
 
   client.rememberState = function () {
     console.log("client.rememberState function");
@@ -135,7 +151,7 @@ module.exports = (function () {
   function init() {
     client.stakingForm();
     client.toggleModal();
-    client.copyData();
+    // client.copyData();
     client.detectDevice();
     client.rememberState();
     if (!contract.isMetaMask()) {
@@ -198,7 +214,11 @@ module.exports = (function () {
   }
 
   function handle(e){
-    $("#error-message").text(e.message);
+    $(".error-container").text(e.message);
+    $(".error-container").fadeIn();
+    setTimeout(function() {
+       $(".error-container").fadeOut();
+     }, 2500);
   }
 
 })();
