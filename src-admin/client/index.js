@@ -1,9 +1,8 @@
 const $ = require("jquery");
 require("jquery-easing");
 require("./templates");
-const clip = require("clipboard-polyfill");
+const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
-
 
 
 module.exports = (function () {
@@ -170,9 +169,7 @@ module.exports = (function () {
 
   client.setup = function () {
     $("#user-id").val(contract.user);
-    $.each($(".user-info"),function(i, ele){
-      $(ele).userInfo();
-    })
+    $.each($(".user-info"), (i, ele) => $(ele).userInfo());
     $("#stake-tx-info").txInfo("stake");
     $("#approve-tx-info").txInfo("approve");
   };
@@ -182,7 +179,14 @@ module.exports = (function () {
     $("[data-id=user-info-display-action]").click(displayUserInfo);
     $("[data-id=approve-action]").click(approve);
     $("#stake-action").click(stake);
+    $(".copy-link").click(copy);
   };
+
+  function copy() {
+    let text = $(this).parent().find("span").first().text();
+    console.log(text);
+    clipboard.writeText(text);
+  }
 
   function chooseMethod() {
     contract.setManual($("#choice-manual").is(":checked")).then(function () {

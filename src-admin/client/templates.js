@@ -9,16 +9,16 @@ $.fn.userInfo = function () {
 $.fn.txInfo = function (prefix) {
   this.append(
     "<h4>To address: <span class='text-brand' id='" + prefix + "-address'>&nbsp;</span>" +
-    "  <a href=''#' class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "  <a class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>" +
     "<h4>Amount: <span class='text-brand' id='" + prefix + "-amount'>&nbsp;</span>" +
-    "  <a href=''#' class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "  <a class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>" +
     "<h4>Gas limit: <span class='text-brand' id='" + prefix + "-gas'>&nbsp;</span>" +
-    "  <a href=''#' class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "  <a class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>" +
     "<h4>Data: <span class='text-brand address' id='" + prefix + "-data'>&nbsp;</span>" +
-    "  <a href=''#' class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "  <a class='copy-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>"
   );
 };
