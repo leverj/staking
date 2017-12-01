@@ -31,11 +31,11 @@ async function startAutomation() {
 			console.log('Deploying fee contract...')
 			const feeContract = await deploy(feeJson.abi, feeJson.bytecode, addDeployerToAdmin(configuration.fee.parameters.values));
 			configuration.feeAddress = feeContract.contractAddress;
-			fee = new web3.eth.Contract(feeJson.abi, feeContract.contractAddress);
+			fee = new web3.eth.Contract(feeJson.abi, feeContract.contractAddress, sendOptions);
 			updateConfiguration = true;
 		} else {
 			// Create the instance of the contract with configuration.feeAddress
-			fee = new web3.eth.Contract(feeJson.abi, configuration.feeAddress);
+			fee = new web3.eth.Contract(feeJson.abi, configuration.feeAddress, sendOptions);
 		}
 
 		if(configuration.stakeAddress === 'undefined') {
@@ -48,16 +48,21 @@ async function startAutomation() {
 			// Create the instance of the contract with configuration.stakeAddress
 			stake = new web3.eth.Contract(stakeJson.abi, configuration.stakeAddress);
 		}
+
+		fee.options.from = deployer.address
+		stake.options.from = deployer.address
+
 		if(updateConfiguration) fs.writeFileSync(path.join(__dirname, 'configuration.json'), JSON.stringify(configuration));
 
 		console.log('Setting the fee token in Stake.sol...');
-		await stake.methods.setFeeToken(fee._address).send(sendOptions);
+		await stake.methods.setFeeToken(fee._address).send({from: deployer.address, gas: 4e6});
 		console.log('Setting the minter in Fee.sol...');
-		await fee.methods.setMinter(stake._address).send(sendOptions);
+		await fee.methods.setMinter(stake._address).send({from: deployer.address, gas: 4e6});
 		console.log('Removing the admin in Fee.sol...');
-		await fee.methods.removeAdmin(deployer.address).send(sendOptions);
+		await fee.methods.removeOwner(deployer.address).send({from: deployer.address, gas: 4e6});
 		console.log('Removing the admin in Stake.sol...');
-		await stake.methods.removeAdmin(deployer.address).send(sendOptions);
+		await stake.methods.removeOwner(deployer.address).send({from: deployer.address, gas: 4e6});
+		console.log('Done');
 	}
 
 	function addDeployerToAdmin(values){
