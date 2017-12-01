@@ -28,9 +28,7 @@ const contracts = {
       ], "0xDaa1A6c972d4b8d57dce119E48C6ABB19BaF8402", "0xC66f77054bF7536f3d1e7c8dD311e5394A4c8B7B", "1000000", "0xaa7127e250e87476fdd253f15e86a4ea9c4c4bd4"]
     }
   }
-
 };
-
 
 function generateContractByteCode(_contract) {
   try {
@@ -44,7 +42,6 @@ function generateContractByteCode(_contract) {
     console.error(e);
   }
 }
-
 
 function compile() {
   let sources = {};
