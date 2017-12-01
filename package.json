@@ -73,7 +73,7 @@
   },
   "dependencies": {
     "affirm.js": "^1.0.0",
-    "clipboard-js": "^0.3.6",
+    "clipboard-polyfill": "^2.3.0",
     "compression": "^1.7.1",
     "config": "^1.28.1",
     "ethereumjs-abi": "^0.6.4",

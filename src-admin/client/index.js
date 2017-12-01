@@ -1,7 +1,10 @@
 const $ = require("jquery");
-const jQuery = require("jquery-easing");
-const clip = require("clipboard-js");
+require("jquery-easing");
+require("./templates");
+const clip = require("clipboard-polyfill");
 const contract = require("./contract");
+
+
 
 module.exports = (function () {
   let client = {};
@@ -122,7 +125,7 @@ module.exports = (function () {
     document.body.removeChild(input)
   };
 
-  client.copyClick = function() {
+  client.copyClick = function () {
     const copyButton = $(".copy-link");
     const copyButtonData = copyButton.data();
 
@@ -141,7 +144,7 @@ module.exports = (function () {
     let overlay;
 
     overlay = $('.overlay');
-    setTimeout( function(){
+    setTimeout(function () {
       overlay.addClass('overlay__invisible');
     }, 3000);
   }
@@ -167,17 +170,22 @@ module.exports = (function () {
 
   client.setup = function () {
     $("#user-id").val(contract.user);
+    $.each($(".user-info"),function(i, ele){
+      $(ele).userInfo();
+    })
+    $("#stake-tx-info").txInfo("stake");
+    $("#approve-tx-info").txInfo("approve");
   };
 
   client.setEvents = function () {
     $("#choose-action").click(chooseMethod);
-    $("#user-info-display-action").click(displayUserInfo);
-    $("#approve-action").click(approve);
+    $("[data-id=user-info-display-action]").click(displayUserInfo);
+    $("[data-id=approve-action]").click(approve);
     $("#stake-action").click(stake);
   };
 
   function chooseMethod() {
-    contract.setManual($("#choice-manual").is(":checked")).then(function(){
+    contract.setManual($("#choice-manual").is(":checked")).then(function () {
       $("#user-id").val(contract.user);
     });
   }
@@ -195,7 +203,7 @@ module.exports = (function () {
 
   function approve() {
     let tokens = $("#approve-count").val() - 0;
-    contract.getApproveInfo(tokens).then(function(info){
+    contract.getApproveInfo(tokens).then(function (info) {
       $("#approve-address").text(info.address);
       $("#approve-amount").text(info.amount);
       $("#approve-gas").text(info.gas);
@@ -206,7 +214,7 @@ module.exports = (function () {
 
   function stake() {
     let tokens = $("#stake-count").val() - 0;
-    contract.getStakeInfo(tokens).then(function(info){
+    contract.getStakeInfo(tokens).then(function (info) {
       $("#stake-address").text(info.address);
       $("#stake-amount").text(info.amount);
       $("#stake-gas").text(info.gas);
@@ -215,14 +223,16 @@ module.exports = (function () {
     contract.stake(tokens).catch(handle);
   }
 
-  function handle(e){
+  function handle(e) {
     errorFlag = true;
-
-    $(".error-container").text(e.message);
-    $(".error-container").fadeIn();
-    setTimeout(function() {
-       $(".error-container").fadeOut();
-     }, 2500);
+    let $error = $(".error-container");
+    $error.text(e.message);
+    $error.fadeIn();
+    setTimeout(function () {
+      $(".error-container").fadeOut();
+    }, 2500);
   }
 
 })();
+
+
