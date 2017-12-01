@@ -261,7 +261,7 @@ h4 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #4b4b4b;
+    background-color: rgb(43, 46, 82);
     z-index: 9;
     top: 0;
     transition: all 0.5s ease;

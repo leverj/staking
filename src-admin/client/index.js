@@ -5,6 +5,7 @@ const contract = require("./contract");
 
 module.exports = (function () {
   let client = {};
+  let errorFlag = false;
 
   client.stakingForm = function () {
     let currentForm;
@@ -18,6 +19,7 @@ module.exports = (function () {
     $(".show").click(function () {
       $(this).addClass("hidden");
       $(this).parent().find(".eth-info").addClass("active");
+      // if(errorFlag) return;
       $(this).nextAll(".action-button").removeClass("hidden");
     });
 
@@ -214,6 +216,8 @@ module.exports = (function () {
   }
 
   function handle(e){
+    errorFlag = true;
+
     $(".error-container").text(e.message);
     $(".error-container").fadeIn();
     setTimeout(function() {

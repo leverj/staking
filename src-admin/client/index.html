@@ -58,9 +58,9 @@
 
       <ul id="progressbar">
         <li class="active">Welcome</li>
+        <li>Method</li>
         <li>User Information</li>
         <li>Approval</li>
-        <li>Staking</li>
         <li>Staking</li>
         <li>Confriamtion</li>
       </ul>
@@ -102,9 +102,10 @@
         <div class="eth-info">
           <h4>Number of LEV: <span class="text-brand" name="lev-count">&nbsp;</span></h4>
 
+          <h4>Approved LEV: <span class="text-brand" name="approved-count">&nbsp;</span></h4>
+
           <h4>Staked LEV: <span class="text-brand" name="staked-count">&nbsp;</span></h4>
 
-          <h4>Approved LEV: <span class="text-brand" name="approved-count">&nbsp;</span></h4>
 
           <!--<h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>-->
         </div>
@@ -120,9 +121,9 @@
         <div class="eth-info active">
           <h4>Number of LEV: <span class="text-brand" name="lev-count">10000</span></h4>
 
-          <h4>Staked LEV: <span class="text-brand"  name="staked-count">90</span></h4>
-
           <h4>Approved LEV: <span class="text-brand"  name="approved-count">100</span></h4>
+
+          <h4>Staked LEV: <span class="text-brand"  name="staked-count">90</span></h4>
 
           <!--<h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>-->
         </div>
@@ -132,29 +133,41 @@
         <div id="error-message" class="error-container"></div>
 
         <div class="eth-info">
-        <h4>To address: <span class="text-brand" id="approve-address">&nbsp;</span></h4>
+          <h4>To address: <span class="text-brand" id="approve-address">&nbsp;</span></h4>
 
-        <h4>Amount: <span class="text-brand" id="approve-amount">&nbsp;</span></h4>
+          <h4>Amount: <span class="text-brand" id="approve-amount">&nbsp;</span></h4>
 
-        <h4>Gas limit: <span class="text-brand" id="approve-gas">&nbsp;</span></h4>
+          <h4>Gas limit: <span class="text-brand" id="approve-gas">&nbsp;</span></h4>
 
-        <h4>Data: <span class="text-brand address" id="approve-data">&nbsp;</span></h4>
+          <h4>Data: <span class="text-brand address" id="approve-data">&nbsp;</span></h4>
         </div>
 
         <input type="button" name="previous" class="previous action-button" value="Previous" />
         <input type="button" name="Approve" id="approve-action" class="show approve action-button" value="Approve" />
-        <input type="button" name="refresh"  id="user-info-display-action"  class="refresh action-button hidden" value="Refresh" />
+        <input type="button" name="refresh"  id="user-info-display-action"  class="refresh action-button hidden" value="Approve" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
+        <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
       </fieldset>
 
       <fieldset>
+        
+        <div class="eth-info active">
+          <h4>Number of LEV: <span class="text-brand" name="lev-count">10000</span></h4>
+
+          <h4>Approved LEV: <span class="text-brand"  name="approved-count">100</span></h4>
+
+          <h4>Staked LEV: <span class="text-brand"  name="staked-count">90</span></h4>
+
+          <!--<h4>LEV available to withdraw: <span class="text-brand">2901</span></h4>-->
+        </div>
+
         <h2 class="staking-title"></h2>
         <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
 
         <input type="text" name="gplus" id="stake-count" placeholder="Amount to stake" />
         <div id="error-message" class="error-container"></div>
 
-        <div class="eth-info">
+        <div class="eth-info active">
           <h4>To address: <span class="text-brand" id="stake-address">&nbsp;</span>
             <a href="#" class="copy-link"><i class="fa fa-files-o" aria-hidden="true"></i></a>
           </h4>
@@ -175,6 +188,7 @@
         <input type="button" name="previous" class="previous action-button" value="Previous" />
         <input type="button" name="show" class="show approve action-button" id="stake-action" value="Stake" />
         <input type="button" name="next" class="next action-button hidden" value="Next" />
+
       </fieldset>
 
     </form>
