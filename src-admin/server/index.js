@@ -21,11 +21,11 @@ module.exports = (async function () {
   app.use("/api/v1", api);
   app.use(compress());
 
-  let indexhtml = './dist1/src-admin/client/index.html';
-  app.use(express.static('./dist1/src-admin/client/', {maxAge: 31536000000}));
+  let indexhtml = './dist/src-admin/client/index.html';
+  app.use(express.static('./dist/src-admin/client/', {maxAge: 31536000000}));
 
   app.get(['/'], function (req, res) {
-    return res.sendFile(indexhtml, {root: './dist1/src-admin/client/'})
+    return res.sendFile(indexhtml, {root: './dist/src-admin/client/'})
   });
 
   app.use(function (err, req, res, next) {
