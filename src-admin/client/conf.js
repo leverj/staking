@@ -1,5 +1,8 @@
 module.exports = {
-  stake: '0x5e24f0bc04240630ee3752e4f577f77230939e7a',
-  fee: '0x9b49c2111ff96c6e9b01b18118ee064381ca9a85',
-  lev:'0xa26fe93339345c40dd1904a700c15d02352c2b0b',
+  "network": "https://ropsten.infura.io/5Ik2NwtzUQsXpL5nAvXW",
+  "stake": "0xcc6e0b1bce2a153edc1ff8fe00cbca138e977a18",
+  "fee": "0x2929d8e471244eec85e80b90165f489e3db4e570",
+  "lev": "0xaa7127e250e87476fdd253f15e86a4ea9c4c4bd4",
+  "feeDecimals": 9,
+  "levDecimals": 9
 };

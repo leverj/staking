@@ -1,6 +1,6 @@
 {
   "name": "staking",
-  "description": "Stake LEV tokens here to get FEE tokens for a particular period",
+  "description": "Stake LEV tokens here to get FEE tokens for a particular staking-interval",
   "main": "index.js",
   "authors": [
     "coinpit"

@@ -7,38 +7,41 @@ machine:
 test:
   override:
     - npm test
-    - npm install bower
-    - bower install
     - truffle compile
-    - webpack
-
+    - grunt
 
 deployment:
   hub:
-    branch: consolidate
+    branch: develop
     commands:
       - docker info
-      - docker build -t leverj/stake:consolidate .
+      - docker build -t leverj/stake:develop .
+      - docker build -f Dockerfile-automation -t leverj/stake-automation:develop .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
-#  grid-ui:
-#    branch: hw
-#    commands:
-#      - docker info
-#      - docker build -t bharathrao/coinpit:develop .
-#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-#      - docker push bharathrao/coinpit
-#  master:
-#    branch: master
-#    commands:
-#      - docker info
-#      - docker build -t bharathrao/coinpit:master .
-#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-#      - docker push bharathrao/coinpit
-#  testnet:
-#    branch: testnet
-#    commands:
-#      - docker info
-#      - docker build -t bharathrao/coinpit:testnet .
-#      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-#      - docker push bharathrao/coinpit
+      - docker push leverj/stake-automation
+  master:
+    branch: master
+    commands:
+      - docker info
+      - docker build -t leverj/stake:master .
+      - docker build -f Dockerfile-automation -t leverj/stake-automation:master .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push leverj/stake
+      - docker push leverj/stake-automation
+  testnet:
+    branch: testnet
+    commands:
+      - docker info
+      - docker build -t leverj/stake:testnet .
+      - docker build -f Dockerfile-automation -t leverj/stake-automation:testnet .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push leverj/stake
+      - docker push leverj/stake-automation
+  staking:
+      branch: feature/staking-ui
+      commands:
+        - docker info
+        - docker build -t leverj/stake:develop .
+        - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+        - docker push leverj/stake

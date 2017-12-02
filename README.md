@@ -3,14 +3,12 @@
 ### Prerequisites:
 
 ```
-truffle 3.4.5
-node 8.4.0
+truffle 4.0.1
+node 8.8.0
 ```
 
 ### build
 ```
     npm install
-    truffle compile
     npm test
 ```
-6 months staking
