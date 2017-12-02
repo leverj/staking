@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
   // Project configuration.
-  const dist = './dist1/';
+  const dist = './dist/';
   const server = './src-admin/server/';
   const common = './src-admin/common/';
   const client = './src-admin/client/';
@@ -57,8 +57,8 @@ module.exports = function (grunt) {
         dev: {
           options: {
             match: [
-              {"bootstrap.min.css": "dist1/src/client/bootstrap/dist/css/bootstrap.min.css"},
-              {"main.css": "dist1/src/client/coinpit.css"},
+              {"bootstrap.min.css": "dist/src/client/bootstrap/dist/css/bootstrap.min.css"},
+              {"main.css": "dist/src/client/coinpit.css"},
               {"coinpit.js": "dist/src/client/coinpit.js"},
               {"chart.js": "dist/src/client/chart.js"},
             ],
@@ -70,8 +70,8 @@ module.exports = function (grunt) {
       browserify: {
         dist: {
           files: {
-            "dist1/src-admin/client/admin.js": client + "admin.js",
-            "dist1/src-admin/client/index.js": client + "index.js"
+            "dist/src-admin/client/admin.js": client + "admin.js",
+            "dist/src-admin/client/index.js": client + "index.js"
           }
         }
       },
