@@ -108,16 +108,14 @@
     <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
     <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the
       help icon at any point during the process</h3>
-    <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
+    <input type="" readonly name="cpass" id="user-id" placeholder="Etherum Address"/>
     <div class="error-container"></div>
 
     <div class="eth-info user-info"></div>
-
+    <input type="button" name="previous" class="previous action-button" value="Previous"/>
     <input type="button" name="show" data-id="user-info-display-action" class="show action-button" value="Show Info"/>
-
-    <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
-           value="Refresh"/>
-    <input type="button" name="previous" class="previous action-button hidden" value="Previous"/>
+    <!-- <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
+           value="Refresh"/>  -->
     <input type="button" name="next" class="next action-button hidden" value="Next"/>
   </fieldset>
 
@@ -132,8 +130,8 @@
 
     <input type="button" name="previous" class="previous action-button" value="Previous"/>
     <input type="button" name="Approve" data-id="approve-action" class="show approve action-button" value="Approve"/>
-    <input type="button" name="refresh" data-id="approve-action" class="refresh action-button hidden" value="Approve"/>
-    <input type="button" name="next" class="next action-button hidden" value="Next"/>
+
+    <input type="button" name="next" class="next action-button" value="Next"/>
     <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
   </fieldset>
 
@@ -147,10 +145,10 @@
     <input type="text" name="gplus" id="stake-count" placeholder="Amount to stake"/>
     <div class="error-container"></div>
 
-    <div class="eth-info active" id="stake-tx-info"></div>
+    <div class="eth-info" id="stake-tx-info"></div>
 
     <input type="button" name="previous" class="previous action-button" value="Previous"/>
-    <input type="button" name="show" class="show approve action-button" id="stake-action" value="Stake"/>
+    <input type="button" name=" " class="show approve action-button" id="stake-action" value="Stake"/>
     <input type="button" name="next" class="next action-button hidden" value="Next"/>
 
   </fieldset>

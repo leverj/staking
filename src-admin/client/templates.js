@@ -3,7 +3,8 @@ $.fn.userInfo = function () {
   this.append(
     "<h4>Number of LEV: <span class='text-brand' name='lev-count'>10000</span></h4>" +
     "<h4>Approved LEV: <span class='text-brand'  name='approved-count'>100</span></h4>" +
-    "<h4>Staked LEV: <span class='text-brand'  name='staked-count'>90</span></h4>");
+    "<h4>Staked LEV: <span class='text-brand'  name='staked-count'>90</span></h4>" +
+    "<input type='button' name='refresh' data-id='user-info-display-action' class='refresh action-button' value='Refresh'/>" );
 };
 
 $.fn.txInfo = function (prefix) {
