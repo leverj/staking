@@ -1,9 +1,13 @@
 const $ = require("jquery");
-const jQuery = require("jquery-easing");
+require("jquery-easing");
+require("./templates");
+const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
+
 
 module.exports = (function () {
   let client = {};
+  let errorFlag = false;
 
   client.stakingForm = function () {
     let currentForm;
@@ -17,8 +21,14 @@ module.exports = (function () {
     $(".show").click(function () {
       $(this).addClass("hidden");
       $(this).parent().find(".eth-info").addClass("active");
-      $(this).next(".next").removeClass("hidden");
+      // if(errorFlag) return;
+      $(this).nextAll(".action-button").removeClass("hidden");
     });
+
+    $(".clipboard").click(function (e) {
+      e.preventDefault();
+      alert("chopied");
+    })
 
     $(".next").click(function () {
       if (animating) return false;
@@ -105,11 +115,21 @@ module.exports = (function () {
     // })
   };
 
-  client.copyData = function () {
-    let copyButton;
-    let copyString;
-
+  client.copyData = function (element) {
+    const input = document.createElement('input');
+    input.setAttribute('value', element.innerText);
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input)
   };
+
+  client.copyClick = function () {
+    const copyButton = $(".copy-link");
+    const copyButtonData = copyButton.data();
+
+    // copyButton.click(copyData($(this).data('info')));
+  }
 
   client.rememberState = function () {
     console.log("client.rememberState function");
@@ -123,7 +143,7 @@ module.exports = (function () {
     let overlay;
 
     overlay = $('.overlay');
-    setTimeout( function(){
+    setTimeout(function () {
       overlay.addClass('overlay__invisible');
     }, 3000);
   }
@@ -135,7 +155,7 @@ module.exports = (function () {
   function init() {
     client.stakingForm();
     client.toggleModal();
-    client.copyData();
+    // client.copyData();
     client.detectDevice();
     client.rememberState();
     if (!contract.isMetaMask()) {
@@ -149,17 +169,27 @@ module.exports = (function () {
 
   client.setup = function () {
     $("#user-id").val(contract.user);
+    $.each($(".user-info"), (i, ele) => $(ele).userInfo());
+    $("#stake-tx-info").txInfo("stake");
+    $("#approve-tx-info").txInfo("approve");
   };
 
   client.setEvents = function () {
     $("#choose-action").click(chooseMethod);
-    $("#user-info-display-action").click(displayUserInfo);
-    $("#approve-action").click(approve);
+    $("[data-id=user-info-display-action]").click(displayUserInfo);
+    $("[data-id=approve-action]").click(approve);
     $("#stake-action").click(stake);
+    $(".copy-link").click(copy);
   };
 
+  function copy() {
+    let text = $(this).parent().find("span").first().text();
+    console.log(text);
+    clipboard.writeText(text);
+  }
+
   function chooseMethod() {
-    contract.setManual($("#choice-manual").is(":checked")).then(function(){
+    contract.setManual($("#choice-manual").is(":checked")).then(function () {
       $("#user-id").val(contract.user);
     });
   }
@@ -177,25 +207,36 @@ module.exports = (function () {
 
   function approve() {
     let tokens = $("#approve-count").val() - 0;
-    contract.getApproveInfo(tokens).then(function(info){
+    contract.getApproveInfo(tokens).then(function (info) {
       $("#approve-address").text(info.address);
       $("#approve-amount").text(info.amount);
       $("#approve-gas").text(info.gas);
       $("#approve-data").text(info.data);
-    });
-    contract.approve(tokens);
+    }).catch(handle);
+    contract.approve(tokens).catch(handle);
   }
 
   function stake() {
     let tokens = $("#stake-count").val() - 0;
-    contract.getStakeInfo(tokens).then(function(info){
+    contract.getStakeInfo(tokens).then(function (info) {
       $("#stake-address").text(info.address);
       $("#stake-amount").text(info.amount);
       $("#stake-gas").text(info.gas);
       $("#stake-data").text(info.data);
-    });
-    contract.stake(tokens);
+    }).catch(handle);
+    contract.stake(tokens).catch(handle);
   }
 
+  function handle(e) {
+    errorFlag = true;
+    let $error = $(".error-container");
+    $error.text(e.message);
+    $error.fadeIn();
+    setTimeout(function () {
+      $(".error-container").fadeOut();
+    }, 2500);
+  }
 
 })();
+
+

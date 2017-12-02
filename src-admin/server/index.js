@@ -9,6 +9,7 @@ module.exports = (async function () {
   let leverj = {};
   const app = express();
   const server = getServer();
+  const socketApi = await require('./socketApi');
 
   function getServer() {
     return require('http').Server(app)
@@ -44,7 +45,7 @@ module.exports = (async function () {
 
   init();
   return leverj
-})().catch(function(e){
+})().catch(function (e) {
   console.log(e);
   process.exit(1);
 });

@@ -1,3 +1,4 @@
+const $ = require("jquery");
 const Web3 = require('web3');
 const feeABI = require("../../build/contracts/Fee.json").abi;
 const levABI = require("../../build/contracts/Token.json").abi;

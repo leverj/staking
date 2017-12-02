@@ -17,7 +17,7 @@ module.exports = function (grunt) {
             {
               expand: true,
               cwd: client,
-              src: ['!**/*.js', '**/*', '**/*.html'],
+              src: ['**/*'],
               dest: dist + "/src-admin/client"
             },
             {
@@ -31,13 +31,13 @@ module.exports = function (grunt) {
               cwd: server,
               src: ['**/*'],
               dest: dist + "/src-admin/server"
-            },
+            }/*,
             {
               expand: true,
               cwd: 'bower_components',
-              src: ['**/*'],
+              src: ['**!/!*'],
               dest: dist + "/src-admin/client"
-            },
+            }*/,
             {
               expand: true,
               cwd: contracts,
