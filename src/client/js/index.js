@@ -131,6 +131,10 @@ module.exports = (function () {
       let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
       $("#staking-status").text(text)
     })
+    socket.on('user-update', function (data) {
+      console.log('user-update');
+      displayUserInfo();
+    })
   };
 
   client.setEvents = function () {
@@ -160,12 +164,17 @@ module.exports = (function () {
     contract.setUser(user);
     let self = this;
     contract.updateUserInfo().then(function () {
-      let userInfo = contract.getUserInfo();
-      $("[name=lev-count]").text(userInfo.lev);
-      $("[name=staked-count]").text(userInfo.staked);
-      $("[name=approved-count]").text(userInfo.approved);
+      updateUserInfo();
+      socket.emit('register', {userid: user})
     }).then(showClick.bind(self))
       .catch(handle)
+  }
+
+  function updateUserInfo() {
+    let userInfo = contract.getUserInfo();
+    $("[name=lev-count]").text(userInfo.lev);
+    $("[name=staked-count]").text(userInfo.staked);
+    $("[name=approved-count]").text(userInfo.approved);
   }
 
   function approve() {
