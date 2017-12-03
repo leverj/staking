@@ -30,25 +30,13 @@ module.exports = function (grunt) {
               cwd: server,
               src: ['**/*'],
               dest: dist + "/src/server"
-            }/*,
-            {
-              expand: true,
-              cwd: 'bower_components',
-              src: ['**!/!*'],
-              dest: dist + "/src/client"
-            }*/,
+            },
             {
               expand: true,
               cwd: contracts,
               src: ['**/*'],
               dest: dist + "/build"
-            }/*,
-            {
-              expand: true,
-              cwd: "./config",
-              src: ['**!/!*'],
-              dest: dist + "/config"
-            }*/
+            }
           ]
         }
       },
@@ -69,8 +57,8 @@ module.exports = function (grunt) {
       browserify: {
         dist: {
           files: {
-            "dist/src/client/admin.js": client + "admin.js",
-            "dist/src/client/index.js": client + "index.js"
+            "dist/src/client/js/admin.js": client + "js/admin.js",
+            "dist/src/client/js/index.js": client + "js/index.js"
           }
         }
       },

@@ -2,12 +2,10 @@
 <head>
   <title>Stake LEV</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="./main.css">
+  <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body>
-<!-- <a href="admin.html">admin </a> -->
-
   <div class="overlay">
 
     <h2 class="overlay__text">Loading</h2>
@@ -54,16 +52,11 @@
 
   <div class="instructions">
     <ol class="instructions-list">
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa nihil accusamus odio mollitia eum, voluptate. Aut expedita excepturi quo, obcaecati omnis porro fugiat, neque, quam et cumque repudiandae amet deleniti.</li>
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis inventore odit quia, dolore. Atque, mollitia laboriosam expedita debitis, magni nam, enim fugit tempora dolor ipsam maiores, ducimus adipisci nobis quam. </li>
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at, esse ea placeat assumenda excepturi voluptate dolorem perferendis, animi laudantium. Consequuntur in quaerat at culpa accusamus modi natus harum inventore. </li>
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam, iure, id similique, deserunt sunt est aperiam repellat error enim perspiciatis, corrupti facere iusto quibusdam cumque amet nihil maiores tenetur. Odit! </li>
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam consequuntur, illum facere accusamus sint ipsum temporibus minus, eum pariatur ut. Cum dolor ratione officiis quae non corporis magni unde, autem? </li>
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis, vitae, recusandae corporis ab enim aliquam ad amet soluta possimus quo eius, non doloremque ea ratione odio, incidunt praesentium adipisci quasi! </li>
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia totam quam cum, eveniet enim rem necessitatibus deserunt atque, culpa, a cupiditate velit eos assumenda, quisquam unde tempore ex repudiandae debitis! </li>
-      <li class="instructions-list__item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta natus nesciunt quasi reiciendis culpa perspiciatis molestias accusantium facere omnis sit illo, impedit similique id rem labore magnam. Aspernatur rerum, eligendi. </li>
+      <li class="instructions-list__item">In the section <i>User Information</i> set your address and click on <i>Get Info</i>. You'll see some basic information about your account right there.</li>
+      <li class="instructions-list__item">Then in the input field of the <i>Actions</i> section type how much LEV tokens you want to stake. Click on <i>Approve</i> to allow the Smart Contract to use your tokens for staking.</li>
+      <li class="instructions-list__item">Copy those fields to the send information of any wallet like myetherwallet. Inside the <i>Data</i> field you're approve information is encrypted including the amount to approve.</li>
+      <li class="instructions-list__item">Finally do the same by setting how many tokens you want to stake in the input field and click on <i>Stake</i>. Then copy those fields to the send information of your wallet.</li>
     </ol>
-
     <a href="#" class="close-button"><i class="fa fa-times" aria-hidden="true"></i></a>
   </div>
 
@@ -78,7 +71,7 @@
     </div>
 
     <div class="staking-status">
-      <h3 class="staking-status__heading">Expired Block:  </h3>
+      <h3 class="staking-status__heading" id="staking-status"></h3>
     </div>
 
     <form id="stakingForm">
@@ -181,6 +174,6 @@
 
   </div>
 
-<script src="index.js"></script>
+<script src="./js/index.js"></script>
 </body>
 </html>

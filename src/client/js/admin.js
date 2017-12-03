@@ -1,8 +1,8 @@
 const $ = require("jquery");
 const Web3 = require('web3');
-const feeABI = require("../../build/contracts/Fee.json").abi;
-const levABI = require("../../build/contracts/Token.json").abi;
-const stakeABI = require("../../build/contracts/Stake.json").abi;
+const feeABI = require("../../../build/contracts/Fee.json").abi;
+const levABI = require("../../../build/contracts/Token.json").abi;
+const stakeABI = require("../../../build/contracts/Stake.json").abi;
 
 module.exports = (function () {
   let client = {};

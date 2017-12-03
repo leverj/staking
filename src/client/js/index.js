@@ -3,7 +3,7 @@ require("jquery-easing");
 require("./templates");
 const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
-
+const socket = require("./socket-client");
 
 module.exports = (function () {
   let client = {};
@@ -113,22 +113,6 @@ module.exports = (function () {
     })
   };
 
-  client.copyData = function (element) {
-    const input = document.createElement('input');
-    input.setAttribute('value', element.innerText);
-    document.body.appendChild(input);
-    input.select();
-    document.execCommand('copy');
-    document.body.removeChild(input)
-  };
-
-  client.copyClick = function () {
-    const copyButton = $(".copy-link");
-    const copyButtonData = copyButton.data();
-
-    // copyButton.click(copyData($(this).data('info')));
-  }
-
   client.rememberState = function () {
     console.log("client.rememberState function");
   };
@@ -153,7 +137,6 @@ module.exports = (function () {
   function init() {
     client.stakingForm();
     client.toggleModal();
-    // client.copyData();
     client.detectDevice();
     client.rememberState();
     if (!contract.isMetaMask()) {
@@ -170,6 +153,12 @@ module.exports = (function () {
     $.each($(".user-info"), (i, ele) => $(ele).userInfo());
     $("#stake-tx-info").txInfo("stake");
     $("#approve-tx-info").txInfo("approve");
+
+    socket.on('state', async function (data) {
+      console.log('state', data);
+      let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
+      $("#staking-status").text(text)
+    })
   };
 
   client.setEvents = function () {
@@ -177,7 +166,7 @@ module.exports = (function () {
     $("[data-id=user-info-display-action]").click(displayUserInfo);
     $("[data-id=approve-action]").click(approve);
     $("#stake-action").click(stake);
-    $(".copy-link").click(copy);
+    $(".icon-link").click(copy);
   };
 
   function copy() {
