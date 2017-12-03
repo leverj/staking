@@ -5,6 +5,7 @@ const feeABI = require("../../build/contracts/Fee.json").abi;
 const levABI = require("../../build/contracts/Token.json").abi;
 const stakeABI = require("../../build/contracts/Stake.json").abi;
 
+
 module.exports = (function () {
   let contract = {};
   contract.isManual = browserUtil.getLocal("isManual") === "true";
