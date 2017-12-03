@@ -452,12 +452,12 @@ h4 {
     transition: all 0.3s ease;
   }
 
-  .icon-link:hover:not(.icon-link--rotate) {
+  .icon-link:not(.icon-link--rotate):hover {
     transform: scale(1.2);
+    color: #FD8900;
   }
 
   .icon-link--rotate:hover {
-    transform: rotate(180deg);
     color: #FD8900;
   }
 
