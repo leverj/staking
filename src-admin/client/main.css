@@ -149,7 +149,7 @@ h4 {
   background: transparent;
   border: 0 none;
   border-radius: 3px;
-  border: 1px solid #FD8900;
+  border: 3px solid #FD8900;
   padding: 20px 30px;
   box-sizing: border-box;
   width: 100%;
@@ -449,15 +449,17 @@ h4 {
     color: #fff;
     float: right;
     cursor: pointer;
+    transition: all 0.3s ease;
   }
 
-  .icon-link:hover {
+  .icon-link:hover:not(.icon-link--rotate) {
+    transform: scale(1.2);
+  }
+
+  .icon-link--rotate:hover {
+    transform: rotate(180deg);
     color: #FD8900;
   }
-
-  /*.icon-link--rotate:hover {
-    transform: rotate(180deg);
-  }*/
 
   .staking-status {
     position: absolute;
