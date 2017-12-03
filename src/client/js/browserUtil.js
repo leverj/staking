@@ -1,3 +1,4 @@
+const $ = require('jquery');
 const affirm = require('affirm.js');
 
 module.exports = (function () {
@@ -16,6 +17,7 @@ module.exports = (function () {
       utilities.isLocalStorageSupported = false;
       storage = {}
     }
+    setBrowserOverlay();
   }
 
   function checkBrowsers() {
@@ -32,7 +34,22 @@ module.exports = (function () {
     if (utilities.is_chrome && utilities.is_opera) {
       utilities.is_chrome = false;
     }
-  }
+
+    if (modernBrowsers())
+        utilities.modern_browser = true;
+    else
+        utilities.modern_browser = false;
+    }
+
+    function modernBrowsers() {
+      return window.CSS && window.CSS.supports && window.CSS.supports('--fake-var', 0);
+    }
+
+    function setBrowserOverlay() {
+      let browserOverlay = $('.browser-detection-overlay');
+      if (!utilities.modern_browser)
+        browserOverlay.addClass("active");
+    }
 
   utilities.setLocal = function (key, value) {
     affirm(key, 'Cant store without a key');
