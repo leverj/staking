@@ -3,8 +3,7 @@ const conf = require('./conf');
 const stakeABI = require('./../build/contracts/Stake.json');
 
 async function automate() {
-  let web3, socketWeb3, stake, socketStake, currentBlock, operationActive;
-  let sendOptions = {}, state = {};
+  let web3, socketWeb3, stake, socketStake, currentBlock, operationActive, operator, state = {};
 
   async function getContracts() {
     socketWeb3 = new Web3(new Web3.providers.WebsocketProvider(conf.socketProvider));
@@ -14,9 +13,8 @@ async function automate() {
   }
 
   async function createAccount() {
-    let operator = await web3.eth.accounts.privateKeyToAccount(conf.privateKey);
+    operator = await web3.eth.accounts.privateKeyToAccount(conf.privateKey);
     web3.eth.accounts.wallet.add(operator);
-    sendOptions = {from: operator.address, gas: conf.gas};
   }
 
   async function init() {
@@ -65,7 +63,8 @@ async function automate() {
   async function updateFeeForCurrentStakingInterval() {
     if (state.endBlock >= currentBlock || state.feeCalculated)
       return console.log("skipping updateFeeForCurrentStakingInterval", JSON.stringify(state));
-    await stake.methods.updateFeeForCurrentStakingInterval().send(sendOptions);
+    stake.options.from = operator.address
+    await stake.methods.updateFeeForCurrentStakingInterval().send({from: operator.address, gas: conf.gas});
     await updateContractState();
   }
 
@@ -80,7 +79,8 @@ async function automate() {
     for (let i = 0; i < usersBatch.length; i++) {
       let batch = usersBatch[i];
       console.log("redeem to", batch);
-      await stake.methods.redeemLevAndFeeToStakers(batch).send(sendOptions);
+      stake.options.from = operator.address
+      await stake.methods.redeemLevAndFeeToStakers(batch).send({from: operator.address, gas: conf.gas});
     }
     await updateContractState();
   }
@@ -103,7 +103,8 @@ async function automate() {
       return console.log("skipping startNewStakingInterval", JSON.stringify(state));
     let start = (await web3.eth.getBlock('latest')).number;
     let end = start + conf.blockInterval;
-    await stake.methods.startNewStakingInterval(start, end).send(sendOptions);
+    stake.options.from = operator.address
+    await stake.methods.startNewStakingInterval(start, end).send({from: operator.address, gas: conf.gas});
     await updateContractState();
   }
 
