@@ -143,7 +143,6 @@ module.exports = (function () {
 
   function copy() {
     let text = $(this).parent().find("span").first().text();
-    console.log(text);
     clipboard.writeText(text);
   }
 
@@ -159,37 +158,40 @@ module.exports = (function () {
   function displayUserInfo() {
     let user = $("#user-id").val();
     contract.setUser(user);
+    let self = this;
     contract.updateUserInfo().then(function () {
       let userInfo = contract.getUserInfo();
       $("[name=lev-count]").text(userInfo.lev);
       $("[name=staked-count]").text(userInfo.staked);
       $("[name=approved-count]").text(userInfo.approved);
-    })
-    showClick($(this));
+    }).then(showClick.bind(self))
+      .catch(handle)
   }
 
   function approve() {
     let tokens = $("#approve-count").val() - 0;
+    let self = this;
     contract.getApproveInfo(tokens).then(function (info) {
       $("#approve-address").text(info.address);
       $("#approve-amount").text(info.amount);
       $("#approve-gas").text(info.gas);
       $("#approve-data").text(info.data);
-    }).catch(handle);
-    contract.approve(tokens).catch(handle);
-    showClick($(this));
+    }).then(() => contract.approve(tokens))
+      .then(showClick.bind(self))
+      .catch(handle);
   }
 
   function stake() {
     let tokens = $("#stake-count").val() - 0;
+    let self = this;
     contract.getStakeInfo(tokens).then(function (info) {
       $("#stake-address").text(info.address);
       $("#stake-amount").text(info.amount);
       $("#stake-gas").text(info.gas);
       $("#stake-data").text(info.data);
-    }).catch(handle);
-    contract.stake(tokens).catch(handle);
-    showClick($(this));
+    }).then(() => contract.stake(tokens))
+      .then(showClick.bind(self))
+      .catch(handle);
   }
 
   function handle(e) {
@@ -202,11 +204,11 @@ module.exports = (function () {
     }, 2500);
   }
 
-  function showClick($element) {
+  function showClick() {
     // if(errorFlag) return;
     // $(this).addClass("hidden");
-    $element.parent().find(".eth-info").addClass("active");
-    $element.nextAll(".action-button").removeClass("hidden");
+    $(this).parent().find(".eth-info").addClass("active");
+    $(this).nextAll(".action-button").removeClass("hidden");
   }
 
   function nextScreen() {
