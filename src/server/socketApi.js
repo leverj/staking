@@ -32,7 +32,6 @@ module.exports = (function () {
   function subscribeStakingState() {
     web3.socket.eth.subscribe('newBlockHeaders', async function (error, data) {
       if (error) console.log("error", error);
-      console.log("current block", data.number);
       state.current = data.number;
       if (state.current > state.end) await updateStartEndBlock();
         emitToSocket(io, "state", state);

@@ -8,51 +8,21 @@ const socket = require("./socket-client");
 module.exports = (function () {
   let client = {};
   let errorFlag = false;
+  let currentForm;
+  let nextForm;
+  let previousForm;
+  let left;
+  let opacity;
+  let scale;
+  let animating;
 
   client.stakingForm = function () {
-    let currentForm;
-    let nextForm;
-    let previousForm;
-    let left;
-    let opacity;
-    let scale;
-    let animating;
-
     $(".clipboard").click(function (e) {
       e.preventDefault();
       alert("chopied");
     })
 
-    $(".next").click(function () {
-      if (animating) return false;
-      animating = true;
-
-      currentForm = $(this).parent();
-      nextForm = $(this).parent().next();
-
-
-      $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
-
-      nextForm.show();
-      currentForm.animate({opacity: 0}, {
-        step: function (now, mx) {
-          scale = 1 - (1 - now) * 0.2;
-          left = (now * 50) + "%";
-          opacity = 1 - now;
-          currentForm.css({
-            'transform': 'scale(' + scale + ')',
-            'position': 'absolute'
-          });
-          nextForm.css({'left': left, 'opacity': opacity});
-        },
-        duration: 800,
-        complete: function () {
-          currentForm.hide();
-          animating = false;
-        },
-        easing: 'easeInOutBack'
-      });
-    });
+    $(".next").click(nextScreen);
 
     $(".previous").click(function () {
       if (animating) return false;
@@ -89,7 +59,10 @@ module.exports = (function () {
     $(".submit").click(function () {
       return false;
     })
+
+
   };
+
 
   client.toggleModal = function () {
     let openModal;
@@ -155,7 +128,6 @@ module.exports = (function () {
     $("#approve-tx-info").txInfo("approve");
 
     socket.on('state', async function (data) {
-      console.log('state', data);
       let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
       $("#staking-status").text(text)
     })
@@ -176,9 +148,12 @@ module.exports = (function () {
   }
 
   function chooseMethod() {
+    let self = this;
     contract.setManual($("#choice-manual").is(":checked")).then(function () {
       $("#user-id").val(contract.user);
-    });
+    })
+      .then(nextScreen.bind(this))
+      .catch(handle);
   }
 
   function displayUserInfo() {
@@ -232,6 +207,37 @@ module.exports = (function () {
     // $(this).addClass("hidden");
     $element.parent().find(".eth-info").addClass("active");
     $element.nextAll(".action-button").removeClass("hidden");
+  }
+
+  function nextScreen() {
+    if (animating) return false;
+    animating = true;
+
+    currentForm = $(this).parent();
+    nextForm = $(this).parent().next();
+
+
+    $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
+
+    nextForm.show();
+    currentForm.animate({opacity: 0}, {
+      step: function (now, mx) {
+        scale = 1 - (1 - now) * 0.2;
+        left = (now * 50) + "%";
+        opacity = 1 - now;
+        currentForm.css({
+          'transform': 'scale(' + scale + ')',
+          'position': 'absolute'
+        });
+        nextForm.css({'left': left, 'opacity': opacity});
+      },
+      duration: 800,
+      complete: function () {
+        currentForm.hide();
+        animating = false;
+      },
+      easing: 'easeInOutBack'
+    });
   }
 
 })();
