@@ -1,6 +1,7 @@
 const fs = require('fs');
 const affirm = require('affirm.js');
-const configuration = require('./configuration.json');
+affirm(process.env.NODE_ENV, 'set NODE_ENV environment')
+const configuration = require(`./${process.env.NODE_ENV}.json`);
 
 function getPrivateKey() {
   affirm(process.argv[2], 'Provide private key file location of Operator');

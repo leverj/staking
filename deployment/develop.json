@@ -1,0 +1,49 @@
+{
+  "network": "https://ropsten.infura.io/5Ik2NwtzUQsXpL5nAvXW",
+  "fee": {
+    "name": "Fee.sol:Fee",
+    "parameters": {
+      "types": [
+        "address[]",
+        "string",
+        "uint8",
+        "string"
+      ],
+      "values": [
+        [
+          "0x833a2FA19349dAf085B94376ac3042197cF66443",
+          "0xD8ada5c29785F5e486bba48Bd196B103D58BBCa5",
+          "0x7461CCF1FD55c069ce13E07D163C65c78c8b48D1"
+        ],
+        "Leverj FEE Token",
+        "9",
+        "FEE"
+      ]
+    }
+  },
+  "stake": {
+    "name": "Stake.sol:Stake",
+    "parameters": {
+      "types": [
+        "address[]",
+        "address",
+        "address",
+        "uint256",
+        "address"
+      ],
+      "values": [
+        [
+          "0x833a2FA19349dAf085B94376ac3042197cF66443",
+          "0xD8ada5c29785F5e486bba48Bd196B103D58BBCa5",
+          "0x7461CCF1FD55c069ce13E07D163C65c78c8b48D1"
+        ],
+        "0xDaa1A6c972d4b8d57dce119E48C6ABB19BaF8402",
+        "0xC66f77054bF7536f3d1e7c8dD311e5394A4c8B7B",
+        "1000000",
+        "0xaa7127e250e87476fdd253f15e86a4ea9c4c4bd4"
+      ]
+    }
+  },
+  "feeAddress": "0xBd060a550344Ab2c091B050803C50c57937c3f4B",
+  "stakeAddress": "0xa53f47301EA03DFF47B946D3393ecD07954842a3"
+}
