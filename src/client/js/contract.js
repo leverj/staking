@@ -84,7 +84,13 @@ module.exports = (function () {
   };
 
   async function setUser() {
-    if (!contract.isManual) contract.user = (await web3.eth.getAccounts())[0];
+    if (!contract.isManual) {
+      let accounts = await web3.eth.getAccounts();
+      if(accounts.length === 0){
+        throw new Error('METAMASK is locked. Please unlock it');
+      }
+      contract.user = accounts[0];
+    }
   }
 
   async function init() {
