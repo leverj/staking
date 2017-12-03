@@ -8,51 +8,21 @@ const socket = require("./socket-client");
 module.exports = (function () {
   let client = {};
   let errorFlag = false;
+  let currentForm;
+  let nextForm;
+  let previousForm;
+  let left;
+  let opacity;
+  let scale;
+  let animating;
 
   client.stakingForm = function () {
-    let currentForm;
-    let nextForm;
-    let previousForm;
-    let left;
-    let opacity;
-    let scale;
-    let animating;
-
     $(".clipboard").click(function (e) {
       e.preventDefault();
       alert("chopied");
     })
 
-    $(".next").click(function () {
-      if (animating) return false;
-      animating = true;
-
-      currentForm = $(this).parent();
-      nextForm = $(this).parent().next();
-
-
-      $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
-
-      nextForm.show();
-      currentForm.animate({opacity: 0}, {
-        step: function (now, mx) {
-          scale = 1 - (1 - now) * 0.2;
-          left = (now * 50) + "%";
-          opacity = 1 - now;
-          currentForm.css({
-            'transform': 'scale(' + scale + ')',
-            'position': 'absolute'
-          });
-          nextForm.css({'left': left, 'opacity': opacity});
-        },
-        duration: 800,
-        complete: function () {
-          currentForm.hide();
-          animating = false;
-        },
-        easing: 'easeInOutBack'
-      });
-    });
+    $(".next").click(nextScreen);
 
     $(".previous").click(function () {
       if (animating) return false;
@@ -89,7 +59,10 @@ module.exports = (function () {
     $(".submit").click(function () {
       return false;
     })
+
+
   };
+
 
   client.toggleModal = function () {
     let openModal;
@@ -155,9 +128,12 @@ module.exports = (function () {
     $("#approve-tx-info").txInfo("approve");
 
     socket.on('state', async function (data) {
-      console.log('state', data);
       let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
       $("#staking-status").text(text)
+    })
+    socket.on('user-update', function (data) {
+      console.log('user-update');
+      displayUserInfo();
     })
   };
 
@@ -171,50 +147,60 @@ module.exports = (function () {
 
   function copy() {
     let text = $(this).parent().find("span").first().text();
-    console.log(text);
     clipboard.writeText(text);
   }
 
   function chooseMethod() {
+    let self = this;
     contract.setManual($("#choice-manual").is(":checked")).then(function () {
       $("#user-id").val(contract.user);
-    });
+    })
+      .then(nextScreen.bind(this))
+      .catch(handle);
   }
 
   function displayUserInfo() {
     let user = $("#user-id").val();
     contract.setUser(user);
+    let self = this;
     contract.updateUserInfo().then(function () {
-      let userInfo = contract.getUserInfo();
-      $("[name=lev-count]").text(userInfo.lev);
-      $("[name=staked-count]").text(userInfo.staked);
-      $("[name=approved-count]").text(userInfo.approved);
-    })
-    showClick($(this));
+      updateUserInfo();
+      socket.emit('register', {userid: user})
+    }).then(showClick.bind(self))
+      .catch(handle)
+  }
+
+  function updateUserInfo() {
+    let userInfo = contract.getUserInfo();
+    $("[name=lev-count]").text(userInfo.lev);
+    $("[name=staked-count]").text(userInfo.staked);
+    $("[name=approved-count]").text(userInfo.approved);
   }
 
   function approve() {
     let tokens = $("#approve-count").val() - 0;
+    let self = this;
     contract.getApproveInfo(tokens).then(function (info) {
       $("#approve-address").text(info.address);
       $("#approve-amount").text(info.amount);
       $("#approve-gas").text(info.gas);
       $("#approve-data").text(info.data);
-    }).catch(handle);
-    contract.approve(tokens).catch(handle);
-    showClick($(this));
+    }).then(() => contract.approve(tokens))
+      .then(showClick.bind(self))
+      .catch(handle);
   }
 
   function stake() {
     let tokens = $("#stake-count").val() - 0;
+    let self = this;
     contract.getStakeInfo(tokens).then(function (info) {
       $("#stake-address").text(info.address);
       $("#stake-amount").text(info.amount);
       $("#stake-gas").text(info.gas);
       $("#stake-data").text(info.data);
-    }).catch(handle);
-    contract.stake(tokens).catch(handle);
-    showClick($(this));
+    }).then(() => contract.stake(tokens))
+      .then(showClick.bind(self))
+      .catch(handle);
   }
 
   function handle(e) {
@@ -227,11 +213,42 @@ module.exports = (function () {
     }, 2500);
   }
 
-  function showClick($element) {
+  function showClick() {
     // if(errorFlag) return;
     // $(this).addClass("hidden");
-    $element.parent().find(".eth-info").addClass("active");
-    $element.nextAll(".action-button").removeClass("hidden");
+    $(this).parent().find(".eth-info").addClass("active");
+    $(this).nextAll(".action-button").removeClass("hidden");
+  }
+
+  function nextScreen() {
+    if (animating) return false;
+    animating = true;
+
+    currentForm = $(this).parent();
+    nextForm = $(this).parent().next();
+
+
+    $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
+
+    nextForm.show();
+    currentForm.animate({opacity: 0}, {
+      step: function (now, mx) {
+        scale = 1 - (1 - now) * 0.2;
+        left = (now * 50) + "%";
+        opacity = 1 - now;
+        currentForm.css({
+          'transform': 'scale(' + scale + ')',
+          'position': 'absolute'
+        });
+        nextForm.css({'left': left, 'opacity': opacity});
+      },
+      duration: 800,
+      complete: function () {
+        currentForm.hide();
+        animating = false;
+      },
+      easing: 'easeInOutBack'
+    });
   }
 
 })();
