@@ -18,13 +18,6 @@ module.exports = (function () {
     let scale;
     let animating;
 
-    $(".show").click(function () {
-      $(this).addClass("hidden");
-      $(this).parent().find(".eth-info").addClass("active");
-      // if(errorFlag) return;
-      $(this).nextAll(".action-button").removeClass("hidden");
-    });
-
     $(".clipboard").click(function (e) {
       e.preventDefault();
       alert("chopied");
@@ -102,17 +95,22 @@ module.exports = (function () {
     let openModal;
     let closeButton;
     let modalBody;
+    let htmlBody;
 
+    closeButton = $(".close-button");
     openModal = $(".js-open-modal");
-    modalBody = $(".modal__body");
+    modalBody = $(".instructions");
+    htmlBody = $("html, body");
 
     openModal.on("click", function () {
       modalBody.addClass("active");
+      htmlBody.addClass("modal-open");
     });
 
-    // closeButton.on("click", function () {
-    //   modalBody.removeClass("active");
-    // })
+    closeButton.on("click", function () {
+      modalBody.removeClass("active");
+      htmlBody.removeClass("modal-open");
+    })
   };
 
   client.copyData = function (element) {
@@ -203,6 +201,7 @@ module.exports = (function () {
       $("[name=staked-count]").text(userInfo.staked);
       $("[name=approved-count]").text(userInfo.approved);
     })
+    showClick($(this));
   }
 
   function approve() {
@@ -214,6 +213,7 @@ module.exports = (function () {
       $("#approve-data").text(info.data);
     }).catch(handle);
     contract.approve(tokens).catch(handle);
+    showClick($(this));
   }
 
   function stake() {
@@ -225,6 +225,7 @@ module.exports = (function () {
       $("#stake-data").text(info.data);
     }).catch(handle);
     contract.stake(tokens).catch(handle);
+    showClick($(this));
   }
 
   function handle(e) {
@@ -237,6 +238,11 @@ module.exports = (function () {
     }, 2500);
   }
 
+  function showClick($element) {
+    // if(errorFlag) return;
+    // $(this).addClass("hidden");
+    $element.parent().find(".eth-info").addClass("active");
+    $element.nextAll(".action-button").removeClass("hidden");
+  }
+
 })();
-
-

@@ -35,14 +35,15 @@ module.exports = (function () {
     $("#lev-setup").click(setuplev);
     $("#set-operator").click(setOperator);
     displayDetails("current block", block);
-
-
     let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated", "getOwners", "operator"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
-      let value = await stake.methods[prop]().call();
-      displayDetails(prop, value);
+      displayDetailsAsync(prop, stake.methods[prop]().call());
     }
+  }
+
+  async function displayDetailsAsync(key, promise) {
+    displayDetails(key, await promise);
   }
 
   async function staking() {
@@ -55,14 +56,14 @@ module.exports = (function () {
     $("#flip-calculated").click(flipCalculated);
     $("#send-fee").click(sendFeeTokens);
     $("#add-owner").click(addOwner);
-    displayDetails("user lev balance", await lev.methods.balanceOf(user).call());
-    displayDetails("user lev approve", await lev.methods.allowance(user, config.stake).call());
-    displayDetails("user lev blocks", await stake.methods.levBlocks(user).call());
-    displayDetails("user lev stake", await stake.methods.stakes(user).call());
-    displayDetails("fee with stake", await fee.methods.balanceOf(config.stake).call());
-    displayDetails("fee with user", await fee.methods.balanceOf(user).call());
-    displayDetails("Fee Owner", await fee.methods.getOwners().call());
-    displayDetails("Fee Minter", await fee.methods.minter().call());
+    displayDetailsAsync("user lev balance", lev.methods.balanceOf(user).call());
+    displayDetailsAsync("user lev approve", lev.methods.allowance(user, config.stake).call());
+    displayDetailsAsync("user lev blocks", stake.methods.levBlocks(user).call());
+    displayDetailsAsync("user lev stake", stake.methods.stakes(user).call());
+    displayDetailsAsync("fee with stake", fee.methods.balanceOf(config.stake).call());
+    displayDetailsAsync("fee with user", fee.methods.balanceOf(user).call());
+    displayDetailsAsync("Fee Owner", fee.methods.getOwners().call());
+    displayDetailsAsync("Fee Minter", fee.methods.minter().call());
     displayDetails("Stake", config.stake);
 
     // let ropsten = new Web3(new Web3.providers.HttpProvider("http://51.15.173.167:8545"));
@@ -162,7 +163,7 @@ module.exports = (function () {
     // handleEvents();
   }
 
-  $(document).ready(function(){
+  $(document).ready(function () {
     init();
   });
 

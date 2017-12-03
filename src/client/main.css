@@ -39,7 +39,45 @@ section{
 }
 
 /*custom font*/
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+/* open-sans-300 - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/fonts/open-sans-v15-latin-300.eot'); /* IE9 Compat Modes */
+  src: local('Open Sans Light'), local('OpenSans-Light'),
+       url('/fonts/open-sans-v15-latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/open-sans-v15-latin-300.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/open-sans-v15-latin-300.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/open-sans-v15-latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/open-sans-v15-latin-300.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+/* open-sans-regular - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/open-sans-v15-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Open Sans Regular'), local('OpenSans-Regular'),
+       url('/fonts/open-sans-v15-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/open-sans-v15-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/open-sans-v15-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/open-sans-v15-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/open-sans-v15-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+/* open-sans-700 - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/open-sans-v15-latin-700.eot'); /* IE9 Compat Modes */
+  src: local('Open Sans Bold'), local('OpenSans-Bold'),
+       url('/fonts/open-sans-v15-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/open-sans-v15-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/open-sans-v15-latin-700.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/open-sans-v15-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/open-sans-v15-latin-700.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
 /*basic reset*/
 * {
   margin: 0;
@@ -54,6 +92,12 @@ html {
 body, h1, h2, h3, h4, h5, h6 {
   font-family: 'Open Sans', sans-serif;
   line-height: 1.5;}
+
+.staking-container {
+  max-width: 750px;
+  margin: 0 auto;
+  position: relative;
+}
 
 h4 {
   color: #fff;
@@ -73,10 +117,11 @@ h4 {
   height: 0;
   visibility: hidden;
   opacity: 0;
-  transition: all 0.7s ease; }
+  transition: all 0.7s ease;
+  position: relative; }
 
 .eth-info.active {
-  height: 150px;
+  height: 120px;
   visibility: visible;
   opacity: 1; }
 
@@ -96,7 +141,6 @@ h4 {
 /*form styles*/
 #stakingForm {
   width: 100%;
-  max-width: 750px;
   margin: 50px auto;
   text-align: center;
   position: relative; }
@@ -105,7 +149,7 @@ h4 {
   background: transparent;
   border: 0 none;
   border-radius: 3px;
-  border: 1px solid #FD8900;
+  border: 3px solid #FD8900;
   padding: 20px 30px;
   box-sizing: border-box;
   width: 100%;
@@ -220,12 +264,19 @@ h4 {
   justify-content: center;
   align-items: center;
   font-size: 20px;
-  top: 40px;
-  left: 25%;
+  top: 100px;
+  left: 40px;
   transition: all 0.2s ease;
   cursor: pointer; }
+
   .help-button:hover {
     transform: scale(1.2); }
+
+  @media screen and (max-width: 768px) {
+    .help-button {
+      left: 20px;
+    }
+  }
 
   .form-field {
     display: flex;
@@ -282,6 +333,51 @@ h4 {
     position: relative;
     margin: 50px auto;
     width: 150px;
+  }
+
+  .instructions {
+    background: rgba(252, 248, 227, 0.9);
+    color: #8a6d3b;
+    position: fixed;
+    bottom: -100%;
+    opacity: 0.8;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 80%;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    overflow: scroll;
+    transition: all 0.5s ease;
+  }
+
+  .instructions.active {
+    opacity: 1;
+    bottom: 10%;
+  }
+
+  .instructions-list {
+    padding: 30px 60px;
+  }
+
+  .instructions-list__item {
+    margin-bottom: 15px;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    font-size: 30px;
+    color: #8a6d3b;
+    transition: all 0.5s ease;
+  }
+
+  .close-button:hover {
+    opacity: 0.7;
+    transform: rotate(180deg);
+    transform-origin: center;
   }
 
   .loader {
@@ -349,13 +445,50 @@ h4 {
     }
   }
 
-  .copy-link {
+  .icon-link {
     color: #fff;
     float: right;
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
 
-  .copy-link:hover {
+  .icon-link:not(.icon-link--rotate):hover {
+    transform: scale(1.2);
     color: #FD8900;
+  }
+
+  .icon-link--rotate:hover {
+    color: #FD8900;
+  }
+
+  .staking-status {
+    position: absolute;
+    right: 0;
+    top: 100px;
+  }
+
+  .staking-status__heading {
+    color: #FD8900;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+
+  .icon-link--big {
+    font-size: 30px;
+  }
+
+  .icon-link--center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @media screen and (max-width: 768px) {
+    .icon-link--center {
+      left: auto;
+      right: 0;
+    }
   }
 
   .error-container {
