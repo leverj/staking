@@ -1,7 +1,7 @@
 const express = require('express');
 const compress = require('compression');
 const helmet = require('helmet');
-const config = require('config');
+const config = require('./conf');
 const util = require('util');
 const api = require('./api');
 
@@ -21,11 +21,11 @@ module.exports = (async function () {
   app.use("/api/v1", api);
   app.use(compress());
 
-  let indexhtml = './dist/src-admin/client/index.html';
-  app.use(express.static('./dist/src-admin/client/', {maxAge: 31536000000}));
+  let indexhtml = './dist/src/client/index.html';
+  app.use(express.static('./dist/src/client/', {maxAge: 31536000000}));
 
   app.get(['/'], function (req, res) {
-    return res.sendFile(indexhtml, {root: './dist/src-admin/client/'})
+    return res.sendFile(indexhtml, {root: './dist/src/client/'})
   });
 
   app.use(function (err, req, res, next) {
