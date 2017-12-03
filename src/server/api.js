@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const config = require("config");
-
+const config = require("./conf");
 
 module.exports = (function () {
   async function getConfig(req, res, next) {
