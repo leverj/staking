@@ -95,17 +95,22 @@ module.exports = (function () {
     let openModal;
     let closeButton;
     let modalBody;
+    let htmlBody;
 
+    closeButton = $(".close-button");
     openModal = $(".js-open-modal");
-    modalBody = $(".modal__body");
+    modalBody = $(".instructions");
+    htmlBody = $("html, body");
 
     openModal.on("click", function () {
       modalBody.addClass("active");
+      htmlBody.addClass("modal-open");
     });
 
-    // closeButton.on("click", function () {
-    //   modalBody.removeClass("active");
-    // })
+    closeButton.on("click", function () {
+      modalBody.removeClass("active");
+      htmlBody.removeClass("modal-open");
+    })
   };
 
   client.copyData = function (element) {
