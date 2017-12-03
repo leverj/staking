@@ -3,7 +3,7 @@ require("jquery-easing");
 require("./templates");
 const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
-
+const socket = require("./socket-client");
 
 module.exports = (function () {
   let client = {};
@@ -153,6 +153,12 @@ module.exports = (function () {
     $.each($(".user-info"), (i, ele) => $(ele).userInfo());
     $("#stake-tx-info").txInfo("stake");
     $("#approve-tx-info").txInfo("approve");
+
+    socket.on('state', async function (data) {
+      console.log('state', data);
+      let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
+      $("#staking-status").text(text)
+    })
   };
 
   client.setEvents = function () {

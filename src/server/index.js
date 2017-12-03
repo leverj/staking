@@ -4,13 +4,12 @@ const helmet = require('helmet');
 const config = require('./conf');
 const util = require('util');
 const api = require('./api');
+const socketApi = require('./socketApi');
 
 module.exports = (async function () {
   let leverj = {};
   const app = express();
   const server = getServer();
-  const socketApi = await require('./socketApi');
-
   function getServer() {
     return require('http').Server(app)
   }
@@ -41,6 +40,7 @@ module.exports = (async function () {
       util.log(err.stack);
       util.log('################################## uncaught exception ######################################')
     })
+    socketApi.connect(server);
   }
 
   init();
