@@ -42,13 +42,13 @@ module.exports = function (grunt) {
               cwd: contracts,
               src: ['**/*'],
               dest: dist + "/build"
-            },
+            }/*,
             {
               expand: true,
               cwd: "./config",
-              src: ['**/*'],
+              src: ['**!/!*'],
               dest: dist + "/config"
-            }
+            }*/
           ]
         }
       },
