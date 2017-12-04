@@ -11,12 +11,31 @@ module.exports = (function () {
   let socketToUser = {};
   let io, web3 = {}, block, startBlock, endBlock, lev = {}, stake = {};
   let state = {start: 0, end: 0, current: 0};
+  let maxUserSockets = 10;
 
-  socketApi.register = function (socket, data) {
+  function register(socket, data) {
     let userid = data.userid;
     socketToUser[socket.id] = userid;
     usersToSockets[userid] = usersToSockets[userid] || []
     removeUnusedSocketsForUser(userid);
+    if (usersToSockets[userid].length >= 1) console.log(userid, usersToSockets[userid].length, 'sockets open')
+    if (usersToSockets[userid].length >= maxUserSockets) {
+      emitToSocket(socket, 'max_conn', 'Exceeded max connections')
+      // setTimeout(function() {
+      socket.disconnect('Exceeded max connections')
+      // }, 10000)
+    }
+    usersToSockets[userid].push(socket.id)
+    usersToSockets[userid] = removeDuplicate(usersToSockets[userid]);
+  }
+
+  function removeDuplicate(list){
+    let map = {}
+    for (let i = 0; i < list.length; i++) {
+      let item = list[i];
+      map[item] = true;
+    }
+    return Object.keys(map);
   }
 
   function removeUnusedSocketsForUser(userid) {
@@ -34,21 +53,54 @@ module.exports = (function () {
       if (error) console.log("error", error);
       state.current = data.number;
       if (state.current > state.end) await updateStartEndBlock();
-        emitToSocket(io, "state", state);
+      emitToSocket(io, "state", state);
     })
   }
 
   function subscribeStake() {
+    stake.socket.events.StakeEvent({}, function (error, data) {
+      if (error) console.error('STAKE.STAKE', error);
+      let userid = data.returnValues.user;
+      console.log('STAKE.STAKE', userid);
+      sendUserMessage(userid, 'user-update', {userid, event: 'STAKE.STAKE'})
+    });
 
+    stake.socket.events.RedeemEvent({}, function (error, data) {
+      if (error) console.error('STAKE.REDEEM', error);
+      let userid = data.returnValues.user;
+      console.log('STAKE.REDEEM', userid);
+      sendUserMessage(userid, 'user-update', {userid, event: 'STAKE.REDEEM'})
+    })
   }
 
   function subscribeLEV() {
+    lev.socket.events.Approval({}, function (error, data) {
+      if (error) console.error('LEV.Approval', error);
+      let userid = data.returnValues._owner;
+      console.log('LEV.Approval', userid);
+      sendUserMessage(userid, 'user-update', {userid, event: 'LEV.Approval'})
+    })
+  }
 
+  function sendUserMessage(userid, topic, message) {
+    let socketids = usersToSockets[userid]
+    console.log('socketids', socketids)
+    if (!socketids || socketids.length === 0) return
+    for (let i = 0; i < socketids.length; i++) {
+      let socketid = socketids[i];
+      let socket = io.sockets.sockets[socketid]
+      if (!socket) {
+        console.log('socket not there');
+        continue
+      }
+      emitToSocket(socket, topic, message)
+    }
+    removeUnusedSocketsForUser()
   }
 
   async function init() {
-    web3.socket = new Web3(new Web3.providers.WebsocketProvider(config.socketprovider));
     web3.http = new Web3(new Web3.providers.HttpProvider(config.common.network));
+    web3.socket = new Web3(new Web3.providers.WebsocketProvider(config.socketprovider));
     lev.socket = new web3.socket.eth.Contract(levJSON.abi, config.common.lev);
     stake.socket = new web3.socket.eth.Contract(stakeJSON.abi, config.common.stake);
     stake.http = new web3.http.eth.Contract(stakeJSON.abi, config.common.stake);
@@ -62,7 +114,7 @@ module.exports = (function () {
   socketApi.connect = async function (server) {
     try {
       io = socketio(server)
-      io.on('connection', onConnection)
+      io.on('connection', onConnection);
       await init();
     } catch (e) {
       console.error(e);
@@ -71,6 +123,7 @@ module.exports = (function () {
 
   function onConnection(socket) {
     console.log('################# socket to client connected', socket.id);
+    socket.on('register', register.bind(undefined, socket));
   }
 
   function emitToSocket(channel, topic, message) {
