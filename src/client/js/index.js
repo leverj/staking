@@ -16,13 +16,42 @@ module.exports = (function () {
   let scale;
   let animating;
 
+
+
   client.stakingForm = function () {
-    $(".clipboard").click(function (e) {
-      e.preventDefault();
-      alert("chopied");
-    })
 
     $(".next").click(nextScreen);
+
+    // $("#progressbar li").click(function () {
+    //   console.log($(this).index());
+    //
+    //   let currentForm = $("fieldset.active");
+    //   let prevForm = currentForm.prev();
+    //   let nextFrom = currentForm.next();
+    //
+    //   currentForm.animate({opacity: 0}, {
+    //     step: function (now, mx) {
+    //       //as the opacity of currentForm reduces to 0 - stored in "now"
+    //       //1. scale previousForm from 80% to 100%
+    //       scale = 0.8 + (1 - now) * 0.2;
+    //       //2. take currentForm to the right(50%) - from 0%
+    //       left = ((1 - now) * 50) + "%";
+    //       //3. increase opacity of previousForm to 1 as it moves in
+    //       opacity = 1 - now;
+    //       currentForm.css({'left': left});
+    //       prevForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
+    //     },
+    //     duration: 800,
+    //     complete: function () {
+    //       currentForm.hide();
+    //       animating = false;
+    //     },
+    //     //this comes from the custom easing plugin
+    //     easing: 'easeInOutBack'
+    //   });
+    //
+    //   $("fieldset").eq($(this).index()).show();
+    // })
 
     $(".previous").click(function () {
       if (animating) return false;
@@ -207,6 +236,7 @@ module.exports = (function () {
     // $(this).addClass("hidden");
     $element.parent().find(".eth-info").addClass("active");
     $element.nextAll(".action-button").removeClass("hidden");
+    $element.hasClass("show") ? $element.addClass("hidden") : "";
   }
 
   function nextScreen() {
@@ -216,9 +246,11 @@ module.exports = (function () {
     currentForm = $(this).parent();
     nextForm = $(this).parent().next();
 
+    console.log(currentForm);
 
     $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
-
+    $("fieldset").removeClass("active");
+    nextForm.addClass('active');
     nextForm.show();
     currentForm.animate({opacity: 0}, {
       step: function (now, mx) {
