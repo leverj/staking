@@ -215,7 +215,8 @@ h4 {
   font-size: 9px;
   width: 16%;
   float: left;
-  position: relative; }
+  position: relative;
+  cursor: pointer;}
 
 #progressbar li:before {
   content: counter(step);
