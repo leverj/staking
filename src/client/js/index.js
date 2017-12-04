@@ -245,6 +245,7 @@ module.exports = (function () {
   function showClick() {
     // if(errorFlag) return;
     // $(this).addClass("hidden");
+    let $element = $(this)
     $element.parent().find(".eth-info").addClass("active");
     $element.nextAll(".action-button").removeClass("hidden");
     $element.hasClass("show") ? $element.addClass("hidden") : "";

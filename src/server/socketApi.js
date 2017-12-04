@@ -71,6 +71,16 @@ module.exports = (function () {
       console.log('STAKE.REDEEM', userid);
       sendUserMessage(userid, 'user-update', {userid, event: 'STAKE.REDEEM'})
     })
+
+/*    stake.socket.events.FeeCalculated({}, function (error, data) {
+      if (error) console.error('FEE CALCULATED', error);
+      console.log('FEE CALCULATED', data);
+    })
+
+    stake.socket.events.StakingInterval({}, function (error, data) {
+      if (error) console.error('StakingInterval', error);
+      console.log('StakingInterval', data);
+    })*/
   }
 
   function subscribeLEV() {
