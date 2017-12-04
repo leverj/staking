@@ -44,6 +44,6 @@
       ]
     }
   },
-  "feeAddress": "0xBd060a550344Ab2c091B050803C50c57937c3f4B",
-  "stakeAddress": "0xa53f47301EA03DFF47B946D3393ecD07954842a3"
+  "feeAddress": null,
+  "stakeAddress": null
 }
