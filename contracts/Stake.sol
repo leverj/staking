@@ -22,8 +22,9 @@ contract Stake is Owned, Validating {
   using SafeMath for uint;
 
   event StakeEvent(address indexed user, uint levs, uint startBlock, uint endBlock);
-
   event RedeemEvent(address indexed user, uint levs, uint feeEarned, uint startBlock, uint endBlock);
+  event FeeCalculated(uint feeCalculated, uint feeReceived, uint weiReceived, uint startBlock, uint endBlock);
+  event StakingInterval(uint startBlock, uint endBlock);
 
   // User address to (lev tokens)*(blocks left to end)
   mapping (address => uint) public levBlocks;
@@ -135,10 +136,11 @@ contract Stake is Owned, Validating {
   /// Executable by the operator only
   function updateFeeForCurrentStakingInterval() external onlyOperator isDoneStaking {
     require(feeCalculated == false);
-    uint feeFromExchange = feeToken.balanceOf(this);
-    feeForTheStakingInterval = feeForTheStakingInterval.add(feeFromExchange.add(this.balance.div(weiPerFee)));
+    uint feeReceived = feeToken.balanceOf(this);
+    feeForTheStakingInterval = feeForTheStakingInterval.add(feeReceived.add(this.balance.div(weiPerFee)));
     feeCalculated = true;
-    if (feeFromExchange > 0) feeToken.burnTokens(feeFromExchange);
+    FeeCalculated(feeForTheStakingInterval, feeReceived, this.balance, startBlock, endBlock);
+    if (feeReceived > 0) feeToken.burnTokens(feeReceived);
     if (this.balance > 0) wallet.transfer(this.balance);
   }
 
@@ -187,6 +189,7 @@ contract Stake is Owned, Validating {
     totalLevBlocks = 0;
     feeForTheStakingInterval = 0;
     feeCalculated = false;
+    StakingInterval(_start, _end);
   }
 
 }
