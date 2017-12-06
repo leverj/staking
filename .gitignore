@@ -7,6 +7,9 @@ package-lock.json
 secrets.json
 node_modules/
 dist
+dist1
 bower_components
-src-admin/client/conf.js
 .DS_Store
+conf.ropsten/stake.json
+migrations/config/
+scripts/stake.sh

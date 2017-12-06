@@ -1,0 +1,11 @@
+.idea/
+bower_components
+conf*
+migrations
+node_modules
+src*
+*.log*
+test
+bower.json
+circle.yml
+README.md

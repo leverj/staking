@@ -1,9 +1,8 @@
 module.exports = function (grunt) {
   // Project configuration.
   const dist = './dist/';
-  const server = './src-admin/server/';
-  const common = './src-admin/common/';
-  const client = './src-admin/client/';
+  const server = './src/server/';
+  const client = './src/client/';
   const contracts = './build/';
 
   grunt.initConfig(
@@ -17,8 +16,8 @@ module.exports = function (grunt) {
             {
               expand: true,
               cwd: client,
-              src: ['**/*.html',"**/*.css"],
-              dest: dist + "/src-admin/client"
+              src: ['**/*'],
+              dest: dist + "/src/client"
             },
             {
               expand: true,
@@ -30,33 +29,36 @@ module.exports = function (grunt) {
               expand: true,
               cwd: server,
               src: ['**/*'],
-              dest: dist + "/src-admin/server"
-            },
-            {
-              expand: true,
-              cwd: 'bower_components',
-              src: ['**/*'],
-              dest: dist + "/src-admin/client"
+              dest: dist + "/src/server"
             },
             {
               expand: true,
               cwd: contracts,
               src: ['**/*'],
               dest: dist + "/build"
-            },
-            {
-              expand: true,
-              cwd: "./config",
-              src: ['**/*'],
-              dest: "./migrations/config"
             }
           ]
         }
       },
+      /*cachebreaker: {
+        dev: {
+          options: {
+            match: [
+              {"bootstrap.min.css": "dist/src/client/bootstrap/dist/css/bootstrap.min.css"},
+              {"main.css": "dist/src/client/coinpit.css"},
+              {"coinpit.js": "dist/src/client/coinpit.js"},
+              {"chart.js": "dist/src/client/chart.js"},
+            ],
+            replacement: 'md5'
+          },
+          files: {src: ['dist/src/client/index.html']}
+        }
+      },*/
       browserify: {
         dist: {
           files: {
-            "dist/src-admin/client/client.js": client + "client.js"
+            "dist/src/client/js/admin.js": client + "js/admin.js",
+            "dist/src/client/js/index.js": client + "js/index.js"
           }
         }
       },
