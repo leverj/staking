@@ -1,0 +1,49 @@
+{
+  "network": "https://mainnet.infura.io/5Ik2NwtzUQsXpL5nAvXW",
+  "fee": {
+    "name": "Fee.sol:Fee",
+    "parameters": {
+      "types": [
+        "address[]",
+        "string",
+        "uint8",
+        "string"
+      ],
+      "values": [
+        [
+          "0x4d2130d9d20428dc249a1e938a0bcea4b5b9ac1a",
+          "0xac01f01f51f0bdd012c1838bd5cef330e6c7ffca",
+          "0x5CcAAAE7Bea14E8e04FB0FC7ED16DF49d5678Eb8"
+        ],
+        "Leverj FEE Token",
+        "9",
+        "FEE"
+      ]
+    }
+  },
+  "stake": {
+    "name": "Stake.sol:Stake",
+    "parameters": {
+      "types": [
+        "address[]",
+        "address",
+        "address",
+        "uint256",
+        "address"
+      ],
+      "values": [
+        [
+          "0x4d2130d9d20428dc249a1e938a0bcea4b5b9ac1a",
+          "0xac01f01f51f0bdd012c1838bd5cef330e6c7ffca",
+          "0x5CcAAAE7Bea14E8e04FB0FC7ED16DF49d5678Eb8"
+        ],
+        "0x5CcAAAE7Bea14E8e04FB0FC7ED16DF49d5678Eb8",
+        "0xaC01F01f51F0bdd012C1838Bd5ceF330E6c7FFCa",
+        "100000",
+        "0x0f4ca92660efad97a9a70cb0fe969c755439772c"
+      ]
+    }
+  },
+  "feeAddress": "0xe00e451dA1ab65bEaB172EF6055293c53a2C4507",
+  "stakeAddress": null
+}
