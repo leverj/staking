@@ -12,4 +12,4 @@ bower_components
 .DS_Store
 conf.ropsten/stake.json
 migrations/config/
-scripts/stake.sh
+scripts/stake*.sh
