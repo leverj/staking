@@ -4,6 +4,7 @@ const stakeABI = require('./../build/contracts/Stake.json');
 
 async function automate() {
   let web3, socketWeb3, stake, socketStake, currentBlock, operationActive, operator, state = {};
+  let gasPrice = 41e9;
 
   async function getContracts() {
     socketWeb3 = new Web3(new Web3.providers.WebsocketProvider(conf.socketProvider));
@@ -37,7 +38,8 @@ async function automate() {
   function startListening() {
     socketWeb3.eth.subscribe('newBlockHeaders', async function (error, data) {
       if (error) console.error(e);
-      console.log('################ current block', data.number);
+      gasPrice = Math.max((await web3.eth.getGasPrice()) - 0, 21e9);
+      console.log('################ current block', data.number, 'gasPrice', gasPrice);
       currentBlock = data.number;
       if (currentBlock > state.endBlock && !operationActive) {
         operationActive = false;
@@ -54,17 +56,10 @@ async function automate() {
     });
   }
 
-  function delay(time) {
-    return new Promise(function (resolve, reject) {
-      setTimeout(resolve, time)
-    })
-  }
-
   async function updateFeeForCurrentStakingInterval() {
     if (state.endBlock >= currentBlock || state.feeCalculated)
       return console.log("skipping updateFeeForCurrentStakingInterval", JSON.stringify(state));
-    stake.options.from = operator.address
-    await stake.methods.updateFeeForCurrentStakingInterval().send({from: operator.address, gas: conf.gas});
+    await sendTx(stake, stake.methods.updateFeeForCurrentStakingInterval())
     await updateContractState();
   }
 
@@ -79,8 +74,7 @@ async function automate() {
     for (let i = 0; i < usersBatch.length; i++) {
       let batch = usersBatch[i];
       console.log("redeem to", batch);
-      stake.options.from = operator.address
-      await stake.methods.redeemLevAndFeeToStakers(batch).send({from: operator.address, gas: conf.gas});
+      await sendTx(stake, stake.methods.redeemLevAndFeeToStakers(batch))
     }
     await updateContractState();
   }
@@ -103,8 +97,7 @@ async function automate() {
       return console.log("skipping startNewStakingInterval", JSON.stringify(state));
     let start = (await web3.eth.getBlock('latest')).number;
     let end = start + conf.blockInterval;
-    stake.options.from = operator.address
-    await stake.methods.startNewStakingInterval(start, end).send({from: operator.address, gas: conf.gas});
+    await sendTx(stake, stake.methods.startNewStakingInterval(start, end))
     await updateContractState();
   }
 
@@ -143,8 +136,18 @@ async function automate() {
     }
   }
 
+  async function sendTx(contract, tx) {
+    contract.options.from = operator.address;
+    let gas = await tx.estimateGas();
+    console.log('gas', gas);
+    await tx.send({from: operator.address, gas, gasPrice: gasPrice})
+  }
+
   await init();
 
 }
 
-automate().catch(console.error);
+automate().catch((e) => {
+  console.error(e)
+  process.exit(1)
+});
