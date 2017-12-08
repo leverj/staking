@@ -3,7 +3,7 @@ const conf = require('./conf');
 const stakeABI = require('./../build/contracts/Stake.json');
 
 async function automate() {
-  let web3, socketWeb3, stake, socketStake, currentBlock, operationActive, operator, state = {};
+  let web3, socketWeb3, stake, socketStake, currentBlock, operationActive, operator, state = {}, errorCount=0;
   let gasPrice = 41e9;
 
   async function getContracts() {
@@ -46,9 +46,12 @@ async function automate() {
         try {
           operationActive = true;
           await operateStake();
+          errorCount=0;
         } catch (e) {
           console.log('operateStake ERROR', e);
           await handleNoUserError(e);
+          if(errorCount === 5) process.exit(1);
+          errorCount++;
         } finally {
           operationActive = false;
         }
