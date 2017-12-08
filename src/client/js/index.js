@@ -89,9 +89,13 @@ module.exports = (function () {
       return false;
     })
 
+    // $(".lev-count").click(function() {
+    //   let levCount = $(this).text();
+    //
+    //   $(this).parent().find("input").value(levCount);
+    // })
 
   };
-
 
   client.toggleModal = function () {
     let openModal;

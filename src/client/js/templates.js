@@ -1,7 +1,7 @@
 const $ = require('jquery');
 $.fn.userInfo = function () {
   this.append(
-    "<h4>Number of LEV: <span class='text-brand' name='lev-count'>10000</span></h4>" +
+    "<h4>Number of LEV: <span class='text-brand lev-count' name='lev-count'>10000</span></h4>" +
     "<h4>Approved LEV: <span class='text-brand'  name='approved-count'>100</span></h4>" +
     "<h4>Staked LEV: <span class='text-brand'  name='staked-count'>90</span></h4>" +
     "<a href='#' class='icon-link icon-link--big icon-link--center icon-link--rotate' data-id='user-info-display-action'><i class='fa fa-refresh' aria-hidden='true'></i></a>" );
