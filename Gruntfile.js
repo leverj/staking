@@ -4,6 +4,7 @@ module.exports = function (grunt) {
   const server = './src/server/';
   const client = './src/client/';
   const contracts = './build/';
+  const config = './config'
 
   grunt.initConfig(
     {
@@ -36,7 +37,14 @@ module.exports = function (grunt) {
               cwd: contracts,
               src: ['**/*'],
               dest: dist + "/build"
+            },
+            {
+              expand: true,
+              cwd: config,
+              src: ['**/*'],
+              dest: dist + "/config"
             }
+
           ]
         }
       },

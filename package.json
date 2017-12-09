@@ -40,7 +40,7 @@
     "bn.js": "4.11.6",
     "chai": "4.1.2",
     "clean-webpack-plugin": "^0.1.17",
-    "copy-webpack-plugin": "^4.2.0",
+    "copy-webpack-plugin": "^4.2.3",
     "css-loader": "0.28.7",
     "enzyme": "3.2.0",
     "enzyme-adapter-react-16": "1.1.0",
@@ -49,7 +49,7 @@
     "ethjs-contract": "^0.1.9",
     "ethjs-provider-http": "0.1.6",
     "ethjs-query": "0.2.4",
-    "ethjs-rpc": "^0.1.7",
+    "ethjs-rpc": "^0.1.8",
     "expect.js": "^0.3.1",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.2.0",
@@ -65,18 +65,18 @@
     "react-addons-test-utils": "15.6.2",
     "react-dom": "16.0.0",
     "react-test-renderer": "16.1.1",
-    "solc": "^0.4.18",
+    "solc": "^0.4.19",
     "truffle": "4.0.1",
     "truffle-hdwallet-provider": "0.0.3",
     "webpack": "3.8.1",
-    "webpack-dev-server": "^2.9.4"
+    "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
     "affirm.js": "^1.0.0",
     "clipboard-polyfill": "^2.3.0",
     "compression": "^1.7.1",
     "config": "^1.28.1",
-    "ethereumjs-abi": "^0.6.4",
+    "ethereumjs-abi": "^0.6.5",
     "ethereumjs-util": "^5.1.2",
     "express": "^4.15.4",
     "helmet": "^3.8.2",
@@ -88,6 +88,6 @@
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
     "style-loader": "^0.19.0",
-    "web3": "^1.0.0-beta.26"
+    "web3": "1.0.0-beta.26"
   }
 }
