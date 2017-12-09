@@ -17,7 +17,7 @@ module.exports = (function () {
       utilities.isLocalStorageSupported = false;
       storage = {}
     }
-    setBrowserOverlay();
+    // setBrowserOverlay();
   }
 
   function checkBrowsers() {
