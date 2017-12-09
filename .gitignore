@@ -3,6 +3,7 @@ logs
 *.log
 build
 .idea
+#package-lock.json
 secrets.json
 node_modules/
 dist
