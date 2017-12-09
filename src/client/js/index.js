@@ -208,6 +208,7 @@ module.exports = (function () {
     $("[name=lev-count]").text(userInfo.lev);
     $("[name=staked-count]").text(userInfo.staked);
     $("[name=approved-count]").text(userInfo.approved);
+    $("[name=fee-count]").text(userInfo.fee);
   }
 
   function approve() {
