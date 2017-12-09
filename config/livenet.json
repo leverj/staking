@@ -1,3 +1,15 @@
 {
-
+  "ip": "0.0.0.0",
+  "port": "8888",
+  "csp": {
+    "directives":{
+      "defaultSrc": ["'none'"],
+      "connectSrc": ["wss://stake.leverj.io", "https://stake.leverj.io"],
+      "imgSrc":     ["https://stake.leverj.io"],
+      "styleSrc":   ["https://stake.leverj.io"],
+      "fontSrc":    ["https://stake.leverj.io"],
+      "scriptSrc":  ["'unsafe-eval'","https://stake.leverj.io"],
+      "mediaSrc":   ["https://stake.leverj.io", "blob:"]
+    }
+  }
 }
