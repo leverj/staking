@@ -6,8 +6,8 @@ machine:
 
 test:
   override:
-    - npm test
-    - truffle compile
+#    - npm test
+#    - truffle compile
     - grunt
 
 deployment:
