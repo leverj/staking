@@ -1,4 +1,6 @@
-module.exports = {
+let config = require('config');
+const _ = require('lodash');
+module.exports = _.assign(config, {
   "common": {
     "network": process.env.NETWORK,
     "stake": process.env.STAKE,
@@ -11,4 +13,4 @@ module.exports = {
   "ip": "0.0.0.0",
   "port": "8888",
   "socketprovider": process.env.SOCKETPROVIDER,
-}
+})
