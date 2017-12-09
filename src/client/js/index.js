@@ -17,7 +17,6 @@ module.exports = (function () {
   let animating;
 
 
-
   client.stakingForm = function () {
 
     $(".next").click(nextScreen);
@@ -185,10 +184,11 @@ module.exports = (function () {
 
   function chooseMethod() {
     let self = this;
-    contract.setManual($("#choice-manual").is(":checked")).then(function () {
-      $("#user-id").val(contract.user);
+    let isManual = $("#choice-manual").is(":checked");
+    contract.setManual(isManual).then(function () {
+      $("#user-id").attr("readonly", !isManual).val(contract.user);
     })
-      .then(nextScreen.bind(this))
+      .then(nextScreen.bind(self))
       .catch(handle);
   }
 
