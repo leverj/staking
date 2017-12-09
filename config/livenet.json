@@ -4,7 +4,7 @@
   "csp": {
     "directives":{
       "defaultSrc": ["'none'"],
-      "connectSrc": ["wss://stake.leverj.io", "https://stake.leverj.io"],
+      "connectSrc": ["https://mainnet.infura.io","wss://stake.leverj.io", "https://stake.leverj.io"],
       "imgSrc":     ["https://stake.leverj.io"],
       "styleSrc":   ["https://stake.leverj.io"],
       "fontSrc":    ["https://stake.leverj.io"],

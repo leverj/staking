@@ -35,10 +35,11 @@ module.exports = (function () {
     let result = await Promise.all([
       lev.methods.balanceOf(contract.user).call(),
       stake.methods.stakes(contract.user).call(),
-      lev.methods.allowance(contract.user, config.stake).call()
+      lev.methods.allowance(contract.user, config.stake).call(),
+      fee.methods.balanceOf(contract.user).call()
     ]);
     result = result.map(num => ((num - 0) / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals) - 0);
-    userInfo = {lev: result[0], staked: result[1], approved: result[2]};
+    userInfo = {lev: result[0], staked: result[1], approved: result[2], fee:result[3]};
   };
 
   contract.getApproveInfo = async function (levCounts) {

@@ -4,7 +4,7 @@
   "csp": {
     "directives":{
       "defaultSrc": ["'none'"],
-      "connectSrc": ["wss://stake-ropsten.leverj.io", "https://stake-ropsten.leverj.io"],
+      "connectSrc": ["https://ropsten.infura.io","wss://stake-ropsten.leverj.io", "https://stake-ropsten.leverj.io"],
       "imgSrc":     ["https://stake-ropsten.leverj.io"],
       "styleSrc":   ["https://stake-ropsten.leverj.io"],
       "fontSrc":    ["https://stake-ropsten.leverj.io"],
