@@ -133,6 +133,7 @@ module.exports = (function () {
 
   function onConnection(socket) {
     console.log('################# socket to client connected', socket.id);
+    if(state.end && state.end && state.current) emitToSocket(io, "state", state);
     socket.on('register', register.bind(undefined, socket));
   }
 

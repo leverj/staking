@@ -10,6 +10,7 @@ module.exports = (async function () {
   let leverj = {};
   const app = express();
   const server = getServer();
+
   function getServer() {
     return require('http').Server(app)
   }
@@ -17,6 +18,14 @@ module.exports = (async function () {
   app.use(helmet({frameguard: {action: 'deny'}}));
   app.use(helmet.noCache());
   app.use(helmet.xssFilter());
+  app.use(helmet.contentSecurityPolicy(
+    {
+      directives: config.csp.directives,
+      reportOnly: false,
+      setAllHeaders: false,
+      disableAndroid: false
+    }
+  ))
   app.use("/api/v1", api);
   app.use(compress());
 
