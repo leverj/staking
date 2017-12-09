@@ -129,7 +129,7 @@ contract('Circulate Fee Tokens', (accounts) => {
   });
 
 
-  it.only('Stake contract should be able to send Fee and Lev to User', async function () {
+  it('Stake contract should be able to send Fee and Lev to User', async function () {
     await stake.redeemLevAndFeeByStaker({from: user1(accounts)});
     expect((await token.balanceOf(user1(accounts))).toNumber()).to.eql(100);
     expect((await fee.balanceOf(user1(accounts))).toNumber()).to.eql(409);
