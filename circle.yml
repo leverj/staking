@@ -6,7 +6,7 @@ machine:
 
 test:
   override:
-    - npm test
+#    - npm test
     - truffle compile
     - grunt
 
@@ -24,8 +24,8 @@ deployment:
     branch: master
     commands:
       - docker info
-      - docker build -t leverj/stake:master .
-      - docker build -f Dockerfile-automation -t leverj/stake-automation:master .
+      - docker build -t leverj/stake:livenet .
+      - docker build -f Dockerfile-automation -t leverj/stake-automation:livenet .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push leverj/stake
       - docker push leverj/stake-automation

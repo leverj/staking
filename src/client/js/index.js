@@ -17,7 +17,6 @@ module.exports = (function () {
   let animating;
 
 
-
   client.stakingForm = function () {
 
     $(".next").click(function(){
@@ -141,10 +140,11 @@ module.exports = (function () {
 
   function chooseMethod() {
     let self = this;
-    contract.setManual($("#choice-manual").is(":checked")).then(function () {
-      $("#user-id").val(contract.user);
+    let isManual = $("#choice-manual").is(":checked");
+    contract.setManual(isManual).then(function () {
+      $("#user-id").attr("readonly", !isManual).val(contract.user);
     })
-      .then(nextScreen.bind(this))
+      .then(nextScreen.bind(self))
       .then(nextScreen)
       .catch(handle);
   }
@@ -165,6 +165,7 @@ module.exports = (function () {
     $("[name=lev-count]").text(userInfo.lev);
     $("[name=staked-count]").text(userInfo.staked);
     $("[name=approved-count]").text(userInfo.approved);
+    $("[name=fee-count]").text(userInfo.fee);
   }
 
   function approve() {

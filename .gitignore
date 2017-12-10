@@ -3,7 +3,7 @@ logs
 *.log
 build
 .idea
-package-lock.json
+#package-lock.json
 secrets.json
 node_modules/
 dist
@@ -12,4 +12,4 @@ bower_components
 .DS_Store
 conf.ropsten/stake.json
 migrations/config/
-scripts/stake.sh
+scripts/stake*.sh
