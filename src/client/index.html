@@ -80,99 +80,103 @@
     <form id="stakingForm">
 
       <ul id="progressbar">
-        <li class="active">Welcome</li>
-        <li>Method</li>
-        <li>User Information</li>
-        <li>Approval</li>
-        <li>Staking</li>
-        <li>Confirmation</li>
+        <li class="active lev-count">Welcome</li>
+        <li class="lev-count">Method</li>
+        <li class="lev-count">User Information</li>
+        <li class="lev-count">Approval</li>
+        <li class="lev-count">Staking</li>
+        <li class="lev-count">Confirmation</li>
       </ul>
 
-      <fieldset>
-        <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-        <h3 class="staking-subtitle">For instructions, please click on the help icon at any point during the process. In the
-          next screen you will have the option to choose to go through the staking wizard through Metamask (recommended) or
-          manually.</h3>
+      <div class="fieldset-container">
 
-        <input type="button" name="next" class="next action-button" value="Next"/>
-      </fieldset>
+          <fieldset>
+            <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+            <h3 class="staking-subtitle">For instructions, please click on the help icon at any point during the process. In the
+              next screen you will have the option to choose to go through the staking wizard through Metamask (recommended) or
+              manually.</h3>
 
-      <fieldset>
+            <input type="button" name="next" class="next action-button" value="Next"/>
+          </fieldset>
 
-        <h2 class="staking-title">Would you like to use directly through Metamask or would you like to
-          go through the manual wizard?</h2>
+          <fieldset>
 
-        <div class="form-field__container">
-          <div class="form-field">
-            <input type="radio" checked id="choice-metamask" name="stake">
-            <label for="choice-metamask" class="text--white">Stake using Metamask</label>
-          </div>
+            <h2 class="staking-title">Would you like to use directly through Metamask or would you like to
+              go through the manual wizard?</h2>
 
-          <div class="form-field">
-            <input type="radio" id="choice-manual" name="stake">
-            <label for="choice-manual" class="text--white">Stake manually</label>
-          </div>
-        </div>
+            <div class="form-field__container">
+              <div class="form-field">
+                <input type="radio" checked id="choice-metamask" name="stake">
+                <label for="choice-metamask" class="text--white">Stake using Metamask</label>
+              </div>
 
-        <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
-        <div class="error-container"></div>
+              <div class="form-field">
+                <input type="radio" id="choice-manual" name="stake">
+                <label for="choice-manual" class="text--white">Stake manually</label>
+              </div>
+            </div>
 
-      </fieldset>
+            <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
+            <div class="error-container"></div>
 
-      <fieldset>
-        <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-        <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the
-          help icon at any point during the process</h3>
-        <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
-        <div class="error-container"></div>
+          </fieldset>
 
-        <div class="eth-info user-info"></div>
-        <input type="button" name="previous" class="previous action-button" value="Previous"/>
-        <input type="button" name="show" data-id="user-info-display-action" class="show action-button" value="Show Info"/>
-        <!-- <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
-               value="Refresh"/>  -->
-        <input type="button" name="next" class="next action-button hidden" value="Next"/>
-      </fieldset>
+          <fieldset>
+            <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+            <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the
+              help icon at any point during the process</h3>
+            <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
+            <div class="error-container"></div>
 
-      <fieldset>
-        <div class="eth-info active user-info"></div>
-        <h2 class="staking-title"></h2>
-        <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
-        <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
-        <div class="error-container"></div>
+            <div class="eth-info user-info"></div>
+            <input type="button" name="previous" class="previous action-button" value="Previous"/>
+            <input type="button" name="show" data-id="user-info-display-action" class="show action-button" value="Show Info"/>
+            <!-- <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
+                   value="Refresh"/>  -->
+            <input type="button" name="next" class="next action-button hidden" value="Next"/>
+          </fieldset>
 
-        <div class="eth-info" id="approve-tx-info"></div>
+          <fieldset>
+            <div class="eth-info active user-info"></div>
+            <h2 class="staking-title"></h2>
+            <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
+            <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
+            <div class="error-container"></div>
 
-        <input type="button" name="previous" class="previous action-button" value="Previous"/>
-        <input type="button" name="Approve" data-id="approve-action" class="approve action-button" value="Approve"/>
+            <div class="eth-info" id="approve-tx-info"></div>
 
-        <input type="button" name="next" class="next action-button" value="Next"/>
-        <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
-      </fieldset>
+            <input type="button" name="previous" class="previous action-button" value="Previous"/>
+            <input type="button" name="Approve" data-id="approve-action" class="approve action-button" value="Approve"/>
 
-      <fieldset>
+            <input type="button" name="next" class="next action-button" value="Next"/>
+            <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
+          </fieldset>
 
-        <div class="eth-info active user-info"></div>
+          <fieldset>
 
-        <h2 class="staking-title"></h2>
-        <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
+            <div class="eth-info active user-info"></div>
 
-        <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
-        <div class="error-container"></div>
+            <h2 class="staking-title"></h2>
+            <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
 
-        <div class="eth-info" id="stake-tx-info"></div>
+            <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
+            <div class="error-container"></div>
 
-        <input type="button" name="previous" class="previous action-button" value="Previous"/>
-        <input type="button" name=" " class="approve action-button" id="stake-action" value="Stake"/>
-        <input type="button" name="next" class="next action-button hidden" value="Next"/>
+            <div class="eth-info" id="stake-tx-info"></div>
 
-      </fieldset>
+            <input type="button" name="previous" class="previous action-button" value="Previous"/>
+            <input type="button" name=" " class="approve action-button" id="stake-action" value="Stake"/>
+            <input type="button" name="next" class="next action-button hidden" value="Next"/>
 
-      <fieldset>
+          </fieldset>
 
-        <h2>Confirmation window</h2>
+          <fieldset>
 
-      </fieldset>
+            <h2>Confirmation window</h2>
+
+          </fieldset>
+
+      </div>
 
     </form>
 

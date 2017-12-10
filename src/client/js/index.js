@@ -20,80 +20,31 @@ module.exports = (function () {
 
   client.stakingForm = function () {
 
-    $(".next").click(nextScreen);
-
-    // $("#progressbar li").click(function () {
-    //   console.log($(this).index());
-    //
-    //   let currentForm = $("fieldset.active");
-    //   let prevForm = currentForm.prev();
-    //   let nextFrom = currentForm.next();
-    //
-    //   currentForm.animate({opacity: 0}, {
-    //     step: function (now, mx) {
-    //       //as the opacity of currentForm reduces to 0 - stored in "now"
-    //       //1. scale previousForm from 80% to 100%
-    //       scale = 0.8 + (1 - now) * 0.2;
-    //       //2. take currentForm to the right(50%) - from 0%
-    //       left = ((1 - now) * 50) + "%";
-    //       //3. increase opacity of previousForm to 1 as it moves in
-    //       opacity = 1 - now;
-    //       currentForm.css({'left': left});
-    //       prevForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
-    //     },
-    //     duration: 800,
-    //     complete: function () {
-    //       currentForm.hide();
-    //       animating = false;
-    //     },
-    //     //this comes from the custom easing plugin
-    //     easing: 'easeInOutBack'
-    //   });
-    //
-    //   $("fieldset").eq($(this).index()).show();
-    // })
+    $(".next").click(function(){
+      nextScreen(1);
+    });
 
     $(".previous").click(function () {
-      if (animating) return false;
-      animating = true;
-
-      currentForm = $(this).parent();
-      previousForm = $(this).parent().prev();
-
-      $("#progressbar li").eq($("fieldset").index(currentForm)).removeClass("active");
-
-      previousForm.show();
-      currentForm.animate({opacity: 0}, {
-        step: function (now, mx) {
-          //as the opacity of currentForm reduces to 0 - stored in "now"
-          //1. scale previousForm from 80% to 100%
-          scale = 0.8 + (1 - now) * 0.2;
-          //2. take currentForm to the right(50%) - from 0%
-          left = ((1 - now) * 50) + "%";
-          //3. increase opacity of previousForm to 1 as it moves in
-          opacity = 1 - now;
-          currentForm.css({'left': left});
-          previousForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
-        },
-        duration: 800,
-        complete: function () {
-          currentForm.hide();
-          animating = false;
-        },
-        //this comes from the custom easing plugin
-        easing: 'easeInOutBack'
-      });
+      let prevButton = $(this);
+      prevScreen(-1);
     });
 
     $(".submit").click(function () {
       return false;
     })
 
-    // $(".lev-count").click(function() {
-    //   let levCount = $(this).text();
-    //
-    //   $(this).parent().find("input").value(levCount);
-    // })
+    $(".lev-count").click(function() {
+      let levCount = $(this).index();
+      let currentForm = $("fieldset:visible");
+      let currentIndex = currentForm.index();
+      console.log("levcount", levCount);
+      console.log("currentIndex", currentIndex);
+
+      // console.log("lev count", levCount);
+      // console.log("currentIndex", currentIndex);
+      levCount > currentIndex ?  nextScreen(levCount) : prevScreen((-1 * levCount));
+
+    })
 
   };
 
@@ -152,6 +103,11 @@ module.exports = (function () {
     client.setup();
     client.setEvents();
     client.removeLoading();
+
+    $("fieldset").each(function(index){
+        //do stuff
+        $(this).addClass("ziggy" + index);
+      });
   }
 
   client.setup = function () {
@@ -189,6 +145,7 @@ module.exports = (function () {
       $("#user-id").val(contract.user);
     })
       .then(nextScreen.bind(this))
+      .then(nextScreen)
       .catch(handle);
   }
 
@@ -255,17 +212,27 @@ module.exports = (function () {
     $element.hasClass("show") ? $element.addClass("hidden") : "";
   }
 
-  function nextScreen() {
+  function nextScreen(x = 1) {
+    console.log("x", x);
     if (animating) return false;
     animating = true;
+    currentForm = $("fieldset:visible");
+    currentIndex = currentForm.index();
+    nextIndex = x + currentIndex;
 
-    currentForm = $(this).parent();
-    nextForm = $(this).parent().next();
+    if (x = 1) {
+      nextForm = $("fieldset").eq(nextIndex);
+    }
+    else {
+      nextForm = $("fieldset").eq(x);
+    }
 
-    console.log(currentForm);
+    console.log(nextForm);
 
-    $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
-    $("fieldset").removeClass("active");
+    nextForm.addClass("next current form");
+
+    $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active activated");
+    // $("fieldset").removeClass("active");
     nextForm.addClass('active');
     nextForm.show();
     currentForm.animate({opacity: 0}, {
@@ -284,6 +251,39 @@ module.exports = (function () {
         currentForm.hide();
         animating = false;
       },
+      easing: 'easeInOutBack'
+    });
+  }
+
+  function prevScreen(x) {
+    if (animating) return false;
+    animating = true;
+
+    currentForm = $("fieldset:visible");
+    currentIndex = currentForm.index();
+    previousForm = $("fieldset").eq(currentIndex + x);
+
+    $("#progressbar li").eq($("fieldset").index(currentForm)).removeClass("active");
+
+    previousForm.show();
+    currentForm.animate({opacity: 0}, {
+      step: function (now, mx) {
+        //as the opacity of currentForm reduces to 0 - stored in "now"
+        //1. scale previousForm from 80% to 100%
+        scale = 0.8 + (1 - now) * 0.2;
+        //2. take currentForm to the right(50%) - from 0%
+        left = ((1 - now) * 50) + "%";
+        //3. increase opacity of previousForm to 1 as it moves in
+        opacity = 1 - now;
+        currentForm.css({'left': left});
+        previousForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
+      },
+      duration: 800,
+      complete: function () {
+        currentForm.hide();
+        animating = false;
+      },
+      //this comes from the custom easing plugin
       easing: 'easeInOutBack'
     });
   }
