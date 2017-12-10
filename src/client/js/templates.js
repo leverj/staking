@@ -1,18 +1,11 @@
 const $ = require('jquery');
 $.fn.userInfo = function () {
   this.append(
-<<<<<<< HEAD
-    "<h4>Number of LEV: <span class='text-brand' name='lev-count'>10000</span></h4>" +
-    "<h4>Approved LEV: <span class='text-brand'  name='approved-count'>100</span></h4>" +
-    "<h4>Staked LEV: <span class='text-brand'  name='staked-count'>90</span></h4>" +
-    "<h4>FEE: <span class='text-brand'  name='staked-count'>90</span></h4>" +
-=======
     "<h4>Number of LEV: <span class='text-brand suggested-count' name='lev-count'>&nbsp;</span></h4>" +
     "<h4>Approved LEV: <span class='text-brand suggested-count'  name='approved-count'>&nbsp;</span></h4>" +
     "<h4>Staked LEV: <span class='text-brand suggested-count'  name='staked-count'>&nbsp;</span></h4>" +
     "<h4>FEE: <span class='text-brand suggested-count'  name='fee-count'>&nbsp;</span></h4>" +
->>>>>>> bbebeb510991c23bcea72fc5903d2fa926edcd09
-    "<a href='#' class='icon-link icon-link--big icon-link--center icon-link--rotate' data-id='user-info-display-action'><i class='fa fa-refresh' aria-hidden='true'></i></a>" );
+    "<a href='#' class='icon-link icon-link--big icon-link--center icon-link--rotate' data-id='user-info-display-action'><i class='fa fa-refresh' aria-hidden='true'></i></a>");
 };
 
 $.fn.txInfo = function (prefix) {

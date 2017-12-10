@@ -20,12 +20,12 @@ module.exports = (function () {
   client.stakingForm = function () {
 
     $(".next").click(function(){
-      nextScreen(1);
+      nextScreen(current() + 1);
     });
 
     $(".previous").click(function () {
       let prevButton = $(this);
-      prevScreen(-1);
+      prevScreen(currentIndex -1);
     });
 
     $(".submit").click(function () {
@@ -144,8 +144,7 @@ module.exports = (function () {
     contract.setManual(isManual).then(function () {
       $("#user-id").attr("readonly", !isManual).val(contract.user);
     })
-      .then(nextScreen.bind(self))
-      .then(nextScreen)
+      .then(nextScreen.bind(self, current() + 1))
       .catch(handle);
   }
 
@@ -213,28 +212,21 @@ module.exports = (function () {
     $element.hasClass("show") ? $element.addClass("hidden") : "";
   }
 
-  function nextScreen(x = 1) {
-    console.log("x", x);
+  function nextScreen(x) {
     if (animating) return false;
     animating = true;
-    currentForm = $("fieldset:visible");
-    currentIndex = currentForm.index();
-    nextIndex = x + currentIndex;
+    let $fieldset = $("fieldset");
 
-    if (x = 1) {
-      nextForm = $("fieldset").eq(nextIndex);
-    }
-    else {
-      nextForm = $("fieldset").eq(x);
-    }
+    let currentForm = $("fieldset:visible");
+    let nextIndex = x + currentForm;
+
+    nextForm = $fieldset.eq(x);
 
     console.log(nextForm);
 
     nextForm.addClass("next current form");
 
-    $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active activated");
-    // $("fieldset").removeClass("active");
-    nextForm.addClass('active');
+    $("#progressbar li").eq($fieldset.index(nextForm)).addClass("active activated");
     nextForm.show();
     currentForm.animate({opacity: 0}, {
       step: function (now, mx) {
@@ -255,6 +247,36 @@ module.exports = (function () {
       easing: 'easeInOutBack'
     });
   }
+
+  function move(current, forward){
+    return Promise(function(resolve, reject){
+      $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active activated");
+      // $("fieldset").removeClass("active");
+      nextForm.addClass('active');
+      nextForm.show();
+      currentForm.animate({opacity: 0}, {
+        step: function (now, mx) {
+          scale = 1 - (1 - now) * 0.2;
+          left = (now * 50) + "%";
+          opacity = 1 - now;
+          currentForm.css({
+            'transform': 'scale(' + scale + ')',
+            'position': 'absolute'
+          });
+          nextForm.css({'left': left, 'opacity': opacity});
+        },
+        duration: 800,
+        complete: function () {
+          currentForm.hide();
+          animating = false;
+          resolve();
+        },
+        easing: 'easeInOutBack',
+      });
+    })
+  }
+
+
 
   function prevScreen(x) {
     if (animating) return false;
@@ -289,4 +311,7 @@ module.exports = (function () {
     });
   }
 
+  function current(){
+    return $("fieldset:visible").index()
+  }
 })();
