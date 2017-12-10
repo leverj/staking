@@ -1,9 +1,10 @@
 const Web3 = require("web3");
 const conf = require('./conf');
 const stakeABI = require('./../build/contracts/Stake.json');
+const feeABI = require('./../build/contracts/Fee.json');
 
 async function automate() {
-  let web3, socketWeb3, stake, socketStake, currentBlock, operationActive, operator, state = {}, errorCount=0;
+  let web3, socketWeb3, stake, fee, socketStake, currentBlock, operationActive, operator, state = {}, errorCount = 0;
   let gasPrice = 41e9;
 
   async function getContracts() {
@@ -11,6 +12,7 @@ async function automate() {
     socketStake = new socketWeb3.eth.Contract(stakeABI.abi, conf.stake);
     web3 = new Web3(new Web3.providers.HttpProvider(conf.provider));
     stake = new web3.eth.Contract(stakeABI.abi, conf.stake);
+    fee = new web3.eth.Contract(feeABI.abi, conf.fee);
   }
 
   async function createAccount() {
@@ -38,6 +40,7 @@ async function automate() {
   function startListening() {
     socketWeb3.eth.subscribe('newBlockHeaders', async function (error, data) {
       if (error) console.error(e);
+      await updateContractState();
       gasPrice = Math.max((await web3.eth.getGasPrice()) - 0, 21e9);
       console.log('################ current block', data.number, 'gasPrice', gasPrice);
       currentBlock = data.number;
@@ -46,11 +49,11 @@ async function automate() {
         try {
           operationActive = true;
           await operateStake();
-          errorCount=0;
+          errorCount = 0;
         } catch (e) {
           console.log('operateStake ERROR', e);
           await handleNoUserError(e);
-          if(errorCount === 5) process.exit(1);
+          if (errorCount === 5) process.exit(1);
           errorCount++;
         } finally {
           operationActive = false;
@@ -60,10 +63,13 @@ async function automate() {
   }
 
   async function updateFeeForCurrentStakingInterval() {
-    if (state.endBlock >= currentBlock || state.feeCalculated)
-      return console.log("skipping updateFeeForCurrentStakingInterval", JSON.stringify(state));
-    await sendTx(stake, stake.methods.updateFeeForCurrentStakingInterval())
-    await updateContractState();
+    if (currentBlock > state.endBlock && !state.feeCalculated
+      && (state.totalLevs > 0 || state.feeReceived > 0 || state.weiReceived > 0)) {
+      await sendTx(stake, stake.methods.updateFeeForCurrentStakingInterval())
+      // await updateContractState();
+    } else
+      console.log("skipping updateFeeForCurrentStakingInterval", JSON.stringify(state));
+
   }
 
   async function redeemToUsers() {
@@ -79,7 +85,6 @@ async function automate() {
       console.log("redeem to", batch);
       await sendTx(stake, stake.methods.redeemLevAndFeeToStakers(batch))
     }
-    await updateContractState();
   }
 
   function getUsersInBatches(users, maxRedeem) {
@@ -101,18 +106,21 @@ async function automate() {
     let start = (await web3.eth.getBlock('latest')).number;
     let end = start + conf.blockInterval;
     await sendTx(stake, stake.methods.startNewStakingInterval(start, end))
-    await updateContractState();
   }
 
   async function updateContractState() {
     let props = ["totalLevs", "startBlock", "endBlock", "feeCalculated"];
     let promises = props.map(prop => stake.methods[prop]().call());
-    let [totalLevs, startBlock, endBlock, feeCalculated] = await Promise.all(promises);
+    promises.push(fee.methods.balanceOf(conf.stake).call())
+    promises.push(web3.eth.getBalance(conf.stake))
+    let [totalLevs, startBlock, endBlock, feeCalculated, feeReceived, weiReceived] = await Promise.all(promises);
     state = {
       totalLevs: totalLevs - 0,
       startBlock: startBlock - 0,
       endBlock: endBlock - 0,
-      feeCalculated: feeCalculated - 0
+      feeCalculated: feeCalculated - 0,
+      feeReceived: feeReceived - 0,
+      weiReceived: weiReceived - 0,
     };
   }
 

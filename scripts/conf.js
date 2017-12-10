@@ -16,6 +16,7 @@ function getPrivateKey() {
 module.exports = {
   "privateKey": getPrivateKey(),
   "stake": process.env.STAKE,
+  "fee": process.env.FEE,
   "provider": process.env.PROVIDER,
   "socketProvider": process.env.SOCKETPROVIDER,
   "blockInterval": process.env.BLOCKINTERVAL - 0,
