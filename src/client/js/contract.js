@@ -39,7 +39,16 @@ module.exports = (function () {
       fee.methods.balanceOf(contract.user).call()
     ]);
     result = result.map(num => ((num - 0) / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals) - 0);
-    userInfo = {lev: result[0], staked: result[1], approved: result[2], fee:result[3]};
+    userInfo = {
+      lev: result[0],
+      staked: result[1],
+      approved: result[2],
+      fee: result[3],
+      levLink: `${config.etherscan}/token/${config.lev}?a=${contract.user}`,
+      stakedLink: `${config.etherscan}/address/${config.stake}#readContract`,
+      approvedLink: `${config.etherscan}/address/${config.lev}#readContract`,
+      feeLink: `${config.etherscan}/token/${config.fee}?a=${contract.user}`,
+    };
   };
 
   contract.getApproveInfo = async function (levCounts) {
@@ -87,7 +96,7 @@ module.exports = (function () {
   async function setUser() {
     if (!contract.isManual) {
       let accounts = await web3.eth.getAccounts();
-      if(accounts.length === 0){
+      if (accounts.length === 0) {
         throw new Error('METAMASK is locked. Please unlock it');
       }
       contract.user = accounts[0];

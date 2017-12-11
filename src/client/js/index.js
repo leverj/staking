@@ -1,6 +1,8 @@
 const $ = require("jquery");
 require("jquery-easing");
 require("./templates");
+require("malihu-custom-scrollbar-plugin")($);
+require("jquery-mousewheel")($);
 const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
 const socket = require("./socket-client");
@@ -19,80 +21,37 @@ module.exports = (function () {
 
   client.stakingForm = function () {
 
-    $(".next").click(nextScreen);
-
-    // $("#progressbar li").click(function () {
-    //   console.log($(this).index());
-    //
-    //   let currentForm = $("fieldset.active");
-    //   let prevForm = currentForm.prev();
-    //   let nextFrom = currentForm.next();
-    //
-    //   currentForm.animate({opacity: 0}, {
-    //     step: function (now, mx) {
-    //       //as the opacity of currentForm reduces to 0 - stored in "now"
-    //       //1. scale previousForm from 80% to 100%
-    //       scale = 0.8 + (1 - now) * 0.2;
-    //       //2. take currentForm to the right(50%) - from 0%
-    //       left = ((1 - now) * 50) + "%";
-    //       //3. increase opacity of previousForm to 1 as it moves in
-    //       opacity = 1 - now;
-    //       currentForm.css({'left': left});
-    //       prevForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
-    //     },
-    //     duration: 800,
-    //     complete: function () {
-    //       currentForm.hide();
-    //       animating = false;
-    //     },
-    //     //this comes from the custom easing plugin
-    //     easing: 'easeInOutBack'
-    //   });
-    //
-    //   $("fieldset").eq($(this).index()).show();
-    // })
+    $(".next").click(function(){
+      nextScreen(current() + 1);
+    });
 
     $(".previous").click(function () {
-      if (animating) return false;
-      animating = true;
-
-      currentForm = $(this).parent();
-      previousForm = $(this).parent().prev();
-
-      $("#progressbar li").eq($("fieldset").index(currentForm)).removeClass("active");
-
-      previousForm.show();
-      currentForm.animate({opacity: 0}, {
-        step: function (now, mx) {
-          //as the opacity of currentForm reduces to 0 - stored in "now"
-          //1. scale previousForm from 80% to 100%
-          scale = 0.8 + (1 - now) * 0.2;
-          //2. take currentForm to the right(50%) - from 0%
-          left = ((1 - now) * 50) + "%";
-          //3. increase opacity of previousForm to 1 as it moves in
-          opacity = 1 - now;
-          currentForm.css({'left': left});
-          previousForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
-        },
-        duration: 800,
-        complete: function () {
-          currentForm.hide();
-          animating = false;
-        },
-        //this comes from the custom easing plugin
-        easing: 'easeInOutBack'
-      });
+      let prevButton = $(this);
+      prevScreen(current() -1);
     });
 
     $(".submit").click(function () {
       return false;
     })
 
-    // $(".lev-count").click(function() {
-    //   let levCount = $(this).text();
-    //
-    //   $(this).parent().find("input").value(levCount);
-    // })
+    $(".lev-count").click(function() {
+      let levCount = $(this).index();
+      let currentForm = $("fieldset:visible");
+      let currentIndex = currentForm.index();
+      console.log("levcount", levCount);
+      console.log("currentIndex", currentIndex);
+
+     if($(this).hasClass("activated")) {
+       if(levCount > currentIndex) {
+         nextScreen(levCount);
+          $(this).prevAll(".activated").addClass("active");
+       }
+       else {
+         prevScreen(levCount);
+         $(this).nextAll(".active").removeClass("active");
+       }
+     }
+    })
 
   };
 
@@ -151,7 +110,7 @@ module.exports = (function () {
     client.setup();
     client.setEvents();
     client.removeLoading();
-  }
+    }
 
   client.setup = function () {
     $("#user-id").val(contract.user);
@@ -175,6 +134,8 @@ module.exports = (function () {
     $("[data-id=approve-action]").click(approve);
     $("#stake-action").click(stake);
     $(".icon-link").click(copy);
+    $(".suggested-count").click(updateWithSuggestedCount);
+    scrollOverflow();
   };
 
   function copy() {
@@ -188,8 +149,12 @@ module.exports = (function () {
     contract.setManual(isManual).then(function () {
       $("#user-id").attr("readonly", !isManual).val(contract.user);
     })
-      .then(nextScreen.bind(self))
+      .then(nextScreen.bind(self, current() + 1))
       .catch(handle);
+  }
+
+  function updateWithSuggestedCount() {
+    $("fieldset:visible").find('[name=gplus]').val($(this).text())
   }
 
   function displayUserInfo() {
@@ -205,10 +170,10 @@ module.exports = (function () {
 
   function updateUserInfo() {
     let userInfo = contract.getUserInfo();
-    $("[name=lev-count]").text(userInfo.lev);
-    $("[name=staked-count]").text(userInfo.staked);
-    $("[name=approved-count]").text(userInfo.approved);
-    $("[name=fee-count]").text(userInfo.fee);
+    $("[name=lev-count]").text(userInfo.lev).next().attr('href', userInfo.levLink);
+    $("[name=staked-count]").text(userInfo.staked).next().attr('href', userInfo.stakedLink);
+    $("[name=approved-count]").text(userInfo.approved).next().attr('href', userInfo.approvedLink);
+    $("[name=fee-count]").text(userInfo.fee).next().attr('href', userInfo.feeLink);
   }
 
   function approve() {
@@ -256,18 +221,21 @@ module.exports = (function () {
     $element.hasClass("show") ? $element.addClass("hidden") : "";
   }
 
-  function nextScreen() {
+  function nextScreen(x) {
     if (animating) return false;
     animating = true;
+    let $fieldset = $("fieldset");
 
-    currentForm = $(this).parent();
-    nextForm = $(this).parent().next();
+    let currentForm = $("fieldset:visible");
+    let nextIndex = x + currentForm;
 
-    console.log(currentForm);
+    nextForm = $fieldset.eq(x);
 
-    $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active");
-    $("fieldset").removeClass("active");
-    nextForm.addClass('active');
+    console.log(nextForm);
+
+    nextForm.addClass("next current form");
+
+    $("#progressbar li").eq($fieldset.index(nextForm)).addClass("active activated");
     nextForm.show();
     currentForm.animate({opacity: 0}, {
       step: function (now, mx) {
@@ -289,4 +257,76 @@ module.exports = (function () {
     });
   }
 
+  function move(current, forward){
+    return Promise(function(resolve, reject){
+      $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active activated");
+      // $("fieldset").removeClass("active");
+      nextForm.addClass('active');
+      nextForm.show();
+      currentForm.animate({opacity: 0}, {
+        step: function (now, mx) {
+          scale = 1 - (1 - now) * 0.2;
+          left = (now * 50) + "%";
+          opacity = 1 - now;
+          currentForm.css({
+            'transform': 'scale(' + scale + ')',
+            'position': 'absolute'
+          });
+          nextForm.css({'left': left, 'opacity': opacity});
+        },
+        duration: 800,
+        complete: function () {
+          currentForm.hide();
+          animating = false;
+          resolve();
+        },
+        easing: 'easeInOutBack',
+      });
+    })
+  }
+
+  function prevScreen(x) {
+    if (animating) return false;
+    animating = true;
+    let $fieldset = $("fieldset");
+
+    let currentForm = $("fieldset:visible");
+    let prevIndex = x + currentForm;
+
+    previousForm = $fieldset.eq(x);
+
+    $("#progressbar li").eq($("fieldset").index(currentForm)).removeClass("active");
+
+    previousForm.show();
+    currentForm.animate({opacity: 0}, {
+      step: function (now, mx) {
+        //as the opacity of currentForm reduces to 0 - stored in "now"
+        //1. scale previousForm from 80% to 100%
+        scale = 0.8 + (1 - now) * 0.2;
+        //2. take currentForm to the right(50%) - from 0%
+        left = ((1 - now) * 50) + "%";
+        //3. increase opacity of previousForm to 1 as it moves in
+        opacity = 1 - now;
+        currentForm.css({'left': left});
+        previousForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
+      },
+      duration: 800,
+      complete: function () {
+        currentForm.hide();
+        animating = false;
+      },
+      //this comes from the custom easing plugin
+      easing: 'easeInOutBack'
+    });
+  }
+
+  function current(){
+    return $("fieldset:visible").index()
+  }
+
+  function scrollOverflow() {
+    $(".instructions-content").mCustomScrollbar({
+      theme:"rounded-dark",
+    });
+  }
 })();
