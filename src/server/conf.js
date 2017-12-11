@@ -9,6 +9,7 @@ module.exports = _.assign(config, {
     "sale": process.env.SALE,
     "feeDecimals": process.env.FEEDECIMALS - 0,
     "levDecimals": process.env.LEVDECIMALS - 0,
+    "etherscan": process.env.ETHERSCAN,
   },
   "ip": "0.0.0.0",
   "port": "8888",

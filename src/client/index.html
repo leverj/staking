@@ -5,6 +5,7 @@
   <title>Stake LEV</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/customScrollBar.css">
   <link rel="stylesheet" type="text/css" href="./css/main.css">
   <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
@@ -58,12 +59,61 @@
   </div>
 
   <div class="instructions">
-    <ol class="instructions-list">
+
+    <div class="instructions-content">
+        <h3>Welcome to the Leverj staking app. The LEV staking process requires two main actions:</h3>
+
+      <ul>
+        <li>
+          To approve LEV for being staked (this requires that you have LEV!)
+        </li>
+
+        <li>
+          To stake the amount of LEV for the remainder of the current staking period (this requires approval from 1)
+        </li>
+      </ul>
+      <p>
+        Below is a guide to help you through the steps on this app:
+
+      </p>
+
+      <ul>
+        <li>
+          <strong>Step 1: Choose method</strong> <br>
+          In this step, you will choose whether you want to engage in staking automatically via MetaMask wallet, or to
+          manually copy transaction parameters for approving and staking
+        </li>
+
+        <li>
+            <strong>Step 2: Get account information</strong> <br>
+            In this step, you provide the Ethereum address that contains your LEV that you want to stake. The app will grab the information on your account relevant for this purpose.
+        </li>
+
+        <li>
+          <strong>Step 3: Approve LEV in account</strong> <br>
+          In this step, you can choose to approve some of the LEV in your address to be staked in the current period. This will give you some transaction parameters that you need to copy into your wallet of choice. See detailed guide for MetaMask and MEW here (insert links to separate guide on YouTube or Blog to show how these transactions are generated and pushed for approval..).
+        </li>
+
+        <li>
+          <strong>Step 4: Stake Approved LEV </strong><br>
+          In this step, you will then stake the amount of approved LEV on the account. This will provide you the data field and account needed to finalize the staking of your LEV in the contract.
+          See detailed guide for MetaMask and MEW here (insert links to separate guide on YouTube or Blog to show how these transactions are generated and pushed for staking the approved tokens..).
+        </li>
+
+        <li>
+          <strong>Step 5: Confirmation</strong> <br>
+          Here you can see that the staking action from Step 4 has successfully been executed. This step will show the amount of LEV staked and give you a link to the relevant transaction(s) on the blockchain.
+        </li>
+      </ul>
+
+  </p>
+    </div>
+    <!-- <ol class="instructions-list">
       <li class="instructions-list__item">In the section <i>User Information</i> set your address and click on <i>Get Info</i>. You'll see some basic information about your account right there.</li>
       <li class="instructions-list__item">Then in the input field of the <i>Actions</i> section type how much LEV tokens you want to stake. Click on <i>Approve</i> to allow the Smart Contract to use your tokens for staking.</li>
       <li class="instructions-list__item">Copy those fields to the send information of any wallet like myetherwallet. Inside the <i>Data</i> field you're approve information is encrypted including the amount to approve.</li>
       <li class="instructions-list__item">Finally do the same by setting how many tokens you want to stake in the input field and click on <i>Stake</i>. Then copy those fields to the send information of your wallet.</li>
-    </ol>
+    </ol> -->
     <a href="#" class="close-button"><i class="fa fa-times" aria-hidden="true"></i></a>
   </div>
 
@@ -87,99 +137,98 @@
     <form id="stakingForm">
 
       <ul id="progressbar">
-        <li class="active">Welcome</li>
-        <li>Method</li>
-        <li>User Information</li>
-        <li>Approval</li>
-        <li>Staking</li>
-        <li>Confirmation</li>
+        <li class="active activated lev-count">Welcome</li>
+        <li class="lev-count">User Information</li>
+        <li class="lev-count">Approval</li>
+        <li class="lev-count">Staking</li>
+        <li class="lev-count">Confirmation</li>
       </ul>
 
-      <fieldset>
-        <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-        <h3 class="staking-subtitle">For instructions, please click on the help icon at any point during the process. In the
-          next screen you will have the option to choose to go through the staking wizard through Metamask (recommended) or
-          manually.</h3>
+      <div class="fieldset-container">
 
-        <input type="button" name="next" class="next action-button" value="Next"/>
-      </fieldset>
+          <fieldset>
 
-      <fieldset>
+            <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+            <h3 class="staking-subtitle">For instructions, please click on the help icon at any point during the process. In the
+              next screen you will have the option to choose to go through the staking wizard through Metamask (recommended) or
+              manually.</h3>
 
-        <h2 class="staking-title">Would you like to use directly through Metamask or would you like to
-          go through the manual wizard?</h2>
+            <h3 class="staking-subtitle">Would you like to use directly through Metamask or would you like to
+              go through the manual wizard?</h3>
 
-        <div class="form-field__container">
-          <div class="form-field">
-            <input type="radio" checked id="choice-metamask" name="stake">
-            <label for="choice-metamask" class="text--white">Stake using Metamask</label>
-          </div>
+            <div class="form-field__container">
+              <div class="form-field">
+                <input type="radio" checked id="choice-metamask" name="stake">
+                <label for="choice-metamask" class="text--white">Stake using Metamask</label>
+              </div>
 
-          <div class="form-field">
-            <input type="radio" id="choice-manual" name="stake">
-            <label for="choice-manual" class="text--white">Stake manually</label>
-          </div>
-        </div>
+              <div class="form-field">
+                <input type="radio" id="choice-manual" name="stake">
+                <label for="choice-manual" class="text--white">Stake manually</label>
+              </div>
+            </div>
 
-        <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
-        <div class="error-container"></div>
+            <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
+            <div class="error-container"></div>
 
-      </fieldset>
+          </fieldset>
 
-      <fieldset>
-        <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-        <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the
-          help icon at any point during the process</h3>
-        <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
-        <div class="error-container"></div>
+          <fieldset>
+            <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+            <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the
+              help icon at any point during the process</h3>
+            <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
+            <div class="error-container"></div>
 
-        <div class="eth-info user-info"></div>
-        <input type="button" name="previous" class="previous action-button" value="Previous"/>
-        <input type="button" name="show" data-id="user-info-display-action" class="show action-button" value="Show Info"/>
-        <!-- <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
-               value="Refresh"/>  -->
-        <input type="button" name="next" class="next action-button hidden" value="Next"/>
-      </fieldset>
+            <div class="eth-info user-info"></div>
+            <input type="button" name="previous" class="previous action-button" value="Previous"/>
+            <input type="button" name="show" data-id="user-info-display-action" class="show action-button" value="Show Info"/>
+            <!-- <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
+                   value="Refresh"/>  -->
+            <input type="button" name="next" class="next action-button hidden" value="Next"/>
+          </fieldset>
 
-      <fieldset>
-        <div class="eth-info active user-info"></div>
-        <h2 class="staking-title"></h2>
-        <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
-        <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
-        <div class="error-container"></div>
+          <fieldset>
+            <div class="eth-info active user-info"></div>
+            <h2 class="staking-title"></h2>
+            <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
+            <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
+            <div class="error-container"></div>
 
-        <div class="eth-info" id="approve-tx-info"></div>
+            <div class="eth-info" id="approve-tx-info"></div>
 
-        <input type="button" name="previous" class="previous action-button" value="Previous"/>
-        <input type="button" name="Approve" data-id="approve-action" class="approve action-button" value="Approve"/>
+            <input type="button" name="previous" class="previous action-button" value="Previous"/>
+            <input type="button" name="Approve" data-id="approve-action" class="approve action-button" value="Approve"/>
 
-        <input type="button" name="next" class="next action-button" value="Next"/>
-        <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
-      </fieldset>
+            <input type="button" name="next" class="next action-button" value="Next"/>
+            <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
+          </fieldset>
 
-      <fieldset>
+          <fieldset>
 
-        <div class="eth-info active user-info"></div>
+            <div class="eth-info active user-info"></div>
 
-        <h2 class="staking-title"></h2>
-        <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
+            <h2 class="staking-title"></h2>
+            <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
 
-        <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
-        <div class="error-container"></div>
+            <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
+            <div class="error-container"></div>
 
-        <div class="eth-info" id="stake-tx-info"></div>
+            <div class="eth-info" id="stake-tx-info"></div>
 
-        <input type="button" name="previous" class="previous action-button" value="Previous"/>
-        <input type="button" name=" " class="approve action-button" id="stake-action" value="Stake"/>
-        <input type="button" name="next" class="next action-button hidden" value="Next"/>
+            <input type="button" name="previous" class="previous action-button" value="Previous"/>
+            <input type="button" name=" " class="approve action-button" id="stake-action" value="Stake"/>
+            <input type="button" name="next" class="next action-button hidden" value="Next"/>
 
-      </fieldset>
+          </fieldset>
 
-      <fieldset>
+          <fieldset>
 
-        <h2>Confirmation window</h2>
+            <h2 class="user-info"></h2>
 
-      </fieldset>
+          </fieldset>
+
+      </div>
 
     </form>
 
