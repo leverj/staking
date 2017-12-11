@@ -82,6 +82,8 @@
     "helmet": "^3.8.2",
     "jquery": "^3.2.1",
     "jquery-easing": "0.0.1",
+    "jquery-mousewheel": "^3.1.13",
+    "malihu-custom-scrollbar-plugin": "^3.1.5",
     "request": "2.83.0",
     "request-promise": "4.2.2",
     "serve-favicon": "^2.4.5",

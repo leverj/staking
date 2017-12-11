@@ -1,6 +1,8 @@
 const $ = require("jquery");
 require("jquery-easing");
 require("./templates");
+require("malihu-custom-scrollbar-plugin")($);
+require("jquery-mousewheel")($);
 const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
 const socket = require("./socket-client");
@@ -25,7 +27,7 @@ module.exports = (function () {
 
     $(".previous").click(function () {
       let prevButton = $(this);
-      prevScreen(currentIndex -1);
+      prevScreen(current() -1);
     });
 
     $(".submit").click(function () {
@@ -39,10 +41,16 @@ module.exports = (function () {
       console.log("levcount", levCount);
       console.log("currentIndex", currentIndex);
 
-      // console.log("lev count", levCount);
-      // console.log("currentIndex", currentIndex);
-      levCount > currentIndex ?  nextScreen(levCount) : prevScreen((-1 * levCount));
-
+     if($(this).hasClass("activated")) {
+       if(levCount > currentIndex) {
+         nextScreen(levCount);
+          $(this).prevAll(".activated").addClass("active");
+       }
+       else {
+         prevScreen(levCount);
+         $(this).nextAll(".active").removeClass("active");
+       }
+     }
     })
 
   };
@@ -102,12 +110,7 @@ module.exports = (function () {
     client.setup();
     client.setEvents();
     client.removeLoading();
-
-    $("fieldset").each(function(index){
-        //do stuff
-        $(this).addClass("ziggy" + index);
-      });
-  }
+    }
 
   client.setup = function () {
     $("#user-id").val(contract.user);
@@ -131,6 +134,7 @@ module.exports = (function () {
     $("[data-id=approve-action]").click(approve);
     $("#stake-action").click(stake);
     $(".icon-link").click(copy);
+    scrollOverflow();
   };
 
   function copy() {
@@ -276,15 +280,15 @@ module.exports = (function () {
     })
   }
 
-
-
   function prevScreen(x) {
     if (animating) return false;
     animating = true;
+    let $fieldset = $("fieldset");
 
-    currentForm = $("fieldset:visible");
-    currentIndex = currentForm.index();
-    previousForm = $("fieldset").eq(currentIndex + x);
+    let currentForm = $("fieldset:visible");
+    let prevIndex = x + currentForm;
+
+    previousForm = $fieldset.eq(x);
 
     $("#progressbar li").eq($("fieldset").index(currentForm)).removeClass("active");
 
@@ -313,5 +317,11 @@ module.exports = (function () {
 
   function current(){
     return $("fieldset:visible").index()
+  }
+
+  function scrollOverflow() {
+    $(".instructions-content").mCustomScrollbar({
+      theme:"rounded-dark",
+    });
   }
 })();
