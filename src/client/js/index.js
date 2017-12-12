@@ -1,7 +1,6 @@
 const $ = require("jquery");
 require("jquery-easing");
 require("./templates");
-require("malihu-custom-scrollbar-plugin")($);
 require("jquery-mousewheel")($);
 const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
@@ -136,7 +135,6 @@ module.exports = (function () {
     $("#stake-action").click(stake);
     $(".icon-link").click(copy);
     $(".suggested-count").click(updateWithSuggestedCount);
-    scrollOverflow();
   };
 
   function copy() {
@@ -325,9 +323,4 @@ module.exports = (function () {
     return $("fieldset:visible").index()
   }
 
-  function scrollOverflow() {
-    $(".instructions-content").mCustomScrollbar({
-      theme:"rounded-dark",
-    });
-  }
 })();
