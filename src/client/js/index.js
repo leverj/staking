@@ -135,6 +135,7 @@ module.exports = (function () {
     $("[data-id=approve-action]").click(approve);
     $("#stake-action").click(stake);
     $(".icon-link").click(copy);
+    $(".suggested-count").click(updateWithSuggestedCount);
     scrollOverflow();
   };
 
@@ -153,6 +154,10 @@ module.exports = (function () {
       .catch(handle);
   }
 
+  function updateWithSuggestedCount() {
+    $("fieldset:visible").find('[name=gplus]').val($(this).text())
+  }
+
   function displayUserInfo() {
     let user = $("#user-id").val();
     contract.setUser(user);
@@ -166,10 +171,10 @@ module.exports = (function () {
 
   function updateUserInfo() {
     let userInfo = contract.getUserInfo();
-    $("[name=lev-count]").text(userInfo.lev);
-    $("[name=staked-count]").text(userInfo.staked);
-    $("[name=approved-count]").text(userInfo.approved);
-    $("[name=fee-count]").text(userInfo.fee);
+    $("[name=lev-count]").text(userInfo.lev).next().attr('href', userInfo.levLink);
+    $("[name=staked-count]").text(userInfo.staked).next().attr('href', userInfo.stakedLink);
+    $("[name=approved-count]").text(userInfo.approved).next().attr('href', userInfo.approvedLink);
+    $("[name=fee-count]").text(userInfo.fee).next().attr('href', userInfo.feeLink);
   }
 
   function approve() {
