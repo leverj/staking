@@ -38,13 +38,14 @@ module.exports = (function () {
       let levCount = $(this).index();
       let currentForm = $("fieldset:visible");
       let currentIndex = currentForm.index();
-      console.log("levcount", levCount);
-      console.log("currentIndex", currentIndex);
 
      if($(this).hasClass("activated")) {
        if(levCount > currentIndex) {
          nextScreen(levCount);
           $(this).prevAll(".activated").addClass("active");
+       }
+       else if(levCount === currentIndex){
+         return false;
        }
        else {
          prevScreen(levCount);
