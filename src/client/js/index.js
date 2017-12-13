@@ -1,7 +1,6 @@
 const $ = require("jquery");
 require("jquery-easing");
 require("./templates");
-require("malihu-custom-scrollbar-plugin")($);
 require("jquery-mousewheel")($);
 const clipboard = require("clipboard-polyfill");
 const contract = require("./contract");
@@ -38,13 +37,14 @@ module.exports = (function () {
       let levCount = $(this).index();
       let currentForm = $("fieldset:visible");
       let currentIndex = currentForm.index();
-      console.log("levcount", levCount);
-      console.log("currentIndex", currentIndex);
 
      if($(this).hasClass("activated")) {
        if(levCount > currentIndex) {
          nextScreen(levCount);
           $(this).prevAll(".activated").addClass("active");
+       }
+       else if(levCount === currentIndex){
+         return false;
        }
        else {
          prevScreen(levCount);
@@ -135,7 +135,6 @@ module.exports = (function () {
     $("#stake-action").click(stake);
     $(".icon-link").click(copy);
     $(".suggested-count").click(updateWithSuggestedCount);
-    scrollOverflow();
   };
 
   function copy() {
@@ -324,9 +323,4 @@ module.exports = (function () {
     return $("fieldset:visible").index()
   }
 
-  function scrollOverflow() {
-    $(".instructions-content").mCustomScrollbar({
-      theme:"rounded-dark",
-    });
-  }
 })();
