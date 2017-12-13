@@ -93,6 +93,13 @@ body, h1, h2, h3, h4, h5, h6 {
   font-family: 'Open Sans', sans-serif;
   line-height: 1.5;}
 
+.app-title {
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  margin-top: 40px;
+}
+
 .staking-container {
   max-width: 750px;
   margin: 0 auto;
@@ -129,10 +136,21 @@ h4 {
 .logo {
   max-width: 100px;
   margin: 0 auto;
-  padding-top: 50px; }
+  padding-top: 50px;
+  position: relative;}
   .logo img {
     display: block;
     max-width: 100%; }
+
+  .beta-container {
+    position: absolute;
+    bottom: -8px;
+    right: -3px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+  }
 
 .hidden {
   opacity: 0;
@@ -355,8 +373,15 @@ h4 {
     transition: all 0.5s ease;
   }
 
-  .instructions ul {
+  .instructions-container {
+    padding: 70px 25px;
+    max-height: 500px;
+    overflow: hidden;
+  }
+
+  .instructions li{
     text-decoration: none;
+    margin-left: 25px;
   }
 
   .instructions li {
@@ -368,16 +393,15 @@ h4 {
   }
 
   .instructions-content {
-    padding: 70px 25px;
     overflow: auto;
     margin: 0 auto;
     max-width: 1000px;
-    max-height: 550px;
+    max-height: 450px;
   }
 
   @media screen and (max-width: 768px) {
     .instructions-content {
-      max-height: 400px;
+      max-height: 470px;
     }
   }
 
@@ -563,6 +587,14 @@ h4 {
   .browser-detection-overlay.active {
     opacity: 1;
     display: flex;
+  }
+
+  .mCS-rounded.mCSB_scrollTools .mCSB_dragger, .mCS-rounded-dark.mCSB_scrollTools .mCSB_dragger, .mCS-rounded-dots.mCSB_scrollTools .mCSB_dragger, .mCS-rounded-dots-dark.mCSB_scrollTools .mCSB_dragger {
+    position: absolute;
+  }
+
+  .user-info-heading {
+    font-size: 16px;
   }
 
   /*.lev-count {
