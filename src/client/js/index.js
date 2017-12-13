@@ -169,10 +169,10 @@ module.exports = (function () {
 
   function updateUserInfo() {
     let userInfo = contract.getUserInfo();
-    $("[name=lev-count]").text(userInfo.lev.toLocaleString()).data('value', userInfo.lev).next().attr('href', userInfo.levLink);
-    $("[name=staked-count]").text(userInfo.staked.toLocaleString()).data('value', userInfo.staked).next().attr('href', userInfo.stakedLink);
-    $("[name=approved-count]").text(userInfo.approved.toLocaleString()).data('value', userInfo.approved).next().attr('href', userInfo.approvedLink);
-    $("[name=fee-count]").text(userInfo.fee.toLocaleString()).data('value', userInfo.fee).next().attr('href', userInfo.feeLink);
+    $("[name=lev-count]").text(userInfo.lev.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.lev).next().attr('href', userInfo.levLink);
+    $("[name=staked-count]").text(userInfo.staked.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.staked).next().attr('href', userInfo.stakedLink);
+    $("[name=approved-count]").text(userInfo.approved.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.approved).next().attr('href', userInfo.approvedLink);
+    $("[name=fee-count]").text(userInfo.fee.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.fee).next().attr('href', userInfo.feeLink);
   }
 
   function approve() {
