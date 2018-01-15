@@ -38,12 +38,19 @@ module.exports = (function () {
     let props = ["totalLevs", "totalLevBlocks", "weiPerFee", "feeForTheStakingInterval", "levToken", "feeToken", "startBlock", "endBlock", "wallet", "feeCalculated", "getOwners", "operator"];
     for (let i = 0; i < props.length; i++) {
       let prop = props[i];
-      displayDetailsAsync(prop, stake.methods[prop]().call());
+      let promise = stake.methods[prop]().call();
+      displayDetailsAsync(prop, promise);
     }
   }
 
   async function displayDetailsAsync(key, promise) {
-    displayDetails(key, await promise);
+    console.log('start',key)
+    try {
+      displayDetails(key, await promise);
+    } catch (e) {
+      console.log(key, e);
+    }
+    console.log('end', key)
   }
 
   async function staking() {
