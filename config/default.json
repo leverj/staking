@@ -4,7 +4,7 @@
   "csp": {
     "directives":{
       "defaultSrc": ["'none'"],
-      "connectSrc": ["https://ropsten.infura.io","ws://localhost:*", "http://localhost:*"],
+      "connectSrc": ["https://ropsten.leverj.io","ws://localhost:*", "http://localhost:*"],
       "imgSrc":     ["http://localhost:*"],
       "styleSrc":   ["http://localhost:*"],
       "fontSrc":    ["http://localhost:*"],
