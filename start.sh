@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-export SOCKETPROVIDER=ws://51.15.134.155:8546
-export NETWORK=https://ropsten.infura.io/5Ik2NwtzUQsXpL5nAvXW
+export SOCKETPROVIDER=wss://ropsten.leverj.io/socket
+export NETWORK=https://ropsten.leverj.io/rpc
 export STAKE=0x21ec0699AE84e342D34cABA2628880901e1A2bF1
 export FEE=0xcba90Ed0CF9A12B7662A04e824f2022d9C106D4F
 export ETHERSCAN=https://ropsten.etherscan.io
