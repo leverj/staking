@@ -58,7 +58,7 @@ module.exports = (function () {
     return {
       address: config.lev,
       amount: 0,
-      gas: await tx.estimateGas(),
+      gas: await tx.estimateGas({from:contract.user}),
       data: tx.encodeABI()
     };
   };
@@ -77,7 +77,7 @@ module.exports = (function () {
     return {
       address: config.stake,
       amount: 0,
-      gas: await tx.estimateGas(),
+      gas: await tx.estimateGas({from:contract.user}),
       data: tx.encodeABI()
     };
   };
