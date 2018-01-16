@@ -149,7 +149,7 @@ async function automate() {
 
   async function sendTx(contract, tx) {
     contract.options.from = operator.address;
-    let gas = await tx.estimateGas();
+    let gas = await tx.estimateGas({from: operator.address});
     console.log('gas', gas);
     await tx.send({from: operator.address, gas, gasPrice: gasPrice})
   }
