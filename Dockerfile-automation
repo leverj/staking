@@ -1,4 +1,4 @@
 FROM coinpit/nodejs:v8
-COPY scripts/automation.js package.json scripts/conf.js dist/
+COPY scripts/automation.js package.json package-lock.json scripts/conf.js dist/
 COPY build build/
 RUN apt-get update && apt-get install -y git && cd dist && npm install --only=production
