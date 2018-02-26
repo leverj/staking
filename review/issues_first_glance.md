@@ -4,7 +4,7 @@
 ### Minor
 
 - **Explicit UINT256 vs UINT**<br>
-It is better to use explicit uint256 declaration than uint (which is alias for uint256) just to increase clarity and mark the intention to use uint256. Lines: [35](https://github.com/BlockchainLabsNZ/staking-app/blob/8306bb8deebe0f554e99bf4e525ea4a3f5672397/contracts/Stake.sol#L35)
+It is better to use explicit uint256 declaration than uint (which is alias for uint256) just to increase clarity and mark the intention to use uint256. Lines: [35](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L35)
 
 - **Differentiate functions and events**<br>
 Favor capitalization and a prefix in front of events (we suggest Log), to prevent the risk of confusion between functions and events
