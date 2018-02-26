@@ -7,13 +7,13 @@
 It is better to use explicit uint256 declaration than uint (which is alias for uint256) just to increase clarity and mark the intention to use uint256. Lines: [35](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L35)
 
 - **Differentiate functions and events**<br>
-Favor capitalization and a prefix in front of events (we suggest Log), to prevent the risk of confusion between functions and events
+Favor capitalization and a prefix in front of events (we suggest Log), to prevent the risk of confusion between functions and events Lines: [24](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L24)
 
 - **Lock pragma to specific compiler version**<br>
-It is better to lock and stick to a chosen compiler version and fully test it before go live.
+It is better to lock and stick to a chosen compiler version and fully test it before go live. Lines: [11](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L11) etc
 
 - **Code style inconsistence**<br>
-Some minor issues with styling according to [solidity styling guide](http://solidity.readthedocs.io/en/develop/style-guide.html#function-declaration)
+Some minor issues with styling according to [solidity styling guide](http://solidity.readthedocs.io/en/develop/style-guide.html#function-declaration) Line: [75](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L75)
 
 - **Suggest add event log in fallback function**<br>
 According to the best practice, it is always better to put a event log in fallback functions to record who sent ETH to this contract.
