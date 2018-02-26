@@ -12,15 +12,12 @@ Favor capitalization and a prefix in front of events (we suggest Log), to preven
 - **Lock pragma to specific compiler version**<br>
 It is better to lock and stick to a chosen compiler version and fully test it before go live. Lines: [11](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L11) etc
 
-- **Code style inconsistence**<br>
-Some minor issues with styling according to [solidity styling guide](http://solidity.readthedocs.io/en/develop/style-guide.html#function-declaration) Line: [75](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L75)
-
 - **Suggest add event log in fallback function**<br>
 According to the best practice, it is always better to put a event log in fallback functions to record who sent ETH to this contract. Lines: [70](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L70)
 
-- **Check overflow**<br>
+- **Consider to Check overflow**<br>
 It is safer to check overflow all the time. Consider to avoid assumptions that your variables are safe.
-```require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);``` Lines: [19](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/StandardToken.sol#L19)
+```require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);``` Lines: [20](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/StandardToken.sol#L19)
 
 ### Moderate
 
