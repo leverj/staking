@@ -16,17 +16,17 @@ It is better to lock and stick to a chosen compiler version and fully test it be
 Some minor issues with styling according to [solidity styling guide](http://solidity.readthedocs.io/en/develop/style-guide.html#function-declaration) Line: [75](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L75)
 
 - **Suggest add event log in fallback function**<br>
-According to the best practice, it is always better to put a event log in fallback functions to record who sent ETH to this contract.
+According to the best practice, it is always better to put a event log in fallback functions to record who sent ETH to this contract. Lines: [70](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L70)
 
 - **Check overflow**<br>
 It is safer to check overflow all the time. Consider to avoid assumptions that your variables are safe.
-```require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);```
+```require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);``` Lines: [19](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/StandardToken.sol#L19)
 
 ### Moderate
 
 - **startNewStakingInterval can be called with a startBlock later than endBlock**<br>
-There is a possibility to prevent staking for one staking period if the end block is lesser than start block. 
+There is a possibility to prevent staking for one staking period if the end block is lesser than start block. Lines: [181](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L181)
 
 - **Favor pull over push**<br>
-The Operator can initiate redeeming for stakers. It use `require()` and if one transaction fails, all other transactions fail. Probably it is better to shift that responsibilities out of blockchain (to the backend for example). Backend could perform all checks and then initiate redeems by calling `redeemLevAndFeeByStaker()` function.
+The Operator can initiate redeeming for stakers. It use `require()` and if one transaction fails, all other transactions fail. Probably it is better to shift that responsibilities out of blockchain (to the backend for example). Backend could perform all checks and then initiate redeems by calling `redeemLevAndFeeByStaker()` function. Lines: [152](https://github.com/BlockchainLabsNZ/staking/blob/master/contracts/Stake.sol#L152)
 
