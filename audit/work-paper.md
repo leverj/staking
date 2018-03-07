@@ -1,11 +1,13 @@
 `staking-contracts-audit/contracts/Fee.sol`
 
-| Contract | Function                         | Visibility | Constant | Returns | Modifiers                       | Static Analysis | Test Coverage | Functional Analysis |
-|:---------|:---------------------------------|:-----------|:---------|:--------|:--------------------------------|:----------------|:--------------|:--------------------|
-| Fee      | Fee(address,string,uint8,string) | public     | false    |         | notEmpty,notEmpty               |                 |               |                     |
-| Fee      | setMinter(address)               | external   | false    |         | onlyOwner,validAddress          |                 |               |                     |
-| Fee      | burnTokens(uint)                 | public     | false    |         | notZero                         |                 |               |                     |
-| Fee      | sendTokens(address,uint)         | public     | false    |         | onlyMinter,validAddress,notZero |                 |               |                     |
+_Well documented, class variables have clear explanations and example values. Nice use of modifiers for validation. Uses SafeMath where appropriate. The function `sendTokens` has a slightly confusing name since it's used to mint tokens, however the usage is explained clearly in a docstring and it can't be called by end users._
+
+| Contract | Function                         | Visibility | Constant | Returns | Modifiers                       | Static Analysis    | Test Coverage      | Functional Analysis |
+|:---------|:---------------------------------|:-----------|:---------|:--------|:--------------------------------|:-------------------|:-------------------|:--------------------|
+| Fee      | Fee(address,string,uint8,string) | public     | false    |         | notEmpty,notEmpty               | :white_check_mark: | :white_check_mark: |                     |
+| Fee      | setMinter(address)               | external   | false    |         | onlyOwner,validAddress          | :white_check_mark: | :white_check_mark: |                     |
+| Fee      | burnTokens(uint)                 | public     | false    |         | notZero                         | :white_check_mark: | :white_check_mark: |                     |
+| Fee      | sendTokens(address,uint)         | public     | false    |         | onlyMinter,validAddress,notZero | :white_check_mark: | :white_check_mark: |                     |
 
 `staking-contracts-audit/contracts/HumanStandardToken.sol`
 
