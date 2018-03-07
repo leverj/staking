@@ -69,6 +69,7 @@ The audit report is focused on the following key areas - though this is not an e
 
 ## Observations
 
+- Consider adding an event for when an `operator` is set in `Owned.sol`.
 
 ## Conclusion
 

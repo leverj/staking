@@ -11,31 +11,36 @@ _Well documented, class variables have clear explanations and example values. Ni
 
 `staking-contracts-audit/contracts/HumanStandardToken.sol`
 
-| Contract           | Function                                        | Visibility | Constant | Returns | Modifiers | Static Analysis | Test Coverage | Functional Analysis |
-|:-------------------|:------------------------------------------------|:-----------|:---------|:--------|:----------|:----------------|:--------------|:--------------------|
-| HumanStandardToken | HumanStandardToken(uint256,string,uint8,string) | public     | false    |         |           |                 |               |                     |
-| HumanStandardToken | approveAndCall(address,uint256,bytes)           | public     | false    | success |           |                 |               |                     |
+_Well documented again, good explanations on all functions and variables. The compiler version is out of date. This contract is only for testing purposes so it doesn't pose a security threat to the project in any way._
+
+| Contract           | Function                                        | Visibility | Constant | Returns | Modifiers | Static Analysis    | Test Coverage      | Functional Analysis |
+|:-------------------|:------------------------------------------------|:-----------|:---------|:--------|:----------|:-------------------|:-------------------|:--------------------|
+| HumanStandardToken | HumanStandardToken(uint256,string,uint8,string) | public     | false    |         |           | :white_check_mark: | :white_check_mark: |                     |
+| HumanStandardToken | approveAndCall(address,uint256,bytes)           | public     | false    | success |           | :white_check_mark: | :white_check_mark: |                     |
 
 
 `staking-contracts-audit/contracts/Migrations.sol`
 
+_Standard Truffle migrations contract_
 
-| Contract   | Function           | Visibility | Constant | Returns | Modifiers  | Static Analysis | Test Coverage | Functional Analysis |
-|:-----------|:-------------------|:-----------|:---------|:--------|:-----------|:----------------|:--------------|:--------------------|
-| Migrations | Migrations()       | public     | false    |         |            |                 |               |                     |
-| Migrations | setCompleted(uint) | public     | false    |         | restricted |                 |               |                     |
-| Migrations | upgrade(address)   | public     | false    |         | restricted |                 |               |                     |
+| Contract   | Function           | Visibility | Constant | Returns | Modifiers  | Static Analysis    |
+|:-----------|:-------------------|:-----------|:---------|:--------|:-----------|:-------------------|
+| Migrations | Migrations()       | public     | false    |         |            | :white_check_mark: |
+| Migrations | setCompleted(uint) | public     | false    |         | restricted | :white_check_mark: |
+| Migrations | upgrade(address)   | public     | false    |         | restricted | :white_check_mark: |
 
 
 `staking-contracts-audit/contracts/Owned.sol`
 
-| Contract | Function             | Visibility | Constant | Returns | Modifiers | Static Analysis | Test Coverage | Functional Analysis |
-|:---------|:---------------------|:-----------|:---------|:--------|:----------|:----------------|:--------------|:--------------------|
-| Owned    | setOperator(address) | external   | false    |         | onlyOwner |                 |               |                     |
-| Owned    | removeOwner(address) | public     | false    |         | onlyOwner |                 |               |                     |
-| Owned    | addOwner(address)    | external   | false    |         | onlyOwner |                 |               |                     |
-| Owned    | setOwners(address)   | internal   | false    |         |           |                 |               |                     |
-| Owned    | getOwners()          | public     | true     |         |           |                 |               |                     |
+_Fairly standard implementation of a basic owner/permission contract. Functions are self-explanatory and do what they're named. Consider adding an event for when an `operator` is set._
+
+| Contract | Function             | Visibility | Constant | Returns | Modifiers | Static Analysis    | Test Coverage      | Functional Analysis |
+|:---------|:---------------------|:-----------|:---------|:--------|:----------|:-------------------|:-------------------|:--------------------|
+| Owned    | setOperator(address) | external   | false    |         | onlyOwner | :white_check_mark: |                    |                     |
+| Owned    | removeOwner(address) | public     | false    |         | onlyOwner | :white_check_mark: | :white_check_mark: |                     |
+| Owned    | addOwner(address)    | external   | false    |         | onlyOwner | :white_check_mark: | :white_check_mark: |                     |
+| Owned    | setOwners(address)   | internal   | false    |         |           | :white_check_mark: |                    |                     |
+| Owned    | getOwners()          | public     | true     |         |           | :white_check_mark: | :white_check_mark: |                     |
 
 `staking-contracts-audit/contracts/Stake.sol`
 
