@@ -67,11 +67,30 @@ The audit report is focused on the following key areas - though this is not an e
 </tr>
 </table>
 
+### Minor
+
+- **Prefer explicit declaration of variable types** - `Best practice` It is recommended to explicitly define your variable types, this confirms your intent and safeguards against a future when the default type changes. e.g `uint256` is preferred to `uint` even though they are the same type. Example [#L38](https://github.com/leverj/staking/blob/master/contracts/Stake.sol#L38])  [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/3)
+
+- **Tokens should emit a generation event on creation** - `Best practice` When a token is first created it should log a `Transfer` event from address `0x0`. This is useful for tools such as EtherScan.io so they can see tokens have been minted. (Some more info [here](https://ethereum.stackexchange.com/questions/28087/why-transfer0x0-to-amount-after-minting-tokens)) [#L39](https://github.com/leverj/staking/blob/master/contracts/HumanStandardToken.sol#L39])  [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/2)
+
+### Moderate
+
+- **Using old compiler version** - `Best practice` This version of the solidity compiler is very old, you should use the most recent stable branch. You should also use a consistent compiler between all contracts. The `pragma solidty...` line should be at the top of the file, before any `import`s happen. I'm logging this as a moderate issue because an actual exploit coming from a bug in an old compiler is rare, but the consequences could be severe if something was ever discovered.  [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/1)
+
+### Major
+
+- **Not protecting against overflowing balances for Fee token** - `Security` `Fee.sol` is a `StandardToken` which has an optional line commented out which checks for overflowing balances. This is unnecessary if you have a token with a fixed total supply, but should be required when you are minting new tokens and increasing the total supply. `Fee.sol` can mint new tokens so overflows should be protected against. [#L16-L19](https://github.com/leverj/staking/blob/master/contracts/StandardToken.sol#L16-L19]) [#L29](https://github.com/leverj/staking/blob/master/contracts/StandardToken.sol#L29]) ... [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/4)
+
+### Critical
+
+- None found
+
 ## Observations
 
 - Consider adding an event for when an `operator` is set in `Owned.sol`.
 - [`Staking.sol:L47`](https://github.com/leverj/staking/blob/master/contracts/Stake.sol#L47) asks about the difference in storage cost between types, I have created a [Test Contract](https://kovan.etherscan.io/address/0x9213B117192cBBB577CDd04e0d6b8bBcD5eb845A) which shows that the method you used is the cheapest. The difference between each type is negligible and there is a difference of around 44 gas between the cheapest and most expensive.
 - Fee.sol can mint new tokens, so some protection should be made against overflowing.
+- Consider adding a ClaimTokens function to Stake.sol so that you can retrieve any random tokens people send to the contract, they would be stuck otherwise. Ensure that you require that the token address you claim is not Lev tokens or Fee tokens so that your users can trust that it won't be used for malicious purposes. [Rough example of this idea](https://github.com/Giveth/minime/blob/master/contracts/MiniMeToken.sol#L497).
 
 ## Conclusion
 
