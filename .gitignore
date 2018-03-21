@@ -13,3 +13,4 @@ bower_components
 conf.ropsten/stake.json
 migrations/config/
 scripts/stake*.sh
+start-prod.sh

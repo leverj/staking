@@ -1,53 +1,66 @@
 module.exports = function (grunt) {
   // Project configuration.
-  const dist = './dist/';
-  const server = './src/server/';
-  const client = './src/client/';
+  const dist      = './dist/';
+  const server    = './src/server/';
+  const client    = './src/client/';
   const contracts = './build/';
-  const config = './config'
+  const config    = './config'
 
   grunt.initConfig(
     {
-      pkg: grunt.file.readJSON('package.json'),
-      clean: {dist: [dist, "./migrations/config"]},
-      exec: {compile: "truffle compile"},
-      copy: {
+      pkg             : grunt.file.readJSON('package.json'),
+      clean           : {dist: [dist, "./migrations/config"]},
+      exec            : {compile: "truffle compile"},
+      copy            : {
         main: {
           files: [
             {
               expand: true,
-              cwd: client,
-              src: ['**/*'],
-              dest: dist + "/src/client"
+              cwd   : client,
+              src   : ['**/*'],
+              dest  : dist + "/src/client"
             },
             {
               expand: true,
-              cwd: ".",
-              src: ["package.json"],
-              dest: dist
+              cwd   : ".",
+              src   : ["package.json"],
+              dest  : dist
             },
             {
               expand: true,
-              cwd: server,
-              src: ['**/*'],
-              dest: dist + "/src/server"
+              cwd   : server,
+              src   : ['**/*'],
+              dest  : dist + "/src/server"
             },
             {
               expand: true,
-              cwd: contracts,
-              src: ['**/*'],
-              dest: dist + "/build"
+              cwd   : contracts,
+              src   : ['**/*'],
+              dest  : dist + "/build"
             },
             {
               expand: true,
-              cwd: config,
-              src: ['**/*'],
-              dest: dist + "/config"
+              cwd   : config,
+              src   : ['**/*'],
+              dest  : dist + "/config"
             }
 
           ]
         }
       },
+      "string-replace": {
+        inline: {
+          files  : {'./': 'node_modules/web3-core-requestmanager/src/givenProvider.js'},
+          options: {
+            replacements:
+              [{
+                pattern    : 'var global = Function(\'return this\')();',
+                replacement: '// var replaced global = Function(\'return this\')();'
+              }]
+          }
+        }
+      },
+
       /*cachebreaker: {
         dev: {
           options: {
@@ -70,7 +83,7 @@ module.exports = function (grunt) {
           }
         }
       },
-      watch: {
+      watch     : {
         s1: {
           files: [client + "/**"],
           tasks: ['copy', 'browserify']
@@ -83,6 +96,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-exec');
-
-  grunt.registerTask('default', ['clean', 'exec', 'copy', 'browserify']);
+  grunt.loadNpmTasks('grunt-string-replace');
+  grunt.registerTask('default', ['clean', 'string-replace', 'exec', 'copy', 'browserify']);
 };
