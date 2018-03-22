@@ -27,12 +27,12 @@ jobs:
             grunt
       - run:
           name: install flattener
-          command: sudo npm install -g truffle-flattener
+          command: npm install truffle-flattener
       - run:
           name: flatten contract
           command: |
-            truffle-flattener contracts/Fee.sol > Fee.txt
-            truffle-flattener contracts/Stake.sol > Stake.txt
+            node node_modules/truffle-flattener/index.js contracts/Fee.sol > Fee.txt
+            node node_modules/truffle-flattener/index.js contracts/Stake.sol > Stake.txt
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
