@@ -154,6 +154,11 @@ contract('Stake setup', (accounts) => {
     await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
   });
 
+  it('constant function, version, returns as expected', async function () {
+    expect(await stake.version.call()).to.eql("1.0.0");
+  });
+
+
   it('admin can change wallet address', async function () {
     expect(await stake.wallet.call(), "Deployed Wallet Address").to.eql(accounts[accounts.length - 1]);
     await stake.setWallet(accounts[6], { from: accounts[0] });
