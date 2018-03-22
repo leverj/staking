@@ -54,7 +54,7 @@ _This is where the bulk of the project exists, functions and variables are mostl
 | Stake    | setLevToken(address)                        | external   | false    |         | validAddress,onlyOwner                         | :white_check_mark: | :white_check_mark: |
 | Stake    | setFeeToken(address)                        | external   | false    |         | validAddress,onlyOwner                         | :white_check_mark: | :white_check_mark: |
 | Stake    | setWallet(address)                          | external   | false    |         | validAddress,onlyOwner                         | :white_check_mark: | :white_check_mark: |
-| Stake    | stakeTokens(uint)                           | external   | false    |         | isStaking,notZero                              | :white_check_mark  | :white_check_mark: |
+| Stake    | stakeTokens(uint)                           | external   | false    |         | isStaking,notZero                              | :white_check_mark:  | :white_check_mark: |
 | Stake    | revertFeeCalculatedFlag(bool)               | external   | false    |         | onlyOwner,isDoneStaking                        | :white_check_mark: | :white_check_mark: |
 | Stake    | updateFeeForCurrentStakingInterval()        | external   | false    |         | onlyOperator,isDoneStaking                     | :white_check_mark: | :white_check_mark: |
 | Stake    | redeemLevAndFeeByStaker()                   | external   | false    |         |                                                | :white_check_mark: | :white_check_mark: |
