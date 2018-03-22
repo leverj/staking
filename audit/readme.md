@@ -1,4 +1,4 @@
-# Leverj Staking Smart Contracts Preliminary Audit Report
+# Leverj Staking Smart Contracts Audit Report
 
 ## Preamble
 This audit report was undertaken by **BlockchainLabs.nz** for the purpose of providing feedback to **Leverj Staking**.
@@ -11,6 +11,7 @@ Solidity contracts were sourced from the public Github repo [leverj/staking](htt
 The following contracts were subject for static, dynamic and functional analyses:
 
 - [Fee.sol](https://github.com/leverj/staking/blob/e8716e4a11881fad181b5330206d8b0c27a58510/contracts/Fee.sol)
+- [Stake.sol](https://github.com/leverj/staking/blob/e8716e4a11881fad181b5330206d8b0c27a58510/contracts/Stake.sol)
 
 ## Focus areas
 The audit report is focused on the following key areas - though this is not an exhaustive list.
@@ -41,8 +42,6 @@ The audit report is focused on the following key areas - though this is not an e
 
 ## Analysis
 
-- [Functional Analysis](kovan-tests.md)
-- [Test Coverage](test-coverage.md)
 - [Work Paper](work-paper.md)
 
 ## Issues
@@ -91,6 +90,10 @@ The audit report is focused on the following key areas - though this is not an e
 - [`Staking.sol:L47`](https://github.com/leverj/staking/blob/master/contracts/Stake.sol#L47) asks about the difference in storage cost between types, I have created a [Test Contract](https://kovan.etherscan.io/address/0x9213B117192cBBB577CDd04e0d6b8bBcD5eb845A) which shows that the method you used is the cheapest. The difference between each type is negligible and there is a difference of around 44 gas between the cheapest and most expensive.
 - Fee.sol can mint new tokens, so some protection should be made against overflowing.
 - Consider adding a ClaimTokens function to Stake.sol so that you can retrieve any random tokens people send to the contract, they would be stuck otherwise. Ensure that you require that the token address you claim is not Lev tokens or Fee tokens so that your users can trust that it won't be used for malicious purposes. [Rough example of this idea](https://github.com/Giveth/minime/blob/master/contracts/MiniMeToken.sol#L497).
+
+## Conclusion
+
+We are statisfied that these Smart Contracts do not exhibit any known security vulnerabilities. Overall the code is well written and the developers have been responsive throughout the audit process. The contracts show care taken by the developers to follow best practices and are well documented. There is high test coverage which should increase confidence in the security of these contracts, and their maintainability in the future. As part of our auditting process we added some new tests to improve the coverage.
 
 
 ___
