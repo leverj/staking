@@ -154,6 +154,22 @@ contract('Stake setup', (accounts) => {
     await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
   });
 
+  it('admin can change wallet address', async function () {
+    expect(await stake.wallet.call(), "Deployed Wallet Address").to.eql(accounts[accounts.length - 1]);
+    await stake.setWallet(accounts[6], { from: accounts[0] });
+    expect(await stake.wallet.call(), "New Wallet Address").to.eql(accounts[6]);
+  });
+
+  it('vandal can\'t change the wallet address', async function () {
+    expect(await stake.wallet.call(), ).to.eql(accounts[6]);
+    try {
+      await stake.setWallet(accounts[7], { from: accounts[7] });
+      expect().fail("should not pass");
+    } catch (e) {
+      expect(e.message).to.not.eql("should not pass");
+    }
+  });
+
   it('should fail to reset if there are stakes left', async function () {
     try {
       await stake.startNewStakingInterval(1000, 2000, {from: operator(accounts)});
