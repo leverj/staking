@@ -36,10 +36,10 @@ _Fairly standard implementation of a basic owner/permission contract. Functions 
 
 | Contract | Function             | Visibility | Constant | Returns | Modifiers | Static Analysis    | Test Coverage      |
 |:---------|:---------------------|:-----------|:---------|:--------|:----------|:-------------------|:-------------------|
-| Owned    | setOperator(address) | external   | false    |         | onlyOwner | :white_check_mark: |                    |
+| Owned    | setOperator(address) | external   | false    |         | onlyOwner | :white_check_mark: | :white_check_mark: |
 | Owned    | removeOwner(address) | public     | false    |         | onlyOwner | :white_check_mark: | :white_check_mark: |
 | Owned    | addOwner(address)    | external   | false    |         | onlyOwner | :white_check_mark: | :white_check_mark: |
-| Owned    | setOwners(address)   | internal   | false    |         |           | :white_check_mark: |                    |
+| Owned    | setOwners(address)   | internal   | false    |         |           | :white_check_mark: | :white_check_mark: |
 | Owned    | getOwners()          | public     | true     |         |           | :white_check_mark: | :white_check_mark: |
 
 `staking-contracts-audit/contracts/Stake.sol`
@@ -59,7 +59,7 @@ _This is where the bulk of the project exists, functions and variables are mostl
 | Stake    | updateFeeForCurrentStakingInterval()        | external   | false    |         | onlyOperator,isDoneStaking                     | :white_check_mark: | :white_check_mark: |
 | Stake    | redeemLevAndFeeByStaker()                   | external   | false    |         |                                                | :white_check_mark: | :white_check_mark: |
 | Stake    | redeemLevAndFeeToStakers(address)           | external   | false    |         | onlyOperator                                   | :white_check_mark: | :white_check_mark: |
-| Stake    | redeemLevAndFee(address)                    | private    | false    |         | validAddress,isDoneStaking                     | :white_check_mark: |                    |
+| Stake    | redeemLevAndFee(address)                    | private    | false    |         | validAddress,isDoneStaking                     | :white_check_mark: | :white_check_mark: |
 | Stake    | startNewStakingInterval(uint,uint)          | external   | false    |         | notZero,notZero,onlyOperator,isDoneStaking     | :white_check_mark: | :white_check_mark: |
 
 `staking-contracts-audit/contracts/StandardToken.sol`
@@ -72,5 +72,5 @@ _Basic ERC20 Token contract, only implements the core of ERC20. This should be u
 | StandardToken | transferFrom(address,address,uint256) | public     | false    | success   |           | :white_check_mark: |                    |
 | StandardToken | balanceOf(address)                    | public     | true     | balance   |           | :white_check_mark: | :white_check_mark: |
 | StandardToken | approve(address,uint256)              | public     | false    | success   |           | :white_check_mark: | :white_check_mark: |
-| StandardToken | allowance(address,address)            | public     | true     | remaining |           | :white_check_mark: |                    |
+| StandardToken | allowance(address,address)            | public     | true     | remaining |           | :white_check_mark: | :white_check_mark: |
 
