@@ -14,3 +14,4 @@ conf.ropsten/stake.json
 migrations/config/
 scripts/stake*.sh
 start-prod.sh
+contract.sh

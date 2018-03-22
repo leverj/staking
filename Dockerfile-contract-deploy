@@ -1,0 +1,7 @@
+FROM coinpit/nodejs:v8
+RUN apt-get update && apt-get install git -y
+COPY build ./dist/build/
+COPY deployment ./dist/deployment/
+COPY package.json package-lock.json ./dist/
+RUN  cd dist && npm install
+

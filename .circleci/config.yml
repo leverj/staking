@@ -33,7 +33,9 @@ jobs:
             docker info
             docker build -t leverj/stake:$CIRCLE_BRANCH .
             docker build -f Dockerfile-automation -t leverj/stake-automation:$CIRCLE_BRANCH .
+            docker build -f Dockerfile-contract-deploy -t leverj/stake-contract:$CIRCLE_BRANCH .
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push leverj/stake
             docker push leverj/stake-automation
+            docker push leverj/stake-contract
 

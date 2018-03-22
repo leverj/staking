@@ -1,7 +1,8 @@
-const fs = require('fs');
+const fs     = require('fs');
 const affirm = require('affirm.js');
-affirm(process.env.NODE_ENV, 'set NODE_ENV environment')
-const configuration = require(`./${process.env.NODE_ENV}.json`);
+
+["FEE_CONSTRUCTOR", "STAKE_CONSTRUCTOR", "NETWORK", "MAX_GAS_PRICE",]
+  .forEach(envName => affirm(process.env[envName], `Environment variable ${envName} is missing`))
 
 function getPrivateKey() {
   affirm(process.argv[2], 'Provide private key file location of Operator');
@@ -14,4 +15,17 @@ function getPrivateKey() {
   }
 }
 
-module.exports = {configuration, key: getPrivateKey()};
+module.exports = {
+  network   : process.env.NETWORK,
+  fee       : {
+    values : JSON.parse(process.env.FEE_CONSTRUCTOR),
+    address: process.env.FEE_ADDRESS
+  },
+  stake     : {
+    values : JSON.parse(process.env.STAKE_CONSTRUCTOR),
+    address: process.env.STAKE_ADDRESS
+  },
+  maxGas    : process.env.MAX_GAS_PRICE - 0,
+  privateKey: getPrivateKey()
+}
+
