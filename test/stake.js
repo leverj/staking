@@ -70,6 +70,25 @@ contract('Calculate Fee Tokens', (accounts) => {
   });
 
 
+  it('admin can set the fee calculated flag', async function () {
+    expect(await stake.feeCalculated.call()).to.eql(false);
+    await stake.revertFeeCalculatedFlag(true, { from: accounts[0] });
+    expect(await stake.feeCalculated.call()).to.eql(true);
+    await stake.revertFeeCalculatedFlag(false, { from: accounts[0] });
+    expect(await stake.feeCalculated.call()).to.eql(false);
+  });
+
+  it('vandal can\'t set the fee calculated flag', async function () {
+    expect(await stake.feeCalculated.call()).to.eql(false);
+    try {
+      await stake.revertFeeCalculatedFlag(true, { from: accounts[7] });
+      expect().fail("should not pass");
+    } catch (e) {
+      expect(e.message).to.not.eql("should not pass");
+      expect(await stake.feeCalculated.call()).to.eql(false);
+    }
+  });
+
   it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
     let walletBalance = (await web3.eth.getBalance(wallet));
     stake = await Stake.deployed();
@@ -166,7 +185,7 @@ contract('Stake setup', (accounts) => {
   });
 
   it('vandal can\'t change the wallet address', async function () {
-    expect(await stake.wallet.call(), ).to.eql(accounts[6]);
+    expect(await stake.wallet.call()).to.eql(accounts[6]);
     try {
       await stake.setWallet(accounts[7], { from: accounts[7] });
       expect().fail("should not pass");
