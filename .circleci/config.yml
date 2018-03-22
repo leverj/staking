@@ -26,9 +26,11 @@ jobs:
             sudo npm install -g grunt
             grunt
       - run:
+          name: install flattener
+          command: sudo npm install -g truffle-flattener
+      - run:
           name: flatten contract
           command: |
-            sudo npm install -g truffle-flattener
             truffle-flattener contracts/Fee.sol > Fee.txt
             truffle-flattener contracts/Stake.sol > Stake.txt
       - setup_remote_docker:
