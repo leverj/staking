@@ -10,20 +10,24 @@ async function deploy() {
   async function start() {
     web3 = new Web3(new Web3.providers.HttpProvider(config.network));
     await createAccount();
-    gasPrice = (await web3.eth.getGasPrice()) - 0;
+    gasPrice = Number.parseInt(await web3.eth.getGasPrice())
     printGasPrice()
     gasPrice = Math.min(gasPrice, config.maxGas);
     printGasPrice()
     await createContracts();
     await provision();
+    await removeDeployer();
     console.log('Done');
   }
 
-  async function provision(){
+  async function provision() {
     console.log('Setting the fee token in Stake.sol...');
     await sendTx(stake, stake.methods.setFeeToken(fee._address));
     console.log('Setting the minter in Fee.sol...');
     await sendTx(fee, fee.methods.setMinter(stake._address));
+  }
+
+  async function removeDeployer() {
     console.log('Removing the admin in Fee.sol...');
     await sendTx(fee, fee.methods.removeOwner(deployer.address));
     console.log('Removing the admin in Stake.sol...');
@@ -37,20 +41,19 @@ async function deploy() {
   }
 
   async function createContracts() {
-    fee   = await getOrCreateContract(config.fee.address, feeJson, config.fee.values);
-    stake = await getOrCreateContract(config.stake.address, stakeJson, config.stake.values);
-
+    fee   = await getOrCreateContract(config.Fee.address, feeJson, config.Fee.values);
+    stake = await getOrCreateContract(config.Stake.address, stakeJson, config.Stake.values);
   }
 
   async function getOrCreateContract(address, contractJson, values) {
     if (!address) {
       console.log(`Deploying ${contractJson.contractName} contract...`)
-      const contract = await deploy(contractJson, addDeployerToAdmin(values));
-      address        = contract._address
+      const deployed = await deploy(contractJson, addDeployerToAdmin(values));
+      address        = deployed._address
     }
-    let deployed = new web3.eth.Contract(contractJson.abi, address);
+    let contract = new web3.eth.Contract(contractJson.abi, address);
     console.log(`${contractJson.contractName} address: `, address);
-    return deployed;
+    return contract;
   }
 
   //todo: first entry in values is assumed as admin list
@@ -62,14 +65,20 @@ async function deploy() {
 
 
   async function deploy(contractJson, arguments) {
-    const contract = new web3.eth.Contract(contractJson.abi);
-    let tx         = contract.deploy({data: contractJson.bytecode, arguments: arguments});
+    const contract   = new web3.eth.Contract(contractJson.abi);
+    let tx           = contract.deploy({data: contractJson.bytecode, arguments: arguments});
+    let deployed     = await sendTx(contract, tx);
+    let contractName = contractJson.contractName;
     console.log({
-      contractName  : contractJson.contractName,
+      contractName,
       compileVersion: contractJson.compiler.version,
       constructor   : tx.encodeABI().substr(contractJson.bytecode.length),
+      address       : deployed._address
     })
-    return await sendTx(contract, tx)
+    console.log(`################################### ${contractName} source starts ###################################`)
+    console.log(config[contractName].source)
+    console.log(`################################### ${contractName} source ends   ###################################`)
+    return deployed
   }
 
   async function sendTx(contract, tx) {
