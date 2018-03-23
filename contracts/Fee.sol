@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.19;
 
 
 import './SafeMath.sol';
@@ -20,8 +20,7 @@ contract Fee is Owned, Validating, StandardToken {
   string public name;                   //fancy name: eg Simon Bucks
   uint8 public decimals;                //How many decimals to show. ie. There could 1000 base units with 3 decimals. Meaning 0.980 SBX = 980 base units. It's like comparing 1 wei to 1 ether.
   string public symbol;                 //An identifier: eg SBX
-  uint256 public feeInCirculation;      //total fee in circulation
-  string public version = 'F0.1';       //human 0.1 standard. Just an arbitrary versioning scheme.
+  string public version = 'F0.2';       //human 0.1 standard. Just an arbitrary versioning scheme.
   address public minter;
 
   modifier onlyMinter {
@@ -56,9 +55,8 @@ contract Fee is Owned, Validating, StandardToken {
   /// @param _value Amount of tokens to delete
   function burnTokens(uint _value) public notZero(_value) {
     require(balances[msg.sender] >= _value);
-
     balances[msg.sender] = SafeMath.sub(balances[msg.sender], _value);
-    feeInCirculation = SafeMath.sub(feeInCirculation, _value);
+    totalSupply = SafeMath.sub(totalSupply, _value);
     Burn(msg.sender, _value);
   }
 
@@ -68,7 +66,7 @@ contract Fee is Owned, Validating, StandardToken {
   /// @param _value The amount o
   function sendTokens(address _to, uint _value) public onlyMinter validAddress(_to) notZero(_value) {
     balances[_to] = SafeMath.add(balances[_to], _value);
-    feeInCirculation = SafeMath.add(feeInCirculation, _value);
-    Transfer(msg.sender, _to, _value);
+    totalSupply = SafeMath.add(totalSupply, _value);
+    Transfer(0x0, _to, _value);
   }
 }

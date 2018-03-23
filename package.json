@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
-    "start": " BLUEBIRD_DEBUG=1 NODE_ENV=dev node src/server/index.js",
-    "dev": "webpack-dev-server --content-base src/server/index.js --port 8888 --inline --hot",
+    "start": "NODE_ENV=dev node src/server/index.js",
     "test-automation": "node scripts/testStakeAutomation.js",
     "server": "node src/server/index.js"
   },
@@ -29,21 +28,8 @@
   },
   "homepage": "https://github.com/leverj/staking#readme",
   "devDependencies": {
-    "babel-core": "6.26.0",
-    "babel-loader": "7.1.2",
-    "babel-preset-env": "1.6.1",
-    "babel-preset-react": "6.24.1",
-    "babel-register": "6.26.0",
-    "babel-require": "1.0.1",
-    "bip39": "2.4.0",
-    "bluebird": "^3.5.1",
     "bn.js": "4.11.6",
-    "chai": "4.1.2",
-    "clean-webpack-plugin": "^0.1.17",
-    "copy-webpack-plugin": "^4.2.3",
     "css-loader": "0.28.7",
-    "enzyme": "3.2.0",
-    "enzyme-adapter-react-16": "1.1.0",
     "ethereumjs-testrpc": "6.0.3",
     "ethereumjs-wallet": "0.6.0",
     "ethjs-contract": "^0.1.9",
@@ -57,19 +43,14 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-exec": "^3.0.0",
-    "html-webpack-plugin": "2.30.1",
+    "grunt-string-replace": "^1.3.1",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.4",
     "mock-require": "2.0.2",
-    "react": "16.0.0",
-    "react-addons-test-utils": "15.6.2",
-    "react-dom": "16.0.0",
-    "react-test-renderer": "16.1.1",
     "solc": "^0.4.19",
-    "truffle": "4.0.1",
-    "truffle-hdwallet-provider": "0.0.3",
-    "webpack": "3.8.1",
-    "webpack-dev-server": "^2.9.7"
+    "truffle": "4.1.3",
+    "truffle-flattener": "^1.2.5",
+    "truffle-hdwallet-provider": "0.0.3"
   },
   "dependencies": {
     "affirm.js": "^1.0.0",
@@ -90,6 +71,6 @@
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
     "style-loader": "^0.19.0",
-    "web3": "1.0.0-beta.26"
+    "web3": "1.0.0-beta.33"
   }
 }

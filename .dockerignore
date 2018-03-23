@@ -7,5 +7,5 @@ src*
 *.log*
 test
 bower.json
-circle.yml
+circle.yml.old
 README.md

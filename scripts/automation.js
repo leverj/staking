@@ -4,12 +4,11 @@ const stakeABI = require('./../build/contracts/Stake.json');
 const feeABI = require('./../build/contracts/Fee.json');
 
 async function automate() {
-  let web3, socketWeb3, stake, fee, socketStake, currentBlock, operationActive, operator, state = {}, errorCount = 0;
+  let web3, socketWeb3, stake, fee, currentBlock, operationActive, operator, state = {}, errorCount = 0;
   let gasPrice = 41e9;
 
   async function getContracts() {
     socketWeb3 = new Web3(new Web3.providers.WebsocketProvider(conf.socketProvider));
-    socketStake = new socketWeb3.eth.Contract(stakeABI.abi, conf.stake);
     web3 = new Web3(new Web3.providers.HttpProvider(conf.provider));
     stake = new web3.eth.Contract(stakeABI.abi, conf.stake);
     fee = new web3.eth.Contract(feeABI.abi, conf.fee);
@@ -132,7 +131,7 @@ async function automate() {
 
   async function getAllStakingUsers() {
     let [fromBlock, toBlock] = await Promise.all([stake.methods.startBlock().call(), stake.methods.endBlock().call()]);
-    let events = await socketStake.getPastEvents('StakeEvent', {fromBlock, toBlock});
+    let events = await stake.getPastEvents('StakeEvent', {fromBlock, toBlock});
     let stakes = {};
     for (let i = 0; i < events.length; i++) {
       let event = events[i];

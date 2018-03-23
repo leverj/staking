@@ -8,7 +8,7 @@
   * what happens to extra fee if not enough trading happened? destroy it.
   * Stake will have full control over FEE.sol
   */
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.19;
 
 
 import './SafeMath.sol';
