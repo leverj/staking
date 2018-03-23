@@ -77,7 +77,7 @@ async function deploy() {
       constructor   : tx.encodeABI().substr(contractJson.bytecode.length),
       address       : deployed._address
     })
-    fs.writeFileSync(path(__dirname, '..', 'src', `${contractName}.txt`), config[contractName].source, 'utf-8')
+    fs.writeFileSync(path.join(__dirname, '..', 'src', `${contractName}.txt`), config[contractName].source, 'utf-8')
     return deployed
   }
 
