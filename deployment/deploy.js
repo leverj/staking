@@ -1,8 +1,10 @@
-const Web3      = require('web3');
-const config    = require('./conf');
-const feeJson   = require('../build/contracts/Fee.json');
-const stakeJson = require('../build/contracts/Stake.json');
+const Web3      = require('web3')
+const config    = require('./conf')
+const feeJson   = require('../build/contracts/Fee.json')
+const stakeJson = require('../build/contracts/Stake.json')
 const _         = require('lodash')
+const fs        = require('fs')
+const path      = require('path')
 
 async function deploy() {
   let fee, stake, deployer, web3, gasPrice;
@@ -75,9 +77,7 @@ async function deploy() {
       constructor   : tx.encodeABI().substr(contractJson.bytecode.length),
       address       : deployed._address
     })
-    console.log(`################################### ${contractName} source starts ###################################`)
-    console.log(config[contractName].source)
-    console.log(`################################### ${contractName} source ends   ###################################`)
+    fs.writeFileSync(path(__dirname, '..', 'src', `${contractName}.txt`), config[contractName].source, 'utf-8')
     return deployed
   }
 
