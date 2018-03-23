@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
-    "start": " BLUEBIRD_DEBUG=1 NODE_ENV=dev node src/server/index.js",
-    "dev": "webpack-dev-server --content-base src/server/index.js --port 8888 --inline --hot",
+    "start": "NODE_ENV=dev node src/server/index.js",
     "test-automation": "node scripts/testStakeAutomation.js",
     "server": "node src/server/index.js"
   },
