@@ -5,20 +5,21 @@ const affirm = require('affirm.js')
 module.exports = (function () {
   function getConf() {
     affirmEnvVariables()
-    let privateKey = getPrivateKey()
-    let network    = process.env.NETWORK;
-    let Fee        = {
-      values : JSON.parse(process.env.FEE_CONSTRUCTOR),
-      address: process.env.FEE_ADDRESS,
-      source : getSourceCode('Fee'),
-    };
-    let Stake      = {
-      values : JSON.parse(process.env.STAKE_CONSTRUCTOR),
-      address: process.env.STAKE_ADDRESS,
-      source : getSourceCode('Stake'),
-    };
-    let maxGas     = process.env.MAX_GAS_PRICE - 0;
-    return {network, Fee, Stake, maxGas, privateKey}
+    return {
+      network    : process.env.NETWORK,
+      maxGasPrice: process.env.MAX_GAS_PRICE - 0,
+      privateKey : getPrivateKey(),
+      Fee        : {
+        values : JSON.parse(process.env.FEE_CONSTRUCTOR),
+        address: process.env.FEE_ADDRESS,
+        source : getSourceCode('Fee'),
+      },
+      Stake      : {
+        values : JSON.parse(process.env.STAKE_CONSTRUCTOR),
+        address: process.env.STAKE_ADDRESS,
+        source : getSourceCode('Stake'),
+      }
+    }
   }
 
   function affirmEnvVariables() {
