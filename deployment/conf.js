@@ -39,7 +39,7 @@ module.exports = (function () {
   }
 
   function getSourceCode(contractName) {
-    return fs.readFileSync(path.join(__dirname, "..", `${contractName}.txt`)).toString()
+    return fs.readFileSync(path.join(__dirname, "..", `${contractName}.sol`)).toString()
   }
 
   return getConf()

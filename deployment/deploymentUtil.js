@@ -1,8 +1,8 @@
 const Web3   = require('web3')
-const _      = require('lodash')
 const fs     = require('fs')
 const path   = require('path')
 const affirm = require('affirm.js')
+const mkdirp = require('mkdirp')
 
 module.exports = (function util() {
   const util = {}
@@ -53,7 +53,8 @@ module.exports = (function util() {
       constructor   : tx.encodeABI().substr(contractJson.bytecode.length),
       address       : deployed._address
     })
-    fs.writeFileSync(path.join(__dirname, '..', 'src', `${contractName}.txt`), source, 'utf-8')
+    await mkdirp(path.join(__dirname, '..', 'stage').toString())
+    fs.writeFileSync(path.join(__dirname, '..', 'stage', `${contractName}.sol`), source, 'utf-8')
     return deployed
   }
 
