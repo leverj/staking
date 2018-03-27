@@ -60,7 +60,7 @@ module.exports = (function util() {
 
   util.sendTx = async function sendTx(contract, tx) {
     contract.options.from = deployer.address;
-    let gas               = await tx.estimateGas();
+    let gas               = await tx.estimateGas({from: deployer.address});
     console.log('gas', gas, gasPrice);
     return await tx.send({from: deployer.address, gas, gasPrice})
   }

@@ -3,7 +3,7 @@ const feeJson        = require('../build/contracts/Fee.json')
 const stakeJson      = require('../build/contracts/Stake.json')
 const _              = require('lodash')
 const deploymentUtil = require('./deploymentUtil')
-const migration = require('./migrateFeeTokens')
+const migration      = require('./migrateFeeTokens')
 
 async function deploy() {
   let fee, stake, deployer;
