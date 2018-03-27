@@ -71,10 +71,12 @@ The audit report is focused on the following key areas - though this is not an e
 - **Prefer explicit declaration of variable types** - `Best practice` It is recommended to explicitly define your variable types, this confirms your intent and safeguards against a future when the default type changes. e.g `uint256` is preferred to `uint` even though they are the same type. Example [#L38](https://github.com/leverj/staking/blob/master/contracts/Stake.sol#L38])  [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/3)
 
 - **Tokens should emit a generation event on creation** - `Best practice` When a token is first created it should log a `Transfer` event from address `0x0`. This is useful for tools such as EtherScan.io so they can see tokens have been minted. (Some more info [here](https://ethereum.stackexchange.com/questions/28087/why-transfer0x0-to-amount-after-minting-tokens)) [#L39](https://github.com/leverj/staking/blob/master/contracts/HumanStandardToken.sol#L39])  [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/2)
+  - [x] Fixed [9e5ab6b7209d05a2ce141fd47ccd896754c5bf33](https://github.com/leverj/staking/commit/01fc1b9408a9e001af685a0ed382297f192b305c)
 
 ### Moderate
 
 - **Using old compiler version** - `Best practice` This version of the solidity compiler is very old, you should use the most recent stable branch. You should also use a consistent compiler between all contracts. The `pragma solidty...` line should be at the top of the file, before any `import`s happen. I'm logging this as a moderate issue because an actual exploit coming from a bug in an old compiler is rare, but the consequences could be severe if something was ever discovered.  [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/1)
+  - [x] Fixed [9e5ab6b7209d05a2ce141fd47ccd896754c5bf33](https://github.com/leverj/staking/commit/01fc1b9408a9e001af685a0ed382297f192b305c)
 
 ### Major
 
