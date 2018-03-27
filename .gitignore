@@ -15,3 +15,7 @@ migrations/config/
 scripts/stake*.sh
 start-prod.sh
 contract.sh
+Fee.txt
+Stake.txt
+deployment/run.sh
+flattened/

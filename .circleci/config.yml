@@ -28,8 +28,8 @@ jobs:
       - run:
           name: flatten contract
           command: |
-            node node_modules/truffle-flattener/index.js contracts/Fee.sol > Fee.txt
-            node node_modules/truffle-flattener/index.js contracts/Stake.sol > Stake.txt
+            node node_modules/truffle-flattener/index.js contracts/Fee.sol > Fee.sol
+            node node_modules/truffle-flattener/index.js contracts/Stake.sol > Stake.sol
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
