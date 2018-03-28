@@ -25,7 +25,7 @@ contract('generate and send fee', (accounts) => {
     await fee.sendTokens(user2, 1100, {from: minter});
     expect((await fee.balanceOf(user1)).toNumber()).to.eql(1000);
     expect((await fee.balanceOf(user2)).toNumber()).to.eql(1100);
-    expect((await fee.feeInCirculation()).toNumber()).to.eql(2100)
+    expect((await fee.totalSupply()).toNumber()).to.eql(2100)
   });
 
   it('should fail if user is not a minter', async function () {
@@ -60,7 +60,7 @@ contract('burn tokens', (accounts) => {
     await fee.burnTokens(500, {from: user2});
     expect((await fee.balanceOf(user1)).toNumber()).to.eql(900);
     expect((await fee.balanceOf(user2)).toNumber()).to.eql(600);
-    expect((await fee.feeInCirculation()).toNumber()).to.eql(1500)
+    expect((await fee.totalSupply()).toNumber()).to.eql(1500)
   })
 
 });

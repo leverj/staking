@@ -8,7 +8,7 @@
       "imgSrc":     ["https://stake.bluelot.us"],
       "styleSrc":   ["https://stake.bluelot.us"],
       "fontSrc":    ["https://stake.bluelot.us"],
-      "scriptSrc":  ["'unsafe-eval'","https://stake.bluelot.us"],
+      "scriptSrc":  ["https://stake.bluelot.us"],
       "mediaSrc":   ["https://stake.bluelot.us", "blob:"]
     }
   }

@@ -1,19 +1,19 @@
 const HumanStandardToken = artifacts.require("./HumanStandardToken.sol");
-const Stake = artifacts.require("./Stake.sol");
-const Fee = artifacts.require("./Fee.sol");
+const Stake              = artifacts.require("./Stake.sol");
+const Fee                = artifacts.require("./Fee.sol");
 
-const expect = require("expect.js");
-const fs = require('fs');
-const BN = require('bn.js');
+const expect       = require("expect.js");
+const fs           = require('fs');
+const BN           = require('bn.js');
 const HttpProvider = require('ethjs-provider-http');
-const EthRPC = require('ethjs-rpc');
-const EthQuery = require('ethjs-query');
-const Web3 = require('web3');
+const EthRPC       = require('ethjs-rpc');
+const EthQuery     = require('ethjs-query');
+const Web3         = require('web3');
 
 
-const ethRPC = new EthRPC(new HttpProvider('http://localhost:8545'));
+const ethRPC   = new EthRPC(new HttpProvider('http://localhost:8545'));
 const ethQuery = new EthQuery(new HttpProvider('http://localhost:8545'));
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+const web3     = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 contract('Stake Levs', (accounts) => {
   let token, stake;
@@ -57,8 +57,8 @@ contract('Calculate Fee Tokens', (accounts) => {
     await stake.setLevToken(token.address);
     wallet = await stake.wallet();
     await web3.eth.sendTransaction({
-      from: wallet,
-      to: user3(accounts),
+      from : wallet,
+      to   : user3(accounts),
       value: new BN("999999999990000000000000000", 10)
     });
     await forceMine(new BN(200));
@@ -72,7 +72,7 @@ contract('Calculate Fee Tokens', (accounts) => {
 
   it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
     let walletBalance = (await web3.eth.getBalance(wallet));
-    stake = await Stake.deployed();
+    stake             = await Stake.deployed();
     await stake.updateFeeForCurrentStakingInterval({from: operator(accounts)});
     expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(1010);
     expect((await fee.balanceOf(stake.address)).toNumber()).to.eql(0);
@@ -90,8 +90,8 @@ contract('Calculate fee tokens when no eth and fee has been collected', (account
     await stake.setLevToken(token.address);
     wallet = await stake.wallet();
     await web3.eth.sendTransaction({
-      from: wallet,
-      to: user3(accounts),
+      from : wallet,
+      to   : user3(accounts),
       value: new BN("999999999990000000000000000", 10)
     });
     await forceMine(new BN(200));
@@ -105,7 +105,7 @@ contract('Calculate fee tokens when no eth and fee has been collected', (account
 
   it('Stake contract should be able to calculate total Fee Tokens  even if there is no eth as commission', async function () {
     let walletBalance = (await web3.eth.getBalance(wallet));
-    stake = await Stake.deployed();
+    stake             = await Stake.deployed();
     await stake.updateFeeForCurrentStakingInterval({from: operator(accounts)});
     expect((await stake.feeForTheStakingInterval()).toNumber()).to.eql(0);
     expect((await fee.balanceOf(stake.address)).toNumber()).to.eql(0);
@@ -139,6 +139,49 @@ contract('Circulate Fee Tokens', (accounts) => {
   });
 });
 
+contract('generic call enabled on stake', (accounts) => {
+  let token, stake, fee;
+  before(async function () {
+    [stake, fee, token] = await setup(accounts);
+    await stakeit(10, user1(accounts), stake, token);
+    await stakeit(15, user2(accounts), stake, token);
+    await forceMine(new BN(300));
+    await sendFeesToSelf(stake.address, await stake.owners(0), fee, 1000);
+    await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
+    await stake.updateFeeForCurrentStakingInterval({from: operator(accounts)});
+  })
+
+  it('should be able to execute a method on any contract', async function () {
+    let user                = user1(accounts);
+    let initialBalance      = await balance(user, fee)
+    let added               = 1e11;
+    let feeContractFromWeb3 = new web3.eth.Contract(fee.abi, fee.address)
+    let data                = feeContractFromWeb3.methods.sendTokens(user, added).encodeABI()
+    let result              = await stake.execute(fee.address, 0, data)
+    expect(initialBalance + added).to.eql(await balance(user, fee))
+    expect(result.logs.length).to.eql(1)
+    let log = result.logs[0];
+    expect(log.event).to.eql("Execution")
+    expect(log.args.destination).to.eql(fee.address)
+    expect(log.args.value.toNumber()).to.eql(0)
+    expect(log.args.data).to.eql(data)
+  })
+
+  it('should not allow to execute if account is not admin', async function () {
+    let user                = user1(accounts);
+    let initialBalance      = await balance(user, fee)
+    let added               = 1e11;
+    let feeContractFromWeb3 = new web3.eth.Contract(fee.abi, fee.address)
+    let data                = feeContractFromWeb3.methods.sendTokens(user, added).encodeABI()
+    try {
+      await stake.execute(fee.address, 0, data, {from: user2(accounts)})
+      expect().to.fail('It should have failed')
+    } catch (e) {
+      expect(e.message).to.match(/VM Exception while processing transaction/)
+    }
+    expect(initialBalance).to.eql(await balance(user, fee))
+  })
+})
 
 contract('Stake setup', (accounts) => {
   let token, stake, fee;
@@ -214,7 +257,7 @@ async function sendFeesToSelf(_to, _owner, _fee, _qty) {
 
 async function setup(accounts) {
   let stake = await Stake.deployed();
-  let fee = await Fee.deployed();
+  let fee   = await Fee.deployed();
   await fee.setMinter(stake.address);
   await stake.setFeeToken(fee.address);
   let token = await HumanStandardToken.new(100000, "LEV", 0, "LEV");

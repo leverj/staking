@@ -8,7 +8,7 @@
       "imgSrc":     ["https://stake-ropsten.leverj.io"],
       "styleSrc":   ["https://stake-ropsten.leverj.io"],
       "fontSrc":    ["https://stake-ropsten.leverj.io"],
-      "scriptSrc":  ["'unsafe-eval'","https://stake-ropsten.leverj.io"],
+      "scriptSrc":  ["https://stake-ropsten.leverj.io"],
       "mediaSrc":   ["https://stake-ropsten.leverj.io", "blob:"]
     }
   }

@@ -8,7 +8,7 @@
   * what happens to extra fee if not enough trading happened? destroy it.
   * Stake will have full control over FEE.sol
   */
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.19;
 
 
 import './SafeMath.sol';
@@ -16,14 +16,18 @@ import './Owned.sol';
 import './Validating.sol';
 import './Token.sol';
 import './Fee.sol';
+import './GenericCall.sol';
 
 
-contract Stake is Owned, Validating {
+contract Stake is Owned, Validating, GenericCall {
   using SafeMath for uint;
 
   event StakeEvent(address indexed user, uint levs, uint startBlock, uint endBlock);
+
   event RedeemEvent(address indexed user, uint levs, uint feeEarned, uint startBlock, uint endBlock);
+
   event FeeCalculated(uint feeCalculated, uint feeReceived, uint weiReceived, uint startBlock, uint endBlock);
+
   event StakingInterval(uint startBlock, uint endBlock);
 
   // User address to (lev tokens)*(blocks left to end)
@@ -64,6 +68,11 @@ contract Stake is Owned, Validating {
 
   modifier isDoneStaking {
     require(block.number >= endBlock);
+    _;
+  }
+
+  modifier isAllowed{
+    require(isOwner[msg.sender]);
     _;
   }
 
