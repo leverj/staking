@@ -80,7 +80,7 @@ The audit report is focused on the following key areas - though this is not an e
 
 ### Major
 
-- **Not protecting against overflowing balances for Fee token** - `Security` `Fee.sol` is a `StandardToken` which has an optional line commented out which checks for overflowing balances. This is unnecessary if you have a token with a fixed total supply, but should be required when you are minting new tokens and increasing the total supply. `Fee.sol` can mint new tokens so overflows should be protected against. [#L16-L19](https://github.com/leverj/staking/blob/master/contracts/StandardToken.sol#L16-L19]) [#L29](https://github.com/leverj/staking/blob/master/contracts/StandardToken.sol#L29]) ... [View on GitHub](https://github.com/BlockchainLabsNZ/staking-contracts-audit/issues/4)
+- None found
 
 ### Critical
 
