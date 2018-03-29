@@ -70,6 +70,25 @@ contract('Calculate Fee Tokens', (accounts) => {
   });
 
 
+  it('admin can set the fee calculated flag', async function () {
+    expect(await stake.feeCalculated.call()).to.eql(false);
+    await stake.revertFeeCalculatedFlag(true, { from: accounts[0] });
+    expect(await stake.feeCalculated.call()).to.eql(true);
+    await stake.revertFeeCalculatedFlag(false, { from: accounts[0] });
+    expect(await stake.feeCalculated.call()).to.eql(false);
+  });
+
+  it('vandal can\'t set the fee calculated flag', async function () {
+    expect(await stake.feeCalculated.call()).to.eql(false);
+    try {
+      await stake.revertFeeCalculatedFlag(true, { from: accounts[7] });
+      expect().fail("should not pass");
+    } catch (e) {
+      expect(e.message).to.not.eql("should not pass");
+      expect(await stake.feeCalculated.call()).to.eql(false);
+    }
+  });
+
   it('Stake contract should be able to calculate total Fee Tokens based on trading', async function () {
     let walletBalance = (await web3.eth.getBalance(wallet));
     stake             = await Stake.deployed();
@@ -195,6 +214,27 @@ contract('Stake setup', (accounts) => {
     await forceMine(new BN(300));
     await sendFeesToSelf(stake.address, await stake.owners(0), fee, 1000);
     await web3.eth.sendTransaction({from: user1(accounts), to: stake.address, value: 10000000});
+  });
+
+  it('constant function, version, returns as expected', async function () {
+    expect(await stake.version.call()).to.eql("1.0.0");
+  });
+
+
+  it('admin can change wallet address', async function () {
+    expect(await stake.wallet.call(), "Deployed Wallet Address").to.eql(accounts[accounts.length - 1]);
+    await stake.setWallet(accounts[6], { from: accounts[0] });
+    expect(await stake.wallet.call(), "New Wallet Address").to.eql(accounts[6]);
+  });
+
+  it('vandal can\'t change the wallet address', async function () {
+    expect(await stake.wallet.call()).to.eql(accounts[6]);
+    try {
+      await stake.setWallet(accounts[7], { from: accounts[7] });
+      expect().fail("should not pass");
+    } catch (e) {
+      expect(e.message).to.not.eql("should not pass");
+    }
   });
 
   it('should fail to reset if there are stakes left', async function () {
