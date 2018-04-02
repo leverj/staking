@@ -19,10 +19,14 @@ async function deploy() {
   }
 
   async function provision() {
-    console.log('Setting the fee token in Stake.sol...');
-    await deploymentUtil.sendTx(stake, stake.methods.setFeeToken(fee._address));
-    console.log('Setting the minter in Fee.sol...');
-    await deploymentUtil.sendTx(fee, fee.methods.setMinter(stake._address));
+    if (await stake.methods.feeToken().call() !== fee._address) {
+      console.log('Setting the fee token in Stake.sol...');
+      await deploymentUtil.sendTx(stake, stake.methods.setFeeToken(fee._address));
+    }
+    if (await fee.methods.minter().call() !== stake._address) {
+      console.log('Setting the minter in Fee.sol...');
+      await deploymentUtil.sendTx(fee, fee.methods.setMinter(stake._address));
+    }
   }
 
   async function createContracts() {
