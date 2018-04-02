@@ -69,6 +69,8 @@ module.exports = (function util() {
     affirm(contracts && Array.isArray(contracts), 'Invalid contracts')
     for (let i = 0; i < contracts.length; i++) {
       let contract = contracts[i];
+      let isOwner  = await contract.methods.isOwner(deployer.address).call()
+      if (!isOwner) continue
       console.log(`Removing the owner in ${contract._address}...`);
       await util.sendTx(contract, contract.methods.removeOwner(deployer.address))
     }

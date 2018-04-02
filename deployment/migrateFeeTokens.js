@@ -5,6 +5,7 @@ module.exports = function () {
   let web3, previousFee, newFee, previousFeeAddress, newFeeAddress, abi, deploymentUtil
 
   migration.migrate = async function migrate(_previousFeeAddress, _newFeeAddress, _abi, _deploymentUtil) {
+    if(!_previousFeeAddress) return
     affirm(_deploymentUtil, 'provide _deploymentUtil')
     web3 = _deploymentUtil.web3()
     affirm(web3.utils.isAddress(_previousFeeAddress), 'Invalid previous address')
