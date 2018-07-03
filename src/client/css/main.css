@@ -430,24 +430,26 @@ h4 {
     background: rgba(252, 248, 227, 1);
     color: #8a6d3b;
     position: fixed;
-    bottom: -100%;
-    opacity: 0.8;
+    bottom: 10%;
+    opacity: 1;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
     height: 80%;
     z-index: 9;
     transition: all 0.5s ease;
+    display: none;
   }
 
   .disclaimer-container {
     padding: 40px 25px;
-    max-height: 550px;
+    max-height: 600px;
     overflow: hidden;
   }
 
   .disclaimer-container .logo {
     padding-top: 0;
+    margin-bottom: 20px;
   }
 
   .disclaimer-modal .warning {
@@ -475,7 +477,7 @@ h4 {
     overflow: auto;
     margin: 0 auto;
     max-width: 1000px;
-    max-height: 450px;
+    max-height: 480px;
   }
 
   .disclaimer-modal .disclaimer-buttons {
@@ -485,25 +487,17 @@ h4 {
   .disclaimer-modal .disclaimer-buttons .button {
     display: inline-block;
     border: none;
+    border-radius: 1px;
     padding: 8px 42px;
-    color: white;
-    background-color: black;
+    color: #ffffff;
+    background: #FD8900;
     text-decoration: none;
-  }
-
-  .disclaimer-modal .disclaimer-buttons .button + .button {
-    margin-left: 4px;
   }
 
   @media screen and (max-width: 768px) {
     .disclaimer-content {
       max-height: 470px;
     }
-  }
-
-  .disclaimer-modal.active {
-    opacity: 1;
-    bottom: 10%;
   }
 
   .close-button {

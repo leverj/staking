@@ -111,10 +111,10 @@ module.exports = (function () {
     acceptButton = $(".disclaimer-modal .accept-disclaimer-button");
     disclaimerModal = $(".disclaimer-modal");
 
-
-    // opening modal
+    // just open the modal
     body.addClass("disclaimer-open");
     disclaimerModal.addClass("active");
+    //////////////////////
 
     acceptButton.on("click", function () {
       disclaimerModal.removeClass("active");
@@ -124,24 +124,22 @@ module.exports = (function () {
   }
 
   $(document).ready(function () {
-    init();
+    client.showDisclaimerModal(init);
   });
 
   function init() {
-    client.showDisclaimerModal(function() {
-      client.showLoading();
-      client.stakingForm();
-      client.toggleModal();
-      client.detectDevice();
-      client.rememberState();
-      if (!contract.isMetaMask()) {
-        $("#choice-metamask").attr("disabled", true);
-        $("#choice-manual").prop("checked", true)
-      }
-      client.setup();
-      client.setEvents();
-      client.removeLoading();
-    });
+    client.showLoading();
+    client.stakingForm();
+    client.toggleModal();
+    client.detectDevice();
+    client.rememberState();
+    if (!contract.isMetaMask()) {
+      $("#choice-metamask").attr("disabled", true);
+      $("#choice-manual").prop("checked", true)
+    }
+    client.setup();
+    client.setEvents();
+    client.removeLoading();
   }
 
   client.setup = function () {
