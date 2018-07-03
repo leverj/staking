@@ -85,6 +85,13 @@ module.exports = (function () {
     console.log("client.detectDevice function");
   };
 
+  client.showLoading = function () {
+    let overlay;
+
+    overlay = $('.overlay');
+    overlay.removeClass('overlay__invisible');
+  };
+
   client.removeLoading = function () {
     let overlay;
 
@@ -92,6 +99,28 @@ module.exports = (function () {
     setTimeout(function () {
       overlay.addClass('overlay__invisible');
     }, 3000);
+  };
+
+  client.showDisclaimerModal = function (callback) {
+    let body;
+    let acceptButton;
+    let disclaimerModal;
+    let cb = callback;
+
+    body = $("body");
+    acceptButton = $(".disclaimer-modal .accept-disclaimer-button");
+    disclaimerModal = $(".disclaimer-modal");
+
+
+    // opening modal
+    body.addClass("disclaimer-open");
+    disclaimerModal.addClass("active");
+
+    acceptButton.on("click", function () {
+      disclaimerModal.removeClass("active");
+      body.removeClass("disclaimer-open");
+      cb();
+    });
   }
 
   $(document).ready(function () {
@@ -99,18 +128,21 @@ module.exports = (function () {
   });
 
   function init() {
-    client.stakingForm();
-    client.toggleModal();
-    client.detectDevice();
-    client.rememberState();
-    if (!contract.isMetaMask()) {
-      $("#choice-metamask").attr("disabled", true);
-      $("#choice-manual").prop("checked", true)
-    }
-    client.setup();
-    client.setEvents();
-    client.removeLoading();
-    }
+    client.showDisclaimerModal(function() {
+      client.showLoading();
+      client.stakingForm();
+      client.toggleModal();
+      client.detectDevice();
+      client.rememberState();
+      if (!contract.isMetaMask()) {
+        $("#choice-metamask").attr("disabled", true);
+        $("#choice-manual").prop("checked", true)
+      }
+      client.setup();
+      client.setEvents();
+      client.removeLoading();
+    });
+  }
 
   client.setup = function () {
     $("#user-id").val(contract.user);

@@ -14,7 +14,7 @@
   <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
 </head>
 <body>
-  <div class="overlay">
+  <div class="overlay overlay__invisible">
 
     <h2 class="overlay__text">Loading</h2>
 
@@ -111,6 +111,50 @@
 
     </div>
     <a href="#" class="close-button"><i class="fa fa-times" aria-hidden="true"></i></a>
+  </div>
+
+
+  <div class="disclaimer-modal">
+    <div class="disclaimer-container">
+      <div class="logo">
+        <img src="./img/logo.svg" alt="">
+      </div>
+
+      <div class="disclaimer-content">
+        <h3><i class="fa fa-exclamation-triangle"></i> READ THIS BEFORE STAKING YOUR LEV TOKENS</h3>
+        <p>
+          By clicking Continue below, you acknowledge that you understand the following:
+        </p>
+        <ul>
+          <li>
+            I understand that this app is guiding me through the staking process and is not in possession of any private keys to conduct any operations related to approval or staking of LEV tokens.
+          </li>
+          <li>
+            I understand that in order to begin the staking process I need to already own LEV tokens, and have access to the Ethereum account in possession of the LEV tokens.
+          </li>
+          <li>
+            I understand that when I approve LEV to be staked in this app, I will be sending a transaction to the LEV token smart contract address.
+          </li>
+          <li>
+            I understand that when I stake my LEV in this app, I will by sending my LEV tokens to a Staking Contract smart contract address, where they will be locked until the end of the current staking period (up to 1 week).
+          </li>
+          <li>
+            I understand that at the end of the staking period, I will receive any FEE tokens, as well as the LEV tokens staked, to the Ethereum address that I staked from
+          </li>
+          <li>
+            I understand that I am responsible for Approving and Staking my LEV tokens with MetaMask or Manually (with MyEtherWallet, Jaxx, Parity, Mist, etc).
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer-buttons">
+      <a href="#" class="button accept-disclaimer-button">
+        Accept
+      </a>
+      <a href="#" class="button deny-disclaimer-button">
+        Cancel
+      </a>
+    </div>
   </div>
 
   <div class="browser-detection-overlay">
