@@ -85,20 +85,14 @@ module.exports = (function () {
     console.log("client.detectDevice function");
   };
 
-  client.showLoading = function () {
-    let overlay;
-
-    overlay = $('.overlay');
-    overlay.removeClass('overlay__invisible');
-  };
-
   client.removeLoading = function () {
     let overlay;
 
     overlay = $('.overlay');
-    setTimeout(function () {
-      overlay.addClass('overlay__invisible');
-    }, 3000);
+    overlay.addClass('overlay__invisible');
+    // setTimeout(function () {
+
+    // }, 500);
   };
 
   client.showDisclaimerModal = function (callback) {
@@ -125,10 +119,10 @@ module.exports = (function () {
 
   $(document).ready(function () {
     client.showDisclaimerModal(init);
+    client.removeLoading();
   });
 
   function init() {
-    client.showLoading();
     client.stakingForm();
     client.toggleModal();
     client.detectDevice();
@@ -139,7 +133,6 @@ module.exports = (function () {
     }
     client.setup();
     client.setEvents();
-    client.removeLoading();
   }
 
   client.setup = function () {
