@@ -89,13 +89,37 @@ module.exports = (function () {
     let overlay;
 
     overlay = $('.overlay');
-    setTimeout(function () {
-      overlay.addClass('overlay__invisible');
-    }, 3000);
+    overlay.addClass('overlay__invisible');
+    // setTimeout(function () {
+
+    // }, 500);
+  };
+
+  client.showDisclaimerModal = function (callback) {
+    let body;
+    let acceptButton;
+    let disclaimerModal;
+    let cb = callback;
+
+    body = $("body");
+    acceptButton = $(".disclaimer-modal .accept-disclaimer-button");
+    disclaimerModal = $(".disclaimer-modal");
+
+    // just open the modal
+    body.addClass("disclaimer-open");
+    disclaimerModal.addClass("active");
+    //////////////////////
+
+    acceptButton.on("click", function () {
+      disclaimerModal.removeClass("active");
+      body.removeClass("disclaimer-open");
+      cb();
+    });
   }
 
   $(document).ready(function () {
-    init();
+    client.showDisclaimerModal(init);
+    client.removeLoading();
   });
 
   function init() {
@@ -109,8 +133,7 @@ module.exports = (function () {
     }
     client.setup();
     client.setEvents();
-    client.removeLoading();
-    }
+  }
 
   client.setup = function () {
     $("#user-id").val(contract.user);

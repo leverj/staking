@@ -418,6 +418,92 @@ h4 {
     margin-bottom: 15px;
   }
 
+  body.disclaimer-open > * {
+    display: none;
+  }
+
+  body.disclaimer-open .disclaimer-modal {
+    display: block;
+  }
+
+  .disclaimer-modal {
+    background: rgba(252, 248, 227, 1);
+    color: #8a6d3b;
+    position: fixed;
+    bottom: 10%;
+    opacity: 1;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 80%;
+    z-index: 9;
+    transition: all 0.5s ease;
+    display: none;
+  }
+
+  .disclaimer-container {
+    padding: 40px 25px;
+    max-height: 600px;
+    overflow: hidden;
+  }
+
+  .disclaimer-container .logo {
+    padding-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .disclaimer-modal .warning {
+    text-align: center;
+  }
+
+  .disclaimer-modal .warning img{
+    width: 120px;
+  }
+
+  .disclaimer-modal li{
+    text-decoration: none;
+    margin-left: 25px;
+  }
+
+  .disclaimer-modal li {
+    margin-bottom: 15px;
+  }
+
+  .disclaimer-modal h3, .disclaimer-modal p {
+    margin-bottom: 30px;
+  }
+
+  .disclaimer-content {
+    overflow: auto;
+    margin: 0 auto;
+    max-width: 1000px;
+    max-height: 480px;
+  }
+
+  .disclaimer-content h3 i {
+    font-size: 2rem;
+  }
+
+  .disclaimer-modal .disclaimer-buttons {
+    text-align: center;
+  }
+
+  .disclaimer-modal .disclaimer-buttons .button {
+    display: inline-block;
+    border: none;
+    border-radius: 1px;
+    padding: 8px 42px;
+    color: #ffffff;
+    background: #FD8900;
+    text-decoration: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .disclaimer-content {
+      max-height: 470px;
+    }
+  }
+
   .close-button {
     position: absolute;
     top: 15px;
