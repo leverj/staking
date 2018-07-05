@@ -90,9 +90,6 @@ module.exports = (function () {
 
     overlay = $('.overlay');
     overlay.addClass('overlay__invisible');
-    // setTimeout(function () {
-
-    // }, 500);
   };
 
   client.showDisclaimerModal = function (callback) {
@@ -234,17 +231,43 @@ module.exports = (function () {
     }, 2500);
   }
 
-  function showClick() {
+  function showClick(res) {
     // if(errorFlag) return;
     // $(this).addClass("hidden");
-    let $element = $(this)
+    let $element = $(this);
     $element.parent().find(".eth-info").addClass("active");
-    $element.nextAll(".action-button").removeClass("hidden");
     $element.hasClass("show") ? $element.addClass("hidden") : "";
+
+    if (current() === 1) {
+      const userInfo = contract.getUserInfo();
+      if (userInfo.approved === 0 && userInfo.lev === 0) {
+        $element.nextAll(".action-button").addClass("hidden");
+      } else {
+        $element.nextAll(".action-button").removeClass("hidden");
+      }
+    }
+
   }
 
   function nextScreen(x) {
     if (animating) return false;
+
+    if (x === 2) {
+      // currently at Step 2
+      const userInfo = contract.getUserInfo();
+      if (userInfo.approved === 0) {
+        handle({
+          message: 'Not good1'
+        });
+      } else if (userInfo.lev === 0) {
+        handle({
+          message: 'Not good2'
+        });
+      }
+
+      return false;
+    }
+
     animating = true;
     let $fieldset = $("fieldset");
 
