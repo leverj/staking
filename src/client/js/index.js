@@ -62,7 +62,7 @@ module.exports = (function () {
     let htmlBody;
 
     closeButton = $(".close-button");
-    openModal = $(".js-open-modal");
+    openModal = $(".help-modal");
     modalBody = $(".instructions");
     htmlBody = $("html, body");
 

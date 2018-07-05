@@ -155,11 +155,12 @@
   </div>
 
   <div class="browser-detection-overlay">
-    <h1 class="browser-detection-overlay__title">It seems like your browser does not support the latest features used in this application. Please upgrade your browser and then return to the page.</h1>
+    <h1 class="browser-detection-overlay__title">
+      It seems like your browser does not support the latest features used in this application. Please upgrade your browser and then return to the page.
+    </h1>
   </div>
 
   <div class="staking-container">
-
     <div class="logo">
       <img src="./img/logo.svg" alt="">
       <!--<div class="beta-container">BETA</div>-->
@@ -167,15 +168,15 @@
 
     <h1 class="app-title">Leverj staking app</h1>
 
-    <div class="help-button js-open-modal">
-      ?
+    <div class="help-button help-modal">
+      <i class="fa fa-question-circle"></i>
     </div>
 
     <div class="staking-status">
       <h3 class="staking-status__heading" id="staking-status"></h3>
     </div>
-    <form id="stakingForm">
 
+    <form id="stakingForm">
       <ul id="progressbar">
         <li class="active activated lev-count">Welcome</li>
         <li class="lev-count">User Information</li>
@@ -184,41 +185,36 @@
         <li class="lev-count">Confirmation</li>
       </ul>
 
-      <div class="fieldset-container">
-
+      <div class="staking-steps fieldset-container">
           <fieldset>
-
             <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-            <h3 class="staking-subtitle">For instructions, please click on the help icon at any point during the process. In the
-              next screen you will have the option to choose to go through the staking wizard through Metamask (recommended) or
-              manually.</h3>
-
-            <h3 class="staking-subtitle">Would you like to use directly through Metamask or would you like to
-              go through the manual wizard?</h3>
+            <p>For instructions, please click on the <a href="#" class="help-modal"><i class="fa fa-question-circle"></i></a> icon at any point during the process.</p>
+            <p>Would you like to stake LEV through Metamask or would you like to go through the manual wizard?</p>
 
             <div class="form-field__container">
               <div class="form-field">
                 <input type="radio" checked id="choice-metamask" name="stake">
                 <label for="choice-metamask" class="text--white">Stake using Metamask</label>
               </div>
-
               <div class="form-field">
                 <input type="radio" id="choice-manual" name="stake">
-                <label for="choice-manual" class="text--white">Stake manually</label>
+                <label for="choice-manual" class="text--white">Stake manually (MyEtherWallet, Parity, Mist, Jaxx)</label>
               </div>
             </div>
 
             <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
             <div class="error-container"></div>
-
           </fieldset>
 
           <fieldset>
             <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-            <h3 class="staking-subtitle">To begin, please enter your Etherum address below. For any help, please click on the
-              help icon at any point during the process</h3>
-            <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
-            <div class="error-container"></div>
+            <p>To begin, please enter your Etherum address below. For any help, please click on the
+              help icon at any point during the process</p>
+
+            <div class="form-field__container">
+              <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
+              <div class="error-container"></div>
+            </div>
 
             <div class="eth-info user-info"></div>
             <input type="button" name="previous" class="previous action-button" value="Previous"/>
