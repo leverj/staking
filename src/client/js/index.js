@@ -63,7 +63,7 @@ module.exports = (function () {
 
     closeButton = $(".close-button");
     openModal = $(".help-modal");
-    modalBody = $(".instructions");
+    modalBody = $("#instructions-modal");
     htmlBody = $("html, body");
 
     openModal.on("click", function () {
@@ -99,17 +99,17 @@ module.exports = (function () {
     let cb = callback;
 
     body = $("body");
-    acceptButton = $(".disclaimer-modal .accept-disclaimer-button");
-    disclaimerModal = $(".disclaimer-modal");
+    acceptButton = $("#disclaimer-modal .accept-disclaimer-button");
+    disclaimerModal = $("#disclaimer-modal");
 
     // just open the modal
-    body.addClass("disclaimer-open");
+    body.addClass("modal-open");
     disclaimerModal.addClass("active");
     //////////////////////
 
     acceptButton.on("click", function () {
       disclaimerModal.removeClass("active");
-      body.removeClass("disclaimer-open");
+      body.removeClass("modal-open");
       cb();
     });
   }
@@ -162,9 +162,19 @@ module.exports = (function () {
     clipboard.writeText(text);
   }
 
+  function setupManual(isManual) {
+    if (isManual) {
+      $(".show-on-manual").removeClass('hidden');
+    } else {
+      $(".show-on-manual").addClass('hidden');
+    }
+  }
+
   function chooseMethod() {
     let self = this;
     let isManual = $("#choice-manual").is(":checked");
+    setupManual(isManual);
+
     contract.setManual(isManual).then(function () {
       $("#user-id").attr("readonly", !isManual).val(contract.user);
     })
@@ -265,7 +275,7 @@ module.exports = (function () {
         });
       }
 
-      return false;
+      // return false;
     }
 
     animating = true;

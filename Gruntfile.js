@@ -93,7 +93,7 @@ module.exports = function (grunt) {
     sass: {
       options: {
         implementation: sass,
-        sourceMap: false
+        sourceMap: true
       },
       dist: {
         files: {

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="./css/customScrollBar.css">
-  <link rel="stylesheet" type="text/css" href="./css/main.css">
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
   <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
@@ -15,9 +15,7 @@
 </head>
 <body>
   <div class="overlay">
-
     <h2 class="overlay__text">Loading</h2>
-
     <div class="overlay__content">
       <svg class="loader">
         <filter id="blur">
@@ -55,73 +53,20 @@
                 stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
       </svg>
     </div>
-
   </div>
 
-  <div class="instructions">
-
-    <div class="instructions-container">
-
-      <div class="instructions-content" >
-        <h3>Welcome to the Leverj staking app. The LEV staking process requires two main actions:</h3>
-
-      <ol>
-        <li>
-          To approve LEV for being staked (this requires that you have LEV!)
-        </li>
-
-        <li>
-          To stake the amount of LEV for the remainder of the current staking period (this requires approval from 1)
-        </li>
-      </ol>
-      <p>
-        Below is a guide to help you through the steps on this app:
-
-      </p>
-
-      <ul>
-        <li>
-          <strong>Step 1: Choose method</strong> <br>
-          In this step, you will choose whether you want to engage in staking automatically via MetaMask wallet, or to
-          manually copy transaction parameters for approving and staking
-        </li>
-
-        <li>
-            <strong>Step 2: Get account information</strong> <br>
-            In this step, you provide the Ethereum address that contains your LEV that you want to stake. The app will grab the information on your account relevant for this purpose.
-        </li>
-
-        <li>
-          <strong>Step 3: Approve LEV in account</strong> <br>
-          In this step, you can choose to approve some of the LEV in your address to be staked in the current period. This will give you some transaction parameters that you need to copy into your wallet of choice. Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
-        </li>
-
-        <li>
-          <strong>Step 4: Stake Approved LEV </strong><br>
-          In this step, you will then stake the amount of approved LEV on the account. This will provide you the data field and account needed to finalize the staking of your LEV in the contract.
-          Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
-        </li>
-
-        <li>
-          <strong>Step 5: Confirmation</strong> <br>
-          Here you can see that the staking action from Step 4 has successfully been executed. This step will show the amount of LEV staked and give you a link to the relevant transaction(s) on the blockchain.
-        </li>
-      </ul>
-      </div>
-
-    </div>
-    <a href="#" class="close-button"><i class="fa fa-times" aria-hidden="true"></i></a>
+  <div class="modal-overlay">
   </div>
 
-
-  <div class="disclaimer-modal">
-    <div class="disclaimer-container">
-      <div class="logo">
-        <img src="./img/logo.svg" alt="">
+  <div id="disclaimer-modal" class="modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="logo">
+          <img src="./img/logo.svg" alt="">
+        </div>
+        <h3 class="color-primary"><i class="fa fa-exclamation-triangle"></i> READ THIS BEFORE STAKING YOUR LEV TOKENS</h3>
       </div>
-
-      <div class="disclaimer-content">
-        <h3><i class="fa fa-exclamation-triangle"></i> READ THIS BEFORE STAKING YOUR LEV TOKENS</h3>
+      <div class="modal-body">
         <p>
           By clicking Continue below, you acknowledge that you understand the following:
         </p>
@@ -146,12 +91,63 @@
           </li>
         </ul>
       </div>
+      <div class="modal-footer text-center">
+        <a href="#" class="button accept-disclaimer-button">
+          Continue
+        </a>
+      </div>
     </div>
-    <div class="disclaimer-buttons">
-      <a href="#" class="button accept-disclaimer-button">
-        Continue
-      </a>
+  </div>
+
+  <div id="instructions-modal" class="modal">
+    <div class="modal-container justify-center">
+      <div class="modal-header">
+        <h3>Welcome to the Leverj staking app. The LEV staking process requires two main actions:</h3>
+      </div>
+      <div class="modal-body">
+        <ol>
+          <li>
+            To approve LEV for being staked (this requires that you have LEV!)
+          </li>
+
+          <li>
+            To stake the amount of LEV for the remainder of the current staking period (this requires approval from 1)
+          </li>
+        </ol>
+        <p>
+          Below is a guide to help you through the steps on this app:
+        </p>
+        <ul>
+          <li>
+            <strong>Step 1: Choose method</strong> <br>
+            In this step, you will choose whether you want to engage in staking automatically via MetaMask wallet, or to
+            manually copy transaction parameters for approving and staking
+          </li>
+
+          <li>
+              <strong>Step 2: Get account information</strong> <br>
+              In this step, you provide the Ethereum address that contains your LEV that you want to stake. The app will grab the information on your account relevant for this purpose.
+          </li>
+
+          <li>
+            <strong>Step 3: Approve LEV in account</strong> <br>
+            In this step, you can choose to approve some of the LEV in your address to be staked in the current period. This will give you some transaction parameters that you need to copy into your wallet of choice. Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
+          </li>
+
+          <li>
+            <strong>Step 4: Stake Approved LEV </strong><br>
+            In this step, you will then stake the amount of approved LEV on the account. This will provide you the data field and account needed to finalize the staking of your LEV in the contract.
+            Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
+          </li>
+
+          <li>
+            <strong>Step 5: Confirmation</strong> <br>
+            Here you can see that the staking action from Step 4 has successfully been executed. This step will show the amount of LEV staked and give you a link to the relevant transaction(s) on the blockchain.
+          </li>
+        </ul>
+      </div>
     </div>
+    <a href="#" class="close-button"><i class="fa fa-times" aria-hidden="true"></i></a>
   </div>
 
   <div class="browser-detection-overlay">
@@ -186,90 +182,88 @@
       </ul>
 
       <div class="staking-steps fieldset-container">
-          <fieldset>
-            <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-            <p>For instructions, please click on the <a href="#" class="help-modal"><i class="fa fa-question-circle"></i></a> icon at any point during the process.</p>
-            <p>Would you like to stake LEV through Metamask or would you like to go through the manual wizard?</p>
+        <fieldset>
+          <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+          <p>For instructions, please click on the <a href="#" class="help-modal"><i class="fa fa-question-circle"></i></a> icon at any point during the process.</p>
+          <p>Would you like to stake LEV through Metamask or would you like to go through the manual wizard?</p>
 
-            <div class="form-field__container">
-              <div class="form-field">
-                <input type="radio" checked id="choice-metamask" name="stake">
-                <label for="choice-metamask" class="text--white">Stake using Metamask</label>
-              </div>
-              <div class="form-field">
-                <input type="radio" id="choice-manual" name="stake">
-                <label for="choice-manual" class="text--white">Stake manually (MyEtherWallet, Parity, Mist, Jaxx)</label>
-              </div>
+          <div class="form-field__container">
+            <div class="form-field">
+              <input type="radio" checked id="choice-metamask" name="stake">
+              <label for="choice-metamask" class="text--white">Stake using Metamask</label>
             </div>
-
-            <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
-            <div class="error-container"></div>
-          </fieldset>
-
-          <fieldset>
-            <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-            <p>You have chosen to stake Manually. This means you will build the approval and staking transactions yourself in a wallet such as MyEtherWallet, Mist, Parity, or Jaxx.</p>
-            <p>Any transactions you conduct should be done from a wallet that you control the private key to, NOT an exchange wallet.</p>
-            <p>To begin, please enter the Ethereum address you will be using to approve and stake your LEV tokens:</p>
-            <p>For instructions, please click on the <a href="#" class="help-modal"><i class="fa fa-question-circle"></i></a> icon at any point during the process.</p>
-
-            <div class="form-field__container">
-              <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
-              <div class="error-container"></div>
+            <div class="form-field">
+              <input type="radio" id="choice-manual" name="stake">
+              <label for="choice-manual" class="text--white">Stake manually (MyEtherWallet, Parity, Mist, Jaxx)</label>
             </div>
+          </div>
 
-            <div class="eth-info user-info"></div>
-            <input type="button" name="previous" class="previous action-button" value="Previous"/>
-            <input type="button" name="show" data-id="user-info-display-action" class="show action-button" value="Show Info"/>
-            <!-- <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
-                   value="Refresh"/>  -->
-            <input type="button" name="next" class="next action-button hidden " value="Next"/>
-          </fieldset>
+          <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
+          <div class="error-container"></div>
+        </fieldset>
 
-          <fieldset>
-            <div class="eth-info active user-info"></div>
-            <h2 class="staking-title"></h2>
-            <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
-            <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
+        <fieldset>
+          <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+          <p class="show-on-manual hidden">You have chosen to stake Manually. This means you will build the approval and staking transactions yourself in a wallet such as MyEtherWallet, Mist, Parity, or Jaxx.</p>
+          <p class="show-on-manual hidden">Any transactions you conduct should be done from a wallet that you control the private key to, NOT an exchange wallet.</p>
+          <p>To begin, please enter the Ethereum address you will be using to approve and stake your LEV tokens:</p>
+          <p>For instructions, please click on the <a href="#" class="help-modal"><i class="fa fa-question-circle"></i></a> icon at any point during the process.</p>
+
+          <div class="form-field__container">
+            <input type="" name="cpass" id="user-id" placeholder="Etherum Address"/>
             <div class="error-container"></div>
+          </div>
 
-            <div class="eth-info" id="approve-tx-info"></div>
+          <div class="eth-info user-info"></div>
+          <input type="button" name="previous" class="previous action-button" value="Previous"/>
+          <input type="button" name="show" data-id="user-info-display-action" class="show action-button" value="Show Info"/>
+          <!-- <input type="button" name="refresh" data-id="user-info-display-action" class="refresh action-button hidden"
+                 value="Refresh"/>  -->
+          <input type="button" name="next" class="next action-button hidden " value="Next"/>
+        </fieldset>
 
-            <input type="button" name="previous" class="previous action-button" value="Previous"/>
-            <input type="button" name="Approve" data-id="approve-action" class="approve action-button" value="Approve"/>
+        <fieldset>
+          <div class="eth-info active user-info"></div>
+          <h2 class="staking-title"></h2>
+          <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
+          <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
+          <div class="error-container"></div>
 
-            <input type="button" name="next" class="next action-button" value="Next"/>
-            <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
-          </fieldset>
+          <div class="eth-info" id="approve-tx-info"></div>
 
-          <fieldset>
+          <input type="button" name="previous" class="previous action-button" value="Previous"/>
+          <input type="button" name="Approve" data-id="approve-action" class="approve action-button" value="Approve"/>
 
-            <div class="eth-info active user-info"></div>
+          <input type="button" name="next" class="next action-button" value="Next"/>
+          <!-- <input type="button" name="next" class="next action-button hidden" value="Skip" /> -->
+        </fieldset>
 
-            <h2 class="staking-title"></h2>
-            <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
+        <fieldset>
 
-            <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
-            <div class="error-container"></div>
+          <div class="eth-info active user-info"></div>
 
-            <div class="eth-info" id="stake-tx-info"></div>
+          <h2 class="staking-title"></h2>
+          <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
 
-            <input type="button" name="previous" class="previous action-button" value="Previous"/>
-            <input type="button" name=" " class="approve action-button" id="stake-action" value="Stake"/>
-            <input type="button" name="next" class="next action-button hidden" value="Next"/>
+          <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
+          <div class="error-container"></div>
 
-          </fieldset>
+          <div class="eth-info" id="stake-tx-info"></div>
 
-          <fieldset>
+          <input type="button" name="previous" class="previous action-button" value="Previous"/>
+          <input type="button" name=" " class="approve action-button" id="stake-action" value="Stake"/>
+          <input type="button" name="next" class="next action-button hidden" value="Next"/>
 
-            <h2 class="user-info"></h2>
+        </fieldset>
 
-          </fieldset>
+        <fieldset>
+
+          <h2 class="user-info"></h2>
+
+        </fieldset>
 
       </div>
-
     </form>
-
   </div>
 
 <script src="./js/index.js"></script>

@@ -1,0 +1,53 @@
+.text-center {
+  text-align: center;
+}
+
+.color-primary {
+  color: $color-primary;
+}
+
+.app-title {
+  color: $color-white;
+  text-align: center;
+  text-transform: uppercase;
+  margin-top: 40px;
+}
+
+.button {
+  cursor: pointer;
+  display: inline-block;
+  background-color: $color-primary;
+  color: $color-white;
+  font-weight: bold;
+  border: none;
+  border-radius: 2px;
+  padding: 10px 18px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: $color-white;
+    background-color: $color-primary-hover;
+  }
+}
+
+.logo {
+  max-width: 100px;
+  position: relative;
+  margin: 0 auto;
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .beta-container {
+    position: absolute;
+    bottom: -8px;
+    right: -3px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+  }
+}
