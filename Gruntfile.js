@@ -18,7 +18,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd   : client,
-            src   : ['**/*'],
+            src   : ['**/*', '!**/scss/**'],
             dest  : dist + "/src/client"
           },
           {
