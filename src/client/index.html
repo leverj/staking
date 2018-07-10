@@ -174,7 +174,7 @@
 
     <form id="stakingForm">
       <ul id="progressbar">
-        <li class="current"><span>Welcome</span></li>
+        <li class="current reached"><span>Welcome</span></li>
         <li><span>User Information</span></li>
         <li><span>Approval</span></li>
         <li><span>Staking</span></li>
@@ -199,7 +199,9 @@
               </div>
             </div>
 
-            <input type="button" name="next" id="choose-action" class="action-button" value="Next"/>
+            <div class="actions">
+              <button type="button" id="choose-action" class="button action-button pull-right">Next</button>
+            </div>
             <div class="error-container"></div>
           </fieldset>
 
@@ -240,7 +242,6 @@
           </fieldset>
 
           <fieldset>
-
             <div class="eth-info active user-info"></div>
 
             <h2 class="staking-title"></h2>
@@ -254,13 +255,10 @@
             <input type="button" name="previous" class="previous action-button" value="Previous"/>
             <input type="button" name=" " class="approve action-button" id="stake-action" value="Stake"/>
             <input type="button" name="next" class="next action-button hidden" value="Next"/>
-
           </fieldset>
 
           <fieldset>
-
             <h2 class="user-info"></h2>
-
           </fieldset>
         </div>
       </div>

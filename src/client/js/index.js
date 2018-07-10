@@ -20,11 +20,11 @@ module.exports = (function () {
   client.stakingForm = function () {
 
     $(".next").click(function(){
-      goToStep(current() + 1);
+      goToStep(currentStep + 1);
     });
 
     $(".previous").click(function () {
-      goToStep(current() -1);
+      goToStep(currentStep -1);
     });
 
     $(".submit").click(function () {
@@ -162,7 +162,7 @@ module.exports = (function () {
     contract.setManual(isManual).then(function () {
       $("#user-id").attr("readonly", !isManual).val(contract.user);
     })
-      .then(goToStep.bind(self, current() + 1))
+      .then(goToStep.bind(self, currentStep + 1))
       .catch(handle);
   }
 
@@ -232,7 +232,7 @@ module.exports = (function () {
     $element.parent().find(".eth-info").addClass("active");
     $element.hasClass("show") ? $element.addClass("hidden") : "";
 
-    if (current() === 1) {
+    if (currentStep === 1) {
       const userInfo = contract.getUserInfo();
       if (userInfo.approved === 0 && userInfo.lev === 0) {
         $element.nextAll(".action-button").addClass("hidden");
@@ -255,9 +255,4 @@ module.exports = (function () {
     $('#progressbar li:lt(' + (currentStep + 1) + ')').addClass('reached');
     $('#progressbar li').eq(currentStep).addClass('current');
   }
-
-  function current(){
-    return currentStep;
-  }
-
 })();

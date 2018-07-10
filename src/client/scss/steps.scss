@@ -21,14 +21,26 @@
     display: inline-block;
     width: 100%;
     white-space: normal;
+    vertical-align: middle;
+    position: relative;
 
     h2 {
       margin-bottom: 12px;
     }
 
-    &.active {
-      display: block;
+    .actions {
+      margin-top: 40px;
+
+      &:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
     }
+  }
+
+  .error-container {
+    margin: 8px 0;
   }
 }
 
