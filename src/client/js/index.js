@@ -15,44 +15,28 @@ module.exports = (function () {
   let left;
   let opacity;
   let scale;
-  let animating;
-
+  let currentStep = 0;
 
   client.stakingForm = function () {
 
     $(".next").click(function(){
-      nextScreen(current() + 1);
+      goToStep(current() + 1);
     });
 
     $(".previous").click(function () {
-      let prevButton = $(this);
-      prevScreen(current() -1);
+      goToStep(current() -1);
     });
 
     $(".submit").click(function () {
       return false;
     })
 
-    $(".lev-count").click(function() {
-      let levCount = $(this).index();
-      let currentForm = $("fieldset:visible");
-      let currentIndex = currentForm.index();
+    $("#progressbar > li").click(function() {
+      if (!$(this).hasClass('reached')) return;
 
-     if($(this).hasClass("activated")) {
-       if(levCount > currentIndex) {
-         nextScreen(levCount);
-          $(this).prevAll(".activated").addClass("active");
-       }
-       else if(levCount === currentIndex){
-         return false;
-       }
-       else {
-         prevScreen(levCount);
-         $(this).nextAll(".active").removeClass("active");
-       }
-     }
+      let step = $(this).index();
+      goToStep(step);
     })
-
   };
 
   client.toggleModal = function () {
@@ -178,7 +162,7 @@ module.exports = (function () {
     contract.setManual(isManual).then(function () {
       $("#user-id").attr("readonly", !isManual).val(contract.user);
     })
-      .then(nextScreen.bind(self, current() + 1))
+      .then(goToStep.bind(self, current() + 1))
       .catch(handle);
   }
 
@@ -259,124 +243,21 @@ module.exports = (function () {
 
   }
 
-  function nextScreen(x) {
-    if (animating) return false;
+  function goToStep(step) {
+    if (step == currentStep) return false;
+    currentStep = step;
+    const fieldsetWidth = $('.fieldset-container').width();
+    $('.fieldset-container').css('transform', 'translateX(-' + (currentStep * fieldsetWidth) + 'px)');
+    // $('.fieldset-container fieldset').hide().eq(currentStep).show();
 
-    if (x === 2) {
-      // currently at Step 2
-      const userInfo = contract.getUserInfo();
-      if (userInfo.approved === 0) {
-        handle({
-          message: 'Not good1'
-        });
-      } else if (userInfo.lev === 0) {
-        handle({
-          message: 'Not good2'
-        });
-      }
-
-      // return false;
-    }
-
-    animating = true;
-    let $fieldset = $("fieldset");
-
-    let currentForm = $("fieldset:visible");
-    let nextIndex = x + currentForm;
-
-    nextForm = $fieldset.eq(x);
-
-    console.log(nextForm);
-
-    nextForm.addClass("next current form");
-
-    $("#progressbar li").eq($fieldset.index(nextForm)).addClass("active activated");
-    nextForm.show();
-    currentForm.animate({opacity: 0}, {
-      step: function (now, mx) {
-        scale = 1 - (1 - now) * 0.2;
-        left = (now * 50) + "%";
-        opacity = 1 - now;
-        currentForm.css({
-          'transform': 'scale(' + scale + ')',
-          'position': 'absolute'
-        });
-        nextForm.css({'left': left, 'opacity': opacity});
-      },
-      duration: 800,
-      complete: function () {
-        currentForm.hide();
-        animating = false;
-      },
-      easing: 'easeInOutBack'
-    });
-  }
-
-  function move(current, forward){
-    return Promise(function(resolve, reject){
-      $("#progressbar li").eq($("fieldset").index(nextForm)).addClass("active activated");
-      // $("fieldset").removeClass("active");
-      nextForm.addClass('active');
-      nextForm.show();
-      currentForm.animate({opacity: 0}, {
-        step: function (now, mx) {
-          scale = 1 - (1 - now) * 0.2;
-          left = (now * 50) + "%";
-          opacity = 1 - now;
-          currentForm.css({
-            'transform': 'scale(' + scale + ')',
-            'position': 'absolute'
-          });
-          nextForm.css({'left': left, 'opacity': opacity});
-        },
-        duration: 800,
-        complete: function () {
-          currentForm.hide();
-          animating = false;
-          resolve();
-        },
-        easing: 'easeInOutBack',
-      });
-    })
-  }
-
-  function prevScreen(x) {
-    if (animating) return false;
-    animating = true;
-    let $fieldset = $("fieldset");
-
-    let currentForm = $("fieldset:visible");
-    let prevIndex = x + currentForm;
-
-    previousForm = $fieldset.eq(x);
-
-    $("#progressbar li").eq($("fieldset").index(currentForm)).removeClass("active");
-
-    previousForm.show();
-    currentForm.animate({opacity: 0}, {
-      step: function (now, mx) {
-        //as the opacity of currentForm reduces to 0 - stored in "now"
-        //1. scale previousForm from 80% to 100%
-        scale = 0.8 + (1 - now) * 0.2;
-        //2. take currentForm to the right(50%) - from 0%
-        left = ((1 - now) * 50) + "%";
-        //3. increase opacity of previousForm to 1 as it moves in
-        opacity = 1 - now;
-        currentForm.css({'left': left});
-        previousForm.css({'transform': 'scale(' + scale + ')', 'opacity': opacity});
-      },
-      duration: 800,
-      complete: function () {
-        currentForm.hide();
-        animating = false;
-      },
-      //this comes from the custom easing plugin
-      easing: 'easeInOutBack'
-    });
+    $('#progressbar li').removeClass('passed current');
+    $('#progressbar li:lt(' + (currentStep) + ')').addClass('passed');
+    $('#progressbar li:lt(' + (currentStep + 1) + ')').addClass('reached');
+    $('#progressbar li').eq(currentStep).addClass('current');
   }
 
   function current(){
-    return $("fieldset:visible").index()
+    return currentStep;
   }
 
 })();

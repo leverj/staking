@@ -1,0 +1,96 @@
+#stakingForm {
+  margin: 50px auto;
+  text-align: center;
+}
+
+.staking-steps {
+  border: 0;
+  border-bottom: 1px solid $color-primary;
+  overflow: hidden;
+  padding: 30px 0;
+
+  .fieldset-container {
+    white-space: nowrap;
+    transform: translateX(0);
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+  }
+
+  fieldset {
+    border: none;
+    display: inline-block;
+    width: 100%;
+    white-space: normal;
+
+    h2 {
+      margin-bottom: 12px;
+    }
+
+    &.active {
+      display: block;
+    }
+  }
+}
+
+
+/*
+
+#stakingForm fieldset {
+  background: transparent;
+  border: 0 none;
+  box-sizing: border-box;
+  position: relative; }
+
+#stakingForm fieldset p {
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 10px;
+  text-align: left; }
+
+#stakingForm fieldset a {
+  color: #FD8900;
+  text-decoration: none; }
+
+#stakingForm fieldset i {
+  font-size: 1.0125rem; }
+
+#stakingForm fieldset:not(:first-of-type) {
+  display: none; }
+
+#stakingForm input, #stakingForm textarea {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+  color: #2C3E50;
+  font-size: 13px; }
+
+#stakingForm .action-button {
+  width: 100px;
+  background: #FD8900;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px 5px; }
+
+#stakingForm .action-button:hover, #stakingForm .action-button:focus {
+  box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+  outline: none; }
+
+.staking-title {
+  font-size: 20px;
+  text-transform: capitalize;
+  color: #fff;
+  margin-bottom: 10px; }
+
+.staking-subtitle {
+  font-weight: normal;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 15px; }*/
