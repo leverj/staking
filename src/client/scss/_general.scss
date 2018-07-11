@@ -43,7 +43,7 @@
 }
 
 
-.button {
+button {
   cursor: pointer;
   display: inline-block;
   background-color: $color-primary;
@@ -68,6 +68,18 @@
   }
 }
 
+input[type=text] {
+  padding: 12px 8px;
+  font-size: 1rem;
+
+  &:active,
+  &:focus,
+  &:visited {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 .error-container {
   display: none;
   padding: 10px 15px;
@@ -77,4 +89,36 @@
   color: $color-error;
 }
 
+.eth-info {
+  height: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.7s ease;
+  position: relative;
 
+  &.active {
+    min-height: 120px;
+    height: auto;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .user-info-heading {
+    color: $color-text-muted;
+    text-align: left;
+    margin: 15px 0;
+
+    span {
+      color: $color-white;
+      margin-left: 8px;
+
+      &.address {
+        word-break: break-all;
+      }
+    }
+
+    .icon-link {
+      float: right;
+    }
+  }
+}

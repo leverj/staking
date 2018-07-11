@@ -226,10 +226,8 @@ module.exports = (function () {
   }
 
   function showClick(res) {
-    // if(errorFlag) return;
-    // $(this).addClass("hidden");
     let $element = $(this);
-    $element.parent().find(".eth-info").addClass("active");
+    $element.closest('fieldset').find(".eth-info").addClass("active");
     $element.hasClass("show") ? $element.addClass("hidden") : "";
 
     if (currentStep === 1) {
@@ -246,7 +244,7 @@ module.exports = (function () {
   function goToStep(step) {
     if (step == currentStep) return false;
     currentStep = step;
-    const fieldsetWidth = $('.fieldset-container').width();
+    const fieldsetWidth = $('.staking-steps').width();
     $('.fieldset-container').css('transform', 'translateX(-' + (currentStep * fieldsetWidth) + 'px)');
     // $('.fieldset-container fieldset').hide().eq(currentStep).show();
 
