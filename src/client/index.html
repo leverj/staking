@@ -212,51 +212,56 @@
             <p>To begin, please enter the Ethereum address you will be using to approve and stake your LEV tokens:</p>
 
             <div class="form-field__container">
-              <input type="text" name="cpass" id="user-id" placeholder="Etherum Address"/>
+              <div class="input-button-wrapper">
+                <input type="text" name="cpass" id="user-id" placeholder="Etherum Address"/>
+                <button type="button" id="load-eth-info" class="show action-button" data-show="next-to-approve">Show Info</button>
+              </div>
+
               <div class="error-container"></div>
             </div>
 
             <div class="eth-info user-info"></div>
             <div class="actions">
-              <button type="button" type="button" class="previous action-button pull-left">Previous</button>
-              <button type="button" data-id="user-info-display-action" class="show action-button">Show Info</button>
-              <button type="button" class="next action-button hidden pull-right">Next</button>
+              <button type="button" class="previous action-button pull-left">Previous</button>
+              <button type="button" class="next action-button pull-right" disabled id="next-to-approve">Next</button>
             </div>
           </fieldset>
 
           <fieldset>
             <div class="eth-info active user-info"></div>
-            <h2 class="staking-title"></h2>
             <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
             <div class="form-field__container">
-              <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
+              <div class="input-button-wrapper">
+                <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
+                <button type="button" id="approve-action" class="show action-button" data-show="next-to-stake">Approve</button>
+              </div>
+              <div class="error-container"></div>
             </div>
-            <div class="error-container"></div>
 
             <div class="eth-info" id="approve-tx-info"></div>
 
             <div class="actions">
               <button type="button" class="previous action-button pull-left">Previous</button>
-              <button type="button" data-id="approve-action" class="approve action-button">Approve</button>
-              <button type="button" class="next action-button pull-right">Next</button>
+              <button type="button" class="next action-button pull-right" disabled id="next-to-stake">Next</button>
             </div>
           </fieldset>
 
           <fieldset>
             <div class="eth-info active user-info"></div>
-
             <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
             <div class="form-field__container">
-              <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
+              <div class="input-button-wrapper">
+                <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
+                <button type="button" class="approve action-button" id="stake-action">Stake</button>
+              </div>
+              <div class="error-container"></div>
             </div>
-            <div class="error-container"></div>
 
             <div class="eth-info" id="stake-tx-info"></div>
 
             <div class="actions">
-              <button type="button" class="previous action-button">Previous</button>
-              <button type="button" class="approve action-button" id="stake-action">Stake</button>
-              <button type="button" class="next action-button hidden pull-right">Next</button>
+              <button type="button" class="previous action-button pull-left">Previous</button>
+              <button type="button" class="next action-button pull-right" id="next-to-confirm">Next</button>
             </div>
           </fieldset>
 

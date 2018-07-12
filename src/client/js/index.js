@@ -32,7 +32,7 @@ module.exports = (function () {
     })
 
     $("#progressbar > li").click(function() {
-      if (!$(this).hasClass('reached')) return;
+      if (!$(this).hasClass("reached")) return;
 
       let step = $(this).index();
       goToStep(step);
@@ -72,8 +72,8 @@ module.exports = (function () {
   client.removeLoading = function () {
     let overlay;
 
-    overlay = $('.overlay');
-    overlay.addClass('overlay__invisible');
+    overlay = $(".overlay");
+    overlay.addClass("overlay__invisible");
   };
 
   client.showDisclaimerModal = function (callback) {
@@ -122,20 +122,20 @@ module.exports = (function () {
     $("#stake-tx-info").txInfo("stake");
     $("#approve-tx-info").txInfo("approve");
 
-    socket.on('state', async function (data) {
+    socket.on("state", async function (data) {
       let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
       $("#staking-status").text(text)
     })
-    socket.on('user-update', function (data) {
-      console.log('user-update');
-      displayUserInfo();
+    socket.on("user-update", function (data) {
+      console.log("user-update");
+      loadUserInfo.bind($("#approve-action"))();
     })
   };
 
   client.setEvents = function () {
     $("#choose-action").click(chooseMethod);
-    $("[data-id=user-info-display-action]").click(displayUserInfo);
-    $("[data-id=approve-action]").click(approve);
+    $("#load-eth-info").click(loadUserInfo);
+    $("#approve-action").click(approve);
     $("#stake-action").click(stake);
     $(".icon-link").click(copy);
     $(".suggested-count").click(updateWithSuggestedCount);
@@ -148,9 +148,9 @@ module.exports = (function () {
 
   function setupManual(isManual) {
     if (isManual) {
-      $(".show-on-manual").removeClass('hidden');
+      $(".show-on-manual").removeClass("hidden");
     } else {
-      $(".show-on-manual").addClass('hidden');
+      $(".show-on-manual").addClass("hidden");
     }
   }
 
@@ -159,45 +159,69 @@ module.exports = (function () {
     let isManual = $("#choice-manual").is(":checked");
     setupManual(isManual);
 
-    contract.setManual(isManual).then(function () {
-      $("#user-id").attr("readonly", !isManual).val(contract.user);
-    })
+    contract
+      .setManual(isManual)
+      .then(function () {
+        $("#user-id").attr("readonly", !isManual).val(contract.user);
+      })
       .then(goToStep.bind(self, currentStep + 1))
       .catch(handle);
   }
 
   function updateWithSuggestedCount() {
-    $("fieldset:visible").find('[name=gplus]').val($(this).data('value'))
+    $("fieldset:visible").find("[name=gplus]").val($(this).data("value"))
   }
 
-  function displayUserInfo() {
-    let user = $("#user-id").val();
-    contract.setUser(user);
+  function loadUserInfo() {
+    let userId = $("#user-id").val();
+    contract.setUser(userId);
+
     let self = this;
-    contract.updateUserInfo().then(function () {
-      updateUserInfo();
-      socket.emit('register', {userid: user})
-    }).then(showClick.bind(self))
+
+    const text = $(self).text();
+    $(self).html("<i class='fa fa-spinner fa-spin'></i>");
+
+    const ethInfo = $(self).closest("fieldset").find(".eth-info");
+    ethInfo.addClass("loading");
+
+    const buttons = $(self).closest("fieldset").find("button");
+    buttons.prop("disabled", true);
+
+    contract
+      .updateUserInfo()
+      .then(function() {
+        updateUserInfo();
+        socket.emit("register", { userid: userId })
+      })
+      .then(showClick.bind(self))
       .catch(handle)
+      .finally(function(){
+        $(self).text(text);
+        buttons.prop("disabled", false);
+        ethInfo.removeClass("loading");
+      });
   }
 
   function updateUserInfo() {
     let userInfo = contract.getUserInfo();
-    $("[name=lev-count]").text(userInfo.lev.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.lev).next().attr('href', userInfo.levLink);
-    $("[name=staked-count]").text(userInfo.staked.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.staked).next().attr('href', userInfo.stakedLink);
-    $("[name=approved-count]").text(userInfo.approved.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.approved).next().attr('href', userInfo.approvedLink);
-    $("[name=fee-count]").text(userInfo.fee.toLocaleString(undefined,{maximumFractionDigits:9})).data('value', userInfo.fee).next().attr('href', userInfo.feeLink);
+    $("[name=lev-count]").text(userInfo.lev.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.lev).next().attr("href", userInfo.levLink);
+    $("[name=staked-count]").text(userInfo.staked.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.staked).next().attr("href", userInfo.stakedLink);
+    $("[name=approved-count]").text(userInfo.approved.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.approved).next().attr("href", userInfo.approvedLink);
+    $("[name=fee-count]").text(userInfo.fee.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.fee).next().attr("href", userInfo.feeLink);
   }
 
   function approve() {
     let tokens = $("#approve-count").val() - 0;
     let self = this;
-    contract.getApproveInfo(tokens).then(function (info) {
-      $("#approve-address").text(info.address);
-      $("#approve-amount").text(info.amount);
-      $("#approve-gas").text(info.gas);
-      $("#approve-data").text(info.data);
-    }).then(() => contract.approve(tokens))
+    contract
+      .getApproveInfo(tokens)
+      .then(function (info) {
+        $("#approve-address").text(info.address);
+        $("#approve-amount").text(info.amount);
+        $("#approve-gas").text(info.gas);
+        $("#approve-data").text(info.data);
+      })
+      .then(() => contract.approve(tokens))
       .then(showClick.bind(self))
       .catch(handle);
   }
@@ -205,12 +229,15 @@ module.exports = (function () {
   function stake() {
     let tokens = $("#stake-count").val() - 0;
     let self = this;
-    contract.getStakeInfo(tokens).then(function (info) {
-      $("#stake-address").text(info.address);
-      $("#stake-amount").text(info.amount);
-      $("#stake-gas").text(info.gas);
-      $("#stake-data").text(info.data);
-    }).then(() => contract.stake(tokens))
+    contract
+      .getStakeInfo(tokens)
+      .then(function (info) {
+        $("#stake-address").text(info.address);
+        $("#stake-amount").text(info.amount);
+        $("#stake-gas").text(info.gas);
+        $("#stake-data").text(info.data);
+      })
+      .then(() => contract.stake(tokens))
       .then(showClick.bind(self))
       .catch(handle);
   }
@@ -227,30 +254,30 @@ module.exports = (function () {
 
   function showClick(res) {
     let $element = $(this);
-    $element.closest('fieldset').find(".eth-info").addClass("active");
-    $element.hasClass("show") ? $element.addClass("hidden") : "";
+    const fieldset = $element.closest("fieldset");
+    fieldset.find(".eth-info").addClass("active");
 
     if (currentStep === 1) {
       const userInfo = contract.getUserInfo();
+      const buttonToShow = $("#" + $element.data("show"));
       if (userInfo.approved === 0 && userInfo.lev === 0) {
-        $element.nextAll(".action-button").addClass("hidden");
+        buttonToShow.addClass("hidden");
+        alert("no approved or lev");
       } else {
-        $element.nextAll(".action-button").removeClass("hidden");
+        buttonToShow.removeClass("hidden");
       }
     }
-
   }
 
   function goToStep(step) {
     if (step == currentStep) return false;
     currentStep = step;
-    const fieldsetWidth = $('.staking-steps').width();
-    $('.fieldset-container').css('transform', 'translateX(-' + (currentStep * fieldsetWidth) + 'px)');
-    // $('.fieldset-container fieldset').hide().eq(currentStep).show();
+    const fieldsetWidth = $(".staking-steps").width();
+    $(".fieldset-container").css("transform", "translateX(-" + (currentStep * fieldsetWidth) + "px)");
 
-    $('#progressbar li').removeClass('passed current');
-    $('#progressbar li:lt(' + (currentStep) + ')').addClass('passed');
-    $('#progressbar li:lt(' + (currentStep + 1) + ')').addClass('reached');
-    $('#progressbar li').eq(currentStep).addClass('current');
+    $("#progressbar li").removeClass("passed current");
+    $("#progressbar li:lt(" + (currentStep) + ")").addClass("passed");
+    $("#progressbar li:lt(" + (currentStep + 1) + ")").addClass("reached");
+    $("#progressbar li").eq(currentStep).addClass("current");
   }
 })();
