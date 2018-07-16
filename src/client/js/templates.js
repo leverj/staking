@@ -1,26 +1,26 @@
 const $ = require('jquery');
 $.fn.userInfo = function () {
   this.append(
-    "<h4 class='user-info-heading'>Available LEV:<span class='suggested-count' name='lev-count'>&nbsp;</span><a target='_blank' class='icon-link'><i class='fa fa-external-link'></i></a> </h4>" +
-    "<h4 class='user-info-heading'>Total Approved LEV: <span class='suggested-count'  name='approved-count'>&nbsp;</span><a target='_blank' class='icon-link'><i class='fa fa-external-link'></i></a> </h4>" +
-    "<h4 class='user-info-heading'>Total Staked LEV: <span class='suggested-count'  name='staked-count'>&nbsp;</span><a target='_blank' class='icon-link'><i class='fa fa-external-link'></i></a> </h4>" +
-    "<h4 class='user-info-heading'>Number of FEE: <span class='suggested-count'  name='fee-count'>&nbsp;</span><a target='_blank' class='icon-link'><i class='fa fa-external-link'></i></a> </h4>");
-  // + "<a href='#' class='icon-link icon-link--big icon-link--center icon-link--rotate' data-id='user-info-display-action'><i class='fa fa-refresh' aria-hidden='true'></i></a>");
+    "<h4 class='user-info-row'><label>Ethereum address:</label><a target='_blank' class='icon-link'><span name='eth-addr'>&nbsp;</span> <i class='fa fa-info-circle'></i></a></h4>" +
+    "<h4 class='user-info-row'><label>Available LEV:</label><a target='_blank' class='icon-link'><span name='lev-count'>&nbsp;</span> <i class='fa fa-info-circle'></i></a></h4>" +
+    "<h4 class='user-info-row'><label>Total Approved LEV:</label><a target='_blank' class='icon-link'><span name='approved-count'>&nbsp;</span> <i class='fa fa-info-circle'></i></a></h4>" +
+    "<h4 class='user-info-row'><label>Total Staked LEV:</label><a target='_blank' class='icon-link'><span name='staked-count'>&nbsp;</span> <i class='fa fa-info-circle'></i></a></h4>" +
+    "<h4 class='user-info-row'><label>Number of FEE:</label><a target='_blank' class='icon-link'><span name='fee-count'>&nbsp;</span> <i class='fa fa-info-circle'></i></a></h4>");
 };
 
 $.fn.txInfo = function (prefix) {
   this.append(
-    "<h4 class='user-info-heading'>To address: <span id='" + prefix + "-address'>&nbsp;</span>" +
-    "  <a class='icon-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "<h4 class='user-info-row'><label>To address:</label>" +
+    "<a class='icon-link'><span id='" + prefix + "-address'>&nbsp;</span> <i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>" +
-    "<h4 class='user-info-heading'>Amount: <span id='" + prefix + "-amount'>&nbsp;</span>" +
-    "  <a class='icon-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "<h4 class='user-info-row'><label>Amount:</label>" +
+    "<a class='icon-link'><span id='" + prefix + "-amount'>&nbsp;</span> <i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>" +
-    "<h4 class='user-info-heading'>Gas limit: <span id='" + prefix + "-gas'>&nbsp;</span>" +
-    "  <a class='icon-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "<h4 class='user-info-row'><label>Gas limit:</label>" +
+    "<a class='icon-link'><span id='" + prefix + "-gas'>&nbsp;</span> <i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>" +
-    "<h4 class='user-info-heading'>Data: <span class='address' id='" + prefix + "-data'>&nbsp;</span>" +
-    "  <a class='icon-link'><i class='fa fa-files-o' aria-hidden='true'></i></a>" +
+    "<h4 class='user-info-row'><label>Data:</label>" +
+    "<a class='icon-link'><span class='address' id='" + prefix + "-data'>&nbsp;</span> <i class='fa fa-files-o' aria-hidden='true'></i></a>" +
     "</h4>"
   );
 };

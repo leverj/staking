@@ -30,18 +30,7 @@
     display: block;
     max-width: 100%;
   }
-
-  .beta-container {
-    position: absolute;
-    bottom: -8px;
-    right: -3px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 2px 12px;
-    border-radius: 9px;
-    font-size: 13px;
-  }
 }
-
 
 button {
   cursor: pointer;
@@ -69,6 +58,7 @@ button {
 
   &:disabled {
     cursor: not-allowed;
+    background-color: #969696;
   }
 }
 
@@ -126,22 +116,42 @@ input[type=text] {
     opacity: 0.6;
   }
 
-  .user-info-heading {
+  .user-info-row {
     color: $color-text-muted;
     text-align: left;
     margin: 15px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
-    span {
-      color: $color-white;
-      margin-left: 8px;
+    label {
 
-      &.address {
+    }
+
+    a {
+      width: 70%;
+      cursor: pointer;
+
+      span {
+        color: $color-white;
         word-break: break-all;
+        margin-right: 8px;
+      }
+
+      &:hover {
+        span {
+          color: $color-primary;
+        }
       }
     }
 
-    .icon-link {
-      float: right;
+
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
+
+      a {
+        width: 100%;
+      }
     }
   }
 }

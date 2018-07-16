@@ -138,7 +138,6 @@ module.exports = (function () {
     $("#approve-action").click(approve);
     $("#stake-action").click(stake);
     $(".icon-link").click(copy);
-    $(".suggested-count").click(updateWithSuggestedCount);
   };
 
   function copy() {
@@ -165,11 +164,14 @@ module.exports = (function () {
         $("#user-id").attr("readonly", !isManual).val(contract.user);
       })
       .then(goToStep.bind(self, currentStep + 1))
+      .then(() => {
+        if (isManual) {
+          $("#load-eth-info").text("Show Info");
+        } else {
+          $("#load-eth-info").trigger("click");
+        }
+      })
       .catch(handle);
-  }
-
-  function updateWithSuggestedCount() {
-    $("fieldset:visible").find("[name=gplus]").val($(this).data("value"))
   }
 
   function loadUserInfo() {
@@ -178,7 +180,7 @@ module.exports = (function () {
 
     let self = this;
 
-    const text = $(self).text();
+    let text = $(self).text();
     $(self).html("<i class='fa fa-spinner fa-spin'></i>");
 
     const ethInfo = $(self).closest("fieldset").find(".eth-info");
@@ -191,23 +193,34 @@ module.exports = (function () {
       .updateUserInfo()
       .then(function() {
         updateUserInfo();
+        text = "Reload";
         socket.emit("register", { userid: userId })
       })
-      .then(showClick.bind(self))
+      .then(() => {
+        const userInfo = contract.getUserInfo();
+        if (userInfo.staked > 0) {
+          goToStep(4);
+        } else if (userInfo.approved > 0) {
+          $("#stake-count").val(userInfo.approved);
+          goToStep(3);
+        }
+      })
       .catch(handle)
       .finally(function(){
         $(self).text(text);
         buttons.prop("disabled", false);
+        showClick.bind(self)();
         ethInfo.removeClass("loading");
       });
   }
 
   function updateUserInfo() {
-    let userInfo = contract.getUserInfo();
-    $("[name=lev-count]").text(userInfo.lev.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.lev).next().attr("href", userInfo.levLink);
-    $("[name=staked-count]").text(userInfo.staked.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.staked).next().attr("href", userInfo.stakedLink);
-    $("[name=approved-count]").text(userInfo.approved.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.approved).next().attr("href", userInfo.approvedLink);
-    $("[name=fee-count]").text(userInfo.fee.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.fee).next().attr("href", userInfo.feeLink);
+    const userInfo = contract.getUserInfo();
+    $("[name=eth-addr]").text(contract.user).data("value", contract.user).parent().attr("href", userInfo.userLink);
+    $("[name=lev-count]").text(userInfo.lev.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.lev).parent().attr("href", userInfo.levLink);
+    $("[name=staked-count]").text(userInfo.staked.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.staked).parent().attr("href", userInfo.stakedLink);
+    $("[name=approved-count]").text(userInfo.approved.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.approved).parent().attr("href", userInfo.approvedLink);
+    $("[name=fee-count]").text(userInfo.fee.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.fee).parent().attr("href", userInfo.feeLink);
   }
 
   function approve() {
@@ -261,10 +274,9 @@ module.exports = (function () {
       const userInfo = contract.getUserInfo();
       const buttonToShow = $("#" + $element.data("show"));
       if (userInfo.approved === 0 && userInfo.lev === 0) {
-        buttonToShow.addClass("hidden");
-        alert("no approved or lev");
+        buttonToShow.prop("disabled", true);
       } else {
-        buttonToShow.removeClass("hidden");
+        buttonToShow.prop("disabled", false);
       }
     }
   }
@@ -274,6 +286,10 @@ module.exports = (function () {
     currentStep = step;
     const fieldsetWidth = $(".staking-steps").width();
     $(".fieldset-container").css("transform", "translateX(-" + (currentStep * fieldsetWidth) + "px)");
+    $(".fieldset-container fieldset").removeClass("active");
+    $(".fieldset-container fieldset:eq(" + currentStep + ")").addClass("active");
+    $(".fieldset-container fieldset:lt(" + (currentStep + 1) + ")").find('.next').prop("disabled", false);
+
 
     $("#progressbar li").removeClass("passed current");
     $("#progressbar li:lt(" + (currentStep) + ")").addClass("passed");

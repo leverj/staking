@@ -40,6 +40,7 @@ module.exports = (function () {
     ]);
     result = result.map(num => ((num - 0) / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals) - 0);
     userInfo = {
+      userLink: `${config.etherscan}/address/${contract.user}`,
       lev: result[0],
       staked: result[1],
       approved: result[2],

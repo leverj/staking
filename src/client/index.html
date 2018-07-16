@@ -1,278 +1,298 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Stake LEV</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="./css/customScrollBar.css">
-  <link rel="stylesheet" type="text/css" href="./css/style.css">
-  <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
-  <link rel="manifest" href="img/favicon/manifest.json">
-  <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
-</head>
-<body>
-  <div class="overlay">
-    <h2 class="overlay__text">Loading</h2>
-    <div class="overlay__content">
-      <svg class="loader">
-        <filter id="blur">
-          <fegaussianblur in="SourceGraphic" stddeviation="2"></fegaussianblur>
-        </filter>
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#F4F519" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
-      </svg>
-      <svg class="loader loader-2">
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#DE2FFF" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
-      </svg>
-      <svg class="loader loader-3">
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#FF5932" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
-      </svg>
-      <svg class="loader loader-4">
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#E97E42" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
-      </svg>
-      <svg class="loader loader-5">
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="white" stroke-width="6" stroke-linecap="round"
-                filter="url(#blur)"></circle>
-      </svg>
-      <svg class="loader loader-6">
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#00DCA3" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
-      </svg>
-      <svg class="loader loader-7">
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="purple" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
-      </svg>
-      <svg class="loader loader-8">
-        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round"
-                stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
-      </svg>
+  <head>
+    <meta charset="UTF-8">
+    <title>Stake LEV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/customScrollBar.css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="img/favicon/manifest.json">
+    <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  </head>
+  <body>
+    <div class="overlay">
+      <h2 class="overlay__text">Loading</h2>
+      <div class="overlay__content">
+        <svg class="loader">
+          <filter id="blur">
+            <fegaussianblur in="SourceGraphic" stddeviation="2"></fegaussianblur>
+          </filter>
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#F4F519" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-2">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#DE2FFF" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-3">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#FF5932" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-4">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#E97E42" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-5">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="white" stroke-width="6" stroke-linecap="round"
+                  filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-6">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#00DCA3" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-7">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="purple" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-8">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+      </div>
     </div>
-  </div>
 
-  <div class="modal-overlay">
-  </div>
+    <div class="modal-overlay">
+    </div>
 
-  <div id="disclaimer-modal" class="modal">
-    <div class="modal-container">
-      <div class="modal-header">
-        <div class="logo">
-          <img src="./img/logo.svg" alt="">
+    <div id="disclaimer-modal" class="modal">
+      <div class="modal-container">
+        <div class="modal-header">
+          <div class="logo">
+            <img src="./img/logo.svg" alt="">
+          </div>
+          <h3 class="color-primary"><i class="fa fa-exclamation-triangle"></i> READ THIS BEFORE STAKING YOUR LEV TOKENS</h3>
         </div>
-        <h3 class="color-primary"><i class="fa fa-exclamation-triangle"></i> READ THIS BEFORE STAKING YOUR LEV TOKENS</h3>
-      </div>
-      <div class="modal-body">
-        <p>
-          By clicking Continue below, you acknowledge that you understand the following:
-        </p>
-        <ul>
-          <li>
-            I understand that this app is guiding me through the staking process and is not in possession of any private keys to conduct any operations related to approval or staking of LEV tokens.
-          </li>
-          <li>
-            I understand that in order to begin the staking process I need to already own LEV tokens, and have access to the Ethereum account in possession of the LEV tokens.
-          </li>
-          <li>
-            I understand that when I approve LEV to be staked in this app, I will be sending a transaction to the LEV token smart contract address.
-          </li>
-          <li>
-            I understand that when I stake my LEV in this app, I will by sending my LEV tokens to a Staking Contract smart contract address, where they will be locked until the end of the current staking period (up to 1 week).
-          </li>
-          <li>
-            I understand that at the end of the staking period, I will receive any FEE tokens, as well as the LEV tokens staked, to the Ethereum address that I staked from
-          </li>
-          <li>
-            I understand that I am responsible for Approving and Staking my LEV tokens with MetaMask or Manually (with MyEtherWallet, Jaxx, Parity, Mist, etc).
-          </li>
-        </ul>
-      </div>
-      <div class="modal-footer text-center">
-        <button type="button" class="accept-disclaimer-button">
-          Continue
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="instructions-modal" class="modal">
-    <div class="modal-container justify-center">
-      <div class="modal-header">
-        <h3>Welcome to the Leverj staking app. The LEV staking process requires two main actions:</h3>
-      </div>
-      <div class="modal-body">
-        <ol>
-          <li>
-            To approve LEV for being staked (this requires that you have LEV!)
-          </li>
-
-          <li>
-            To stake the amount of LEV for the remainder of the current staking period (this requires approval from 1)
-          </li>
-        </ol>
-        <p>
-          Below is a guide to help you through the steps on this app:
-        </p>
-        <ul>
-          <li>
-            <strong>Step 1: Choose method</strong> <br>
-            In this step, you will choose whether you want to engage in staking automatically via MetaMask wallet, or to
-            manually copy transaction parameters for approving and staking
-          </li>
-
-          <li>
-              <strong>Step 2: Get account information</strong> <br>
-              In this step, you provide the Ethereum address that contains your LEV that you want to stake. The app will grab the information on your account relevant for this purpose.
-          </li>
-
-          <li>
-            <strong>Step 3: Approve LEV in account</strong> <br>
-            In this step, you can choose to approve some of the LEV in your address to be staked in the current period. This will give you some transaction parameters that you need to copy into your wallet of choice. Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
-          </li>
-
-          <li>
-            <strong>Step 4: Stake Approved LEV </strong><br>
-            In this step, you will then stake the amount of approved LEV on the account. This will provide you the data field and account needed to finalize the staking of your LEV in the contract.
-            Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
-          </li>
-
-          <li>
-            <strong>Step 5: Confirmation</strong> <br>
-            Here you can see that the staking action from Step 4 has successfully been executed. This step will show the amount of LEV staked and give you a link to the relevant transaction(s) on the blockchain.
-          </li>
-        </ul>
-      </div>
-    </div>
-    <a href="#" class="close-button"><i class="fa fa-times" aria-hidden="true"></i></a>
-  </div>
-
-  <div class="browser-detection-overlay">
-    <h1 class="browser-detection-overlay__title">
-      It seems like your browser does not support the latest features used in this application. Please upgrade your browser and then return to the page.
-    </h1>
-  </div>
-
-  <div class="staking-container">
-    <div class="logo">
-      <img src="./img/logo.svg" alt="">
-      <!--<div class="beta-container">BETA</div>-->
-    </div>
-
-    <h1 class="app-title">Leverj staking app</h1>
-
-    <div class="help-button help-modal">
-      <i class="fa fa-question-circle"></i>
-    </div>
-
-    <div class="staking-status">
-      <h3 class="staking-status__heading" id="staking-status"></h3>
-    </div>
-
-    <form id="stakingForm">
-      <ul id="progressbar">
-        <li class="current reached"><span>Welcome</span></li>
-        <li><span>User Information</span></li>
-        <li><span>Approval</span></li>
-        <li><span>Staking</span></li>
-        <li><span>Confirmation</span></li>
-      </ul>
-
-      <div class="staking-steps">
-        <div class="fieldset-container">
-          <fieldset>
-            <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
-            <p>For instructions, please click on the <a href="#" class="help-modal"><i class="fa fa-question-circle"></i></a> icon at any point during the process.</p>
-            <p>Would you like to stake LEV through Metamask or would you like to go through the manual wizard?</p>
-
-            <div class="form-field__container">
-              <div class="form-field">
-                <input type="radio" checked id="choice-metamask" name="stake">
-                <label for="choice-metamask" class="text--white">Stake using Metamask</label>
-              </div>
-              <div class="form-field">
-                <input type="radio" id="choice-manual" name="stake">
-                <label for="choice-manual" class="text--white">Stake manually (MyEtherWallet, Parity, Mist, Jaxx)</label>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button type="button" id="choose-action" class="action-button pull-right">Next</button>
-            </div>
-            <div class="error-container"></div>
-          </fieldset>
-
-          <fieldset>
-            <h2 class="staking-title">Enter your Ethereum address</h2>
-            <p class="show-on-manual hidden">You have chosen to stake manually. This means you will build the approval and staking transactions yourself in a wallet such as MyEtherWallet, Mist, Parity, or Jaxx.</p>
-            <p class="show-on-manual hidden">Any transactions you conduct should be done from a wallet that you control the private key to, NOT an exchange wallet.</p>
-            <p>To begin, please enter the Ethereum address you will be using to approve and stake your LEV tokens:</p>
-
-            <div class="form-field__container">
-              <div class="input-button-wrapper">
-                <input type="text" name="cpass" id="user-id" placeholder="Etherum Address"/>
-                <button type="button" id="load-eth-info" class="show action-button" data-show="next-to-approve">Show Info</button>
-              </div>
-
-              <div class="error-container"></div>
-            </div>
-
-            <div class="eth-info user-info"></div>
-            <div class="actions">
-              <button type="button" class="previous action-button pull-left">Previous</button>
-              <button type="button" class="next action-button pull-right" disabled id="next-to-approve">Next</button>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <div class="eth-info active user-info"></div>
-            <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
-            <div class="form-field__container">
-              <div class="input-button-wrapper">
-                <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
-                <button type="button" id="approve-action" class="show action-button" data-show="next-to-stake">Approve</button>
-              </div>
-              <div class="error-container"></div>
-            </div>
-
-            <div class="eth-info" id="approve-tx-info"></div>
-
-            <div class="actions">
-              <button type="button" class="previous action-button pull-left">Previous</button>
-              <button type="button" class="next action-button pull-right" disabled id="next-to-stake">Next</button>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <div class="eth-info active user-info"></div>
-            <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
-            <div class="form-field__container">
-              <div class="input-button-wrapper">
-                <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
-                <button type="button" class="approve action-button" id="stake-action">Stake</button>
-              </div>
-              <div class="error-container"></div>
-            </div>
-
-            <div class="eth-info" id="stake-tx-info"></div>
-
-            <div class="actions">
-              <button type="button" class="previous action-button pull-left">Previous</button>
-              <button type="button" class="next action-button pull-right" id="next-to-confirm">Next</button>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <h2 class="user-info"></h2>
-          </fieldset>
+        <div class="modal-body">
+          <p>
+            By clicking Continue below, you acknowledge that you understand the following:
+          </p>
+          <ul>
+            <li>
+              I understand that this app is guiding me through the staking process and is not in possession of any private keys to conduct any operations related to approval or staking of LEV tokens.
+            </li>
+            <li>
+              I understand that in order to begin the staking process I need to already own LEV tokens, and have access to the Ethereum account in possession of the LEV tokens.
+            </li>
+            <li>
+              I understand that when I approve LEV to be staked in this app, I will be sending a transaction to the LEV token smart contract address.
+            </li>
+            <li>
+              I understand that when I stake my LEV in this app, I will by sending my LEV tokens to a Staking Contract smart contract address, where they will be locked until the end of the current staking period (up to 1 week).
+            </li>
+            <li>
+              I understand that at the end of the staking period, I will receive any FEE tokens, as well as the LEV tokens staked, to the Ethereum address that I staked from
+            </li>
+            <li>
+              I understand that I am responsible for Approving and Staking my LEV tokens with MetaMask or Manually (with MyEtherWallet, Jaxx, Parity, Mist, etc).
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer text-center">
+          <button type="button" class="accept-disclaimer-button">
+            Continue
+          </button>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
 
-<script src="./js/index.js"></script>
-</body>
+    <div id="instructions-modal" class="modal">
+      <div class="modal-container justify-center">
+        <div class="modal-header">
+          <h3>Welcome to the Leverj staking app. The LEV staking process requires two main actions:</h3>
+        </div>
+        <div class="modal-body">
+          <ol>
+            <li>
+              To approve LEV for being staked (this requires that you have LEV!)
+            </li>
+
+            <li>
+              To stake the amount of LEV for the remainder of the current staking period (this requires approval from 1)
+            </li>
+          </ol>
+          <p>
+            Below is a guide to help you through the steps on this app:
+          </p>
+          <ul>
+            <li>
+              <strong>Step 1: Choose method</strong> <br>
+              In this step, you will choose whether you want to engage in staking automatically via MetaMask wallet, or to
+              manually copy transaction parameters for approving and staking
+            </li>
+
+            <li>
+                <strong>Step 2: Get account information</strong> <br>
+                In this step, you provide the Ethereum address that contains your LEV that you want to stake. The app will grab the information on your account relevant for this purpose.
+            </li>
+
+            <li>
+              <strong>Step 3: Approve LEV in account</strong> <br>
+              In this step, you can choose to approve some of the LEV in your address to be staked in the current period. This will give you some transaction parameters that you need to copy into your wallet of choice. Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
+            </li>
+
+            <li>
+              <strong>Step 4: Stake Approved LEV </strong><br>
+              In this step, you will then stake the amount of approved LEV on the account. This will provide you the data field and account needed to finalize the staking of your LEV in the contract.
+              Please refer to <a target="_blank" href="https://blog.leverj.io/staking-contract-testnet-62047390542d">blog</a>.
+            </li>
+
+            <li>
+              <strong>Step 5: Confirmation</strong> <br>
+              Here you can see that the staking action from Step 4 has successfully been executed. This step will show the amount of LEV staked and give you a link to the relevant transaction(s) on the blockchain.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <a href="#" class="close-button"><i class="fa fa-times" aria-hidden="true"></i></a>
+    </div>
+
+    <div class="browser-detection-overlay">
+      <h1 class="browser-detection-overlay__title">
+        It seems like your browser does not support the latest features used in this application. Please upgrade your browser and then return to the page.
+      </h1>
+    </div>
+
+    <div class="staking-container">
+      <div class="logo">
+        <img src="./img/logo.svg" alt="">
+      </div>
+
+      <h1 class="app-title">Leverj staking app</h1>
+
+      <div class="help-button help-modal">
+        <i class="fa fa-question-circle"></i>
+      </div>
+
+      <div class="staking-status">
+        <h3 class="staking-status__heading" id="staking-status"></h3>
+      </div>
+
+      <form id="stakingForm">
+        <ul id="progressbar">
+          <li class="current reached"><span>Welcome</span></li>
+          <li><span>User Information</span></li>
+          <li><span>Approval</span></li>
+          <li><span>Staking</span></li>
+          <li><span>Confirmation</span></li>
+        </ul>
+
+        <div class="staking-steps">
+          <div class="fieldset-container">
+            <fieldset class="active">
+              <h2 class="staking-title">Welcome to the Leverj staking contract</h2>
+              <p>For instructions, please click on the <a href="#" class="help-modal"><i class="fa fa-question-circle"></i></a> icon at any point during the process.</p>
+              <p>Would you like to stake LEV through Metamask or would you like to go through the manual wizard?</p>
+
+              <div class="form-field__container">
+                <div class="form-field">
+                  <input type="radio" checked id="choice-metamask" name="stake">
+                  <label for="choice-metamask" class="text--white">Stake using Metamask</label>
+                </div>
+                <div class="form-field">
+                  <input type="radio" id="choice-manual" name="stake">
+                  <label for="choice-manual" class="text--white">Stake manually (MyEtherWallet, Parity, Mist, Jaxx)</label>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button type="button" id="choose-action" class="action-button pull-right">
+                  Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="error-container"></div>
+            </fieldset>
+
+            <fieldset>
+              <h2 class="staking-title">Enter your Ethereum address</h2>
+              <p class="show-on-manual hidden">You have chosen to stake manually. This means you will build the approval and staking transactions yourself in a wallet such as MyEtherWallet, Mist, Parity, or Jaxx.</p>
+              <p class="show-on-manual hidden">Any transactions you conduct should be done from a wallet that you control the private key to, NOT an exchange wallet.</p>
+              <p>To begin, please enter the Ethereum address you will be using to approve and stake your LEV tokens:</p>
+
+              <div class="form-field__container">
+                <div class="input-button-wrapper">
+                  <input type="text" name="cpass" id="user-id" placeholder="Etherum Address"/>
+                  <button type="button" id="load-eth-info" class="show action-button" data-show="next-to-approve">Show Info</button>
+                </div>
+
+                <div class="error-container"></div>
+              </div>
+
+              <div class="eth-info user-info"></div>
+              <div class="actions">
+                <button type="button" class="previous action-button pull-left">
+                  <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                  Previous
+                </button>
+                <button type="button" class="next action-button pull-right" disabled id="next-to-approve">
+                  Next
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <h2 class="staking-title">Your Information</h2>
+              <div class="eth-info active user-info"></div>
+              <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
+              <div class="form-field__container">
+                <div class="input-button-wrapper">
+                  <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
+                  <button type="button" id="approve-action" class="show action-button" data-show="next-to-stake">Approve</button>
+                </div>
+                <div class="error-container"></div>
+              </div>
+
+              <div class="eth-info" id="approve-tx-info"></div>
+
+              <div class="actions">
+                <button type="button" class="previous action-button pull-left">
+                  <i class="fa fa-chevron-left" aria-hidden="true"></i> Previous
+                </button>
+                <button type="button" class="next action-button pull-right" disabled id="next-to-stake">
+                  Next
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <div class="eth-info active user-info"></div>
+              <h3 class="staking-subtitle">Set the number of LEV to stake</h3>
+              <div class="form-field__container">
+                <div class="input-button-wrapper">
+                  <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
+                  <button type="button" class="approve action-button" id="stake-action" data-show="next-to-confirm">Stake</button>
+                </div>
+                <div class="error-container"></div>
+              </div>
+
+              <div class="eth-info" id="stake-tx-info"></div>
+
+              <div class="actions">
+                <button type="button" class="previous action-button pull-left">
+                  <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                  Previous
+                </button>
+                <button type="button" class="next action-button pull-right" disabled id="next-to-confirm">
+                  Next
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <h2 class="staking-title">Staking Summary</h2>
+              <div class="user-info eth-info"></div>
+            </fieldset>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  <script src="./js/index.js"></script>
+  </body>
 </html>
