@@ -215,7 +215,8 @@
               <div class="form-field__container">
                 <div class="input-button-wrapper">
                   <input type="text" name="cpass" id="user-id" placeholder="Etherum Address"/>
-                  <button type="button" id="load-eth-info" class="show action-button" data-show="next-to-approve">Show Info</button>
+                  <button type="button" id="load-eth-info" class="show action-button" data-show="next-to-approve" data-reload="Reload">Show Info
+                  </button>
                 </div>
 
                 <div class="error-container"></div>
@@ -235,13 +236,12 @@
             </fieldset>
 
             <fieldset>
-              <h2 class="staking-title">Your Information</h2>
               <div class="eth-info active user-info"></div>
               <h3 class="staking-subtitle">Set the number of LEV to approve</h3>
               <div class="form-field__container">
                 <div class="input-button-wrapper">
                   <input type="text" name="gplus" id="approve-count" placeholder="Amount of LEV to approve"/>
-                  <button type="button" id="approve-action" class="show action-button" data-show="next-to-stake">Approve</button>
+                  <button type="button" id="approve-action" class="show action-button" data-show="next-to-stake" data-reload="Approve">Approve</button>
                 </div>
                 <div class="error-container"></div>
               </div>
@@ -265,7 +265,7 @@
               <div class="form-field__container">
                 <div class="input-button-wrapper">
                   <input type="text" name="gplus" id="stake-count" placeholder="Amount of LEV to stake"/>
-                  <button type="button" class="approve action-button" id="stake-action" data-show="next-to-confirm">Stake</button>
+                  <button type="button" class="approve action-button" id="stake-action" data-show="next-to-confirm" data-reload="Stake">Stake</button>
                 </div>
                 <div class="error-container"></div>
               </div>

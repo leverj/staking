@@ -127,8 +127,13 @@ module.exports = (function () {
       $("#staking-status").text(text)
     })
     socket.on("user-update", function (data) {
-      console.log("user-update");
-      loadUserInfo.bind($("#approve-action"))();
+      console.log("user-update", data);
+      if (data.event === "LEV.Approval") {
+        loadUserInfo.bind($("#approve-action"))();
+
+      } else if (data.event === "STAKE.STAKE") {
+
+      }
     })
   };
 
@@ -175,25 +180,28 @@ module.exports = (function () {
   }
 
   function loadUserInfo() {
+    if ($(this).hasClass("working")) return;
+
     let userId = $("#user-id").val();
     contract.setUser(userId);
 
     let self = this;
 
-    let text = $(self).text();
+    let buttonText = $(self).text();
+    $(self).removeClass("working");
     $(self).html("<i class='fa fa-spinner fa-spin'></i>");
 
     const ethInfo = $(self).closest("fieldset").find(".eth-info");
     ethInfo.addClass("loading");
 
-    const buttons = $(self).closest("fieldset").find("button");
+    const buttons = $(self).closest("fieldset").find(".actions button");
     buttons.prop("disabled", true);
 
     contract
       .updateUserInfo()
       .then(function() {
         updateUserInfo();
-        text = "Reload";
+        buttonText = $(self).data("reload");
         socket.emit("register", { userid: userId })
       })
       .then(() => {
@@ -207,7 +215,8 @@ module.exports = (function () {
       })
       .catch(handle)
       .finally(function(){
-        $(self).text(text);
+        $(self).text(buttonText);
+        $(self).removeClass("working");
         buttons.prop("disabled", false);
         showClick.bind(self)();
         ethInfo.removeClass("loading");
@@ -224,19 +233,41 @@ module.exports = (function () {
   }
 
   function approve() {
-    let tokens = $("#approve-count").val() - 0;
+    if ($(this).hasClass("working")) return;
+
+    const tokens = $("#approve-count").val() - 0;
     let self = this;
+
+    let buttonText = $(self).text();
+    const approveTxInfo = $("#approve-tx-info");
+    const buttons = $(self).closest("fieldset").find(".actions button");
+
     contract
       .getApproveInfo(tokens)
       .then(function (info) {
+        approveTxInfo.addClass("active");
         $("#approve-address").text(info.address);
         $("#approve-amount").text(info.amount);
         $("#approve-gas").text(info.gas);
         $("#approve-data").text(info.data);
       })
-      .then(() => contract.approve(tokens))
-      .then(showClick.bind(self))
-      .catch(handle);
+      .then(() => contract.approve(tokens, () => {
+        $(self).addClass("working");
+        $(self).html("<i class='fa fa-spinner fa-spin'></i>");
+        approveTxInfo.addClass("loading");
+        buttons.prop("disabled", true);
+      }))
+      .then(() => {
+        console.log('contract.approve done')
+        showClick.bind(self)();
+      })
+      .catch(handle)
+      .finally(function() {
+        $(self).removeClass("working");
+        $(self).text(buttonText);
+        buttons.prop("disabled", false);
+        approveTxInfo.removeClass("loading");
+      });
   }
 
   function stake() {
@@ -288,8 +319,7 @@ module.exports = (function () {
     $(".fieldset-container").css("transform", "translateX(-" + (currentStep * fieldsetWidth) + "px)");
     $(".fieldset-container fieldset").removeClass("active");
     $(".fieldset-container fieldset:eq(" + currentStep + ")").addClass("active");
-    $(".fieldset-container fieldset:lt(" + (currentStep + 1) + ")").find('.next').prop("disabled", false);
-
+    $(".fieldset-container fieldset:lt(" + (currentStep) + ")").find('.next').prop("disabled", false);
 
     $("#progressbar li").removeClass("passed current");
     $("#progressbar li:lt(" + (currentStep) + ")").addClass("passed");

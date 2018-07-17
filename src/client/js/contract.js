@@ -64,7 +64,7 @@ module.exports = (function () {
     };
   };
 
-  contract.approve = async function (levCounts) {
+  contract.approve = async function (levCounts, onHash) {
     if (contract.isManual) return;
     affirm(levCounts > 0, "Amount to approve must be greater than 0");
     let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
@@ -74,6 +74,7 @@ module.exports = (function () {
       .send({from: contract.user})
       .on('transactionHash', function(hash) {
         console.log(hash);
+        onHash();
       })
       .on('receipt', function(receipt){
         console.log(receipt) // contains the new contract address
