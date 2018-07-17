@@ -73,11 +73,7 @@ module.exports = (function () {
       .approve(config.stake, amount)
       .send({from: contract.user})
       .on('transactionHash', function(hash) {
-        console.log(hash);
-        onHash();
-      })
-      .on('receipt', function(receipt){
-        console.log(receipt) // contains the new contract address
+        onHash(hash);
       })
       .on('confirmation', function(confirmationNumber, receipt){
         console.log('confirmation', confirmationNumber, receipt)
@@ -99,11 +95,17 @@ module.exports = (function () {
     };
   };
 
-  contract.stake = async function (levCounts) {
+  contract.stake = async function (levCounts, onHash) {
     if (contract.isManual) return;
     affirm(levCounts > 0, "Amount to approve must be greater than 0");
     let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
-    await stake.methods.stakeTokens(amount).send({from: contract.user});
+    await stake
+      .methods
+      .stakeTokens(amount)
+      .send({from: contract.user})
+      .on('transactionHash', function(hash) {
+        onHash(hash);
+      });
   };
 
   contract.getUserInfo = function () {

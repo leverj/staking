@@ -130,9 +130,8 @@ module.exports = (function () {
       console.log("user-update", data);
       if (data.event === "LEV.Approval") {
         loadUserInfo.bind($("#approve-action"))();
-
       } else if (data.event === "STAKE.STAKE") {
-
+        loadUserInfo.bind($("#stake-action"))();
       }
     })
   };
@@ -206,6 +205,7 @@ module.exports = (function () {
       })
       .then(() => {
         const userInfo = contract.getUserInfo();
+        buttons.prop("disabled", false);
         if (userInfo.staked > 0) {
           goToStep(4);
         } else if (userInfo.approved > 0) {
@@ -217,7 +217,6 @@ module.exports = (function () {
       .finally(function(){
         $(self).text(buttonText);
         $(self).removeClass("working");
-        buttons.prop("disabled", false);
         showClick.bind(self)();
         ethInfo.removeClass("loading");
       });
@@ -251,7 +250,7 @@ module.exports = (function () {
         $("#approve-gas").text(info.gas);
         $("#approve-data").text(info.data);
       })
-      .then(() => contract.approve(tokens, () => {
+      .then(() => contract.approve(tokens, (hash) => {
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
         approveTxInfo.addClass("loading");
@@ -260,12 +259,15 @@ module.exports = (function () {
       .then(() => {
         console.log('contract.approve done')
         showClick.bind(self)();
+        buttons.prop("disabled", false);
       })
-      .catch(handle)
+      .catch((e) => {
+        handle(e);
+        approveTxInfo.removeClass("active");
+      })
       .finally(function() {
         $(self).removeClass("working");
         $(self).text(buttonText);
-        buttons.prop("disabled", false);
         approveTxInfo.removeClass("loading");
       });
   }
@@ -273,17 +275,40 @@ module.exports = (function () {
   function stake() {
     let tokens = $("#stake-count").val() - 0;
     let self = this;
+
+    let buttonText = $(self).text();
+    const stakeTxInfo = $("#stake-tx-info");
+    const buttons = $(self).closest("fieldset").find(".actions button");
+
     contract
       .getStakeInfo(tokens)
       .then(function (info) {
+        stakeTxInfo.addClass("active");
         $("#stake-address").text(info.address);
         $("#stake-amount").text(info.amount);
         $("#stake-gas").text(info.gas);
         $("#stake-data").text(info.data);
       })
-      .then(() => contract.stake(tokens))
-      .then(showClick.bind(self))
-      .catch(handle);
+      .then(() => contract.stake(tokens, (hash) => {
+        $(self).addClass("working");
+        $(self).html("<i class='fa fa-spinner fa-spin'></i>");
+        stakeTxInfo.addClass("loading");
+        buttons.prop("disabled", true);
+      }))
+      .then(() => {
+        console.log('contract.stake done')
+        showClick.bind(self)();
+      })
+      .catch((e) => {
+        handle(e);
+        stakeTxInfo.removeClass("active");
+      })
+      .finally(function() {
+        $(self).removeClass("working");
+        $(self).text(buttonText);
+        buttons.prop("disabled", false);
+        stakeTxInfo.removeClass("loading");
+      });
   }
 
   function handle(e) {
