@@ -179,8 +179,6 @@ module.exports = (function () {
   }
 
   function loadUserInfo() {
-    if ($(this).hasClass("working")) return;
-
     let userId = $("#user-id").val();
     contract.setUser(userId);
 
@@ -273,6 +271,8 @@ module.exports = (function () {
   }
 
   function stake() {
+    if ($(this).hasClass("working")) return;
+
     let tokens = $("#stake-count").val() - 0;
     let self = this;
 
