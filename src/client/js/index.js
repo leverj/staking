@@ -239,6 +239,13 @@ module.exports = (function () {
     const approveTxInfo = $("#approve-tx-info");
     const buttons = $(self).closest("fieldset").find(".actions button");
 
+    const userInfo = contract.getUserInfo();
+    if (userInfo.lev < tokens) {
+      return handle({
+        message: "You can not approve more than the available LEV."
+      });
+    }
+
     contract
       .getApproveInfo(tokens)
       .then(function (info) {
@@ -249,18 +256,19 @@ module.exports = (function () {
         $("#approve-data").text(info.data);
       })
       .then(() => contract.approve(tokens, (hash) => {
+        console.log("approve hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
         approveTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
-        console.log('contract.approve done')
+        console.log("contract.approve done")
         showClick.bind(self)();
         buttons.prop("disabled", false);
       })
       .catch((e) => {
-        handle(e);
+        handle();
         approveTxInfo.removeClass("active");
       })
       .finally(function() {
@@ -290,17 +298,26 @@ module.exports = (function () {
         $("#stake-data").text(info.data);
       })
       .then(() => contract.stake(tokens, (hash) => {
+        console.log("staking hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
         stakeTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
-        console.log('contract.stake done')
+        console.log("contract.stake done")
         showClick.bind(self)();
       })
       .catch((e) => {
-        handle(e);
+        if (e.toString().indexOf("Error: gas required exceeds allowance")) {
+          handle({
+            message: "Staking has failed, it could be one of the following two reasons. <br>" +
+                    "1. Staking has expired. Wait for a new staking period. <br>" +
+                    "2. You do not have enough approved LEV to be staked."
+          })
+        } else {
+          handle(e);
+        }
         stakeTxInfo.removeClass("active");
       })
       .finally(function() {
@@ -312,13 +329,14 @@ module.exports = (function () {
   }
 
   function handle(e) {
+    console.log(e);
     errorFlag = true;
     let $error = $(".error-container");
-    $error.text(e.message);
+    $error.html(e.message);
     $error.fadeIn();
     setTimeout(function () {
       $(".error-container").fadeOut();
-    }, 2500);
+    }, 5000);
   }
 
   function showClick(res) {
@@ -344,7 +362,7 @@ module.exports = (function () {
     $(".fieldset-container").css("transform", "translateX(-" + (currentStep * fieldsetWidth) + "px)");
     $(".fieldset-container fieldset").removeClass("active");
     $(".fieldset-container fieldset:eq(" + currentStep + ")").addClass("active");
-    $(".fieldset-container fieldset:lt(" + (currentStep) + ")").find('.next').prop("disabled", false);
+    $(".fieldset-container fieldset:lt(" + (currentStep) + ")").find(".next").prop("disabled", false);
 
     $("#progressbar li").removeClass("passed current");
     $("#progressbar li:lt(" + (currentStep) + ")").addClass("passed");
