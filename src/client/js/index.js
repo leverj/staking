@@ -45,7 +45,7 @@ module.exports = (function () {
     let modalBody;
     let htmlBody;
 
-    closeButton = $(".close-button");
+    closeButton = $("#instructions-modal .close-button");
     openModal = $(".help-modal");
     modalBody = $("#instructions-modal");
     htmlBody = $("html, body");
@@ -98,6 +98,45 @@ module.exports = (function () {
     });
   }
 
+  client.setupStepsModal = function () {
+    const body = $("body");
+    const stepsModal = $("#steps-modal");
+    const actionButton = $("#steps-modal button");
+    const closeButton = $("#steps-modal .close-button");
+
+    actionButton.on("click", function () {
+      stepsModal.removeClass("active");
+      body.removeClass("modal-open");
+      const step = $(this).data("step");
+      goToStep(step);
+
+      client.closeStepsModal();
+    });
+
+    closeButton.on("click", client.closeStepsModal);
+  }
+
+  client.showStepsModal = function (userInfo) {
+    const body = $("body");
+    const stepsModal = $("#steps-modal");
+
+    body.addClass("modal-open");
+    stepsModal.addClass("active");
+
+    const approveButton = $("#steps-modal button.approve-button");
+    const stakeButton = $("#steps-modal button.stake-button");
+    const confirmButton = $("#steps-modal button.confirm-button");
+
+    userInfo.lev > 0 ? approveButton.show() : approveButton.hide();
+    userInfo.approved > 0 ? stakeButton.show() : stakeButton.hide();
+    userInfo.staked > 0 ? confirmButton.show() : confirmButton.hide();
+  }
+
+  client.closeStepsModal = function() {
+    $("body").removeClass("modal-open");
+    $("#steps-modal").removeClass("active");
+  }
+
   $(document).ready(function () {
     client.showDisclaimerModal(init);
     client.removeLoading();
@@ -108,6 +147,7 @@ module.exports = (function () {
     client.toggleModal();
     client.detectDevice();
     client.rememberState();
+    client.setupStepsModal();
     if (!contract.isMetaMask()) {
       $("#choice-metamask").attr("disabled", true);
       $("#choice-manual").prop("checked", true)
@@ -171,8 +211,6 @@ module.exports = (function () {
       .then(() => {
         if (isManual) {
           $("#load-eth-info").text("Show Info");
-        } else {
-          $("#load-eth-info").trigger("click");
         }
       })
       .catch(handle);
@@ -204,11 +242,24 @@ module.exports = (function () {
       .then(() => {
         const userInfo = contract.getUserInfo();
         buttons.prop("disabled", false);
-        if (userInfo.staked > 0) {
-          goToStep(4);
-        } else if (userInfo.approved > 0) {
-          $("#stake-count").val(userInfo.approved);
-          goToStep(3);
+        const buttonId = $(self).attr('id');
+        if (buttonId === "load-eth-info") {
+          if (userInfo.lev > 0 || userInfo.approved > 0 || userInfo.staked > 0) {
+            if (userInfo.lev > 0 && userInfo.approved === 0 && userInfo.staked === 0) {
+              return goToStep(3);
+            } else if (userInfo.lev === 0 && ((userInfo.approved > 0 && userInfo.staked === 0) || (userInfo.staked > 0 && userInfo.approved === 0))) {
+              return goToStep(4);
+            }
+
+            client.showStepsModal(userInfo);
+          }
+        } else {
+          if (userInfo.staked > 0) {
+            goToStep(4);
+          } else if (userInfo.approved > 0) {
+            $("#stake-count").val(userInfo.approved);
+            goToStep(3);
+          }
         }
       })
       .catch(handle)
@@ -364,9 +415,13 @@ module.exports = (function () {
     $(".fieldset-container fieldset:eq(" + currentStep + ")").addClass("active");
     $(".fieldset-container fieldset:lt(" + (currentStep) + ")").find(".next").prop("disabled", false);
 
+    reachStep(step);
     $("#progressbar li").removeClass("passed current");
-    $("#progressbar li:lt(" + (currentStep) + ")").addClass("passed");
-    $("#progressbar li:lt(" + (currentStep + 1) + ")").addClass("reached");
-    $("#progressbar li").eq(currentStep).addClass("current");
+    $("#progressbar li").eq(step).addClass("current");
+    $("#progressbar li:lt(" + (step) + ")").addClass("passed");
+  }
+
+  function reachStep(step) {
+    $("#progressbar li:lt(" + (step + 1) + ")").addClass("reached");
   }
 })();
