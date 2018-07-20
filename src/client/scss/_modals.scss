@@ -94,8 +94,8 @@ body.modal-open {
   }
 
   @media screen and (max-width: 768px) {
-    width: 94%;
-    height: 94%;
+    width: 94% !important;
+    height: 94% !important;
   }
 }
 

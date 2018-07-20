@@ -181,7 +181,7 @@ module.exports = (function () {
     $("#load-eth-info").click(loadUserInfo);
     $("#approve-action").click(approve);
     $("#stake-action").click(stake);
-    $(".icon-link").click(copy);
+    $(".icon-copy").click(copy);
   };
 
   function copy() {
@@ -223,7 +223,6 @@ module.exports = (function () {
     let self = this;
 
     let buttonText = $(self).text();
-    $(self).removeClass("working");
     $(self).html("<i class='fa fa-spinner fa-spin'></i>");
 
     const ethInfo = $(self).closest("fieldset").find(".eth-info");

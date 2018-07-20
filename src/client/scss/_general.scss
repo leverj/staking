@@ -120,17 +120,25 @@ input[type=text] {
     color: $color-text-muted;
     text-align: left;
     margin: 15px 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+
+    &:after {
+      content: '';
+      clear: both;
+      display: table;
+    }
 
     label {
-
+      width: 48%;
+      text-align: left;
+      float: left;
+      margin-left: 1.6%;
     }
 
     a {
-      width: 70%;
+      width: 50%;
       cursor: pointer;
+      text-align: right;
+      float: left;
 
       span {
         color: $color-white;
@@ -145,13 +153,36 @@ input[type=text] {
       }
     }
 
+    &.heading {
+      font-size: 18px;
 
-    @media screen and (max-width: 768px) {
-      flex-direction: column;
-
-      a {
+      label {
         width: 100%;
+        text-align: center;
+        word-break: break-all;
       }
+    }
+  }
+}
+
+#stake-tx-info {
+  .icon-copy {
+    span {
+      display: inline-block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 88%;
+
+
+      @media screen and (max-width: 768px) {
+        max-width: 200px;
+      }
+    }
+
+    i {
+      float: right;
+      line-height: 1.5rem;
     }
   }
 }
