@@ -241,7 +241,7 @@ module.exports = (function () {
       .then(() => {
         const userInfo = contract.getUserInfo();
         buttons.prop("disabled", false);
-        const buttonId = $(self).attr('id');
+        const buttonId = $(self).attr("id");
         if (buttonId === "load-eth-info") {
           if (userInfo.lev > 0 || userInfo.approved > 0 || userInfo.staked > 0) {
             if (userInfo.lev > 0 && userInfo.approved === 0 && userInfo.staked === 0) {
@@ -418,6 +418,12 @@ module.exports = (function () {
     $("#progressbar li").removeClass("passed current");
     $("#progressbar li").eq(step).addClass("current");
     $("#progressbar li:lt(" + (step) + ")").addClass("passed");
+
+    if (step !== 3) {
+      $("#stake-tx-info").hide();
+    } else {
+      $("#stake-tx-info").show();
+    }
   }
 
   function reachStep(step) {
