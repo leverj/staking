@@ -106,6 +106,7 @@ body, h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 
+
 h4 {
   color: #fff;
   text-align: left;
@@ -175,6 +176,19 @@ h4 {
   /*stacking fieldsets above each other*/
   position: relative; }
 
+#stakingForm fieldset p {
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 10px;
+  text-align: left; }
+
+#stakingForm fieldset a {
+  color: #FD8900;
+  text-decoration: none; }
+
+#stakingForm fieldset i {
+  font-size: 1.0125rem; }
+
 /*Hide all except first fieldset*/
 #stakingForm fieldset:not(:first-of-type) {
   display: none; }
@@ -204,20 +218,21 @@ h4 {
   margin: 10px 5px; }
 
 #stakingForm .action-button:hover, #stakingForm .action-button:focus {
-  box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60; }
+  box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+  outline: none; }
 
 /*headings*/
 .staking-title {
-  font-size: 15px;
-  text-transform: uppercase;
+  font-size: 20px;
+  text-transform: capitalize;
   color: #fff;
   margin-bottom: 10px; }
 
 .staking-subtitle {
   font-weight: normal;
-  font-size: 13px;
+  font-size: 18px;
   color: #fff;
-  margin-bottom: 20px; }
+  margin-bottom: 15px; }
 
 /*progressbar*/
 #progressbar {
@@ -230,7 +245,7 @@ h4 {
   list-style-type: none;
   color: white;
   text-transform: uppercase;
-  font-size: 9px;
+  font-size: 12px;
   width: 20%;
   float: left;
   position: relative;
@@ -243,10 +258,10 @@ h4 {
 #progressbar li:before {
   content: counter(step);
   counter-increment: step;
-  width: 20px;
-  line-height: 20px;
+  width: 24px;
+  line-height: 24px;
   display: block;
-  font-size: 10px;
+  font-size: 16px;
   color: #fff;
   background: #333;
   border-radius: 3px;
@@ -262,7 +277,7 @@ h4 {
   background: white;
   position: absolute;
   left: -50%;
-  top: 9px;
+  top: 12px;
   z-index: -1;
   /*put it behind the numbers*/ }
 
@@ -278,8 +293,7 @@ h4 {
   border-radius: 50%; }
 
 .help-button {
-  background: #FD8900;
-  color: white;
+  color: #FD8900;
   border-radius: 50%;
   width: 25px;
   height: 25px;
@@ -360,7 +374,7 @@ h4 {
   }
 
   .instructions {
-    background: rgba(252, 248, 227, 0.9);
+    background: rgba(252, 248, 227, 0.95);
     color: #8a6d3b;
     position: fixed;
     bottom: -100%;
