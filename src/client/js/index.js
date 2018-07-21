@@ -245,9 +245,9 @@ module.exports = (function () {
         if (buttonId === "load-eth-info") {
           if (userInfo.lev > 0 || userInfo.approved > 0 || userInfo.staked > 0) {
             if (userInfo.lev > 0 && userInfo.approved === 0 && userInfo.staked === 0) {
-              return goToStep(3);
+              return goToStep(2);
             } else if (userInfo.lev === 0 && ((userInfo.approved > 0 && userInfo.staked === 0) || (userInfo.staked > 0 && userInfo.approved === 0))) {
-              return goToStep(4);
+              return goToStep(3);
             }
 
             client.showStepsModal(userInfo);
