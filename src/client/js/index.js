@@ -18,7 +18,6 @@ module.exports = (function () {
   let currentStep = 0;
 
   client.stakingForm = function () {
-
     $(".next").click(function(){
       goToStep(currentStep + 1);
     });
@@ -154,6 +153,7 @@ module.exports = (function () {
     }
     client.setup();
     client.setEvents();
+    client.showAppInfo();
   }
 
   client.setup = function () {
@@ -163,9 +163,18 @@ module.exports = (function () {
     $("#approve-tx-info").txInfo("approve");
 
     socket.on("state", async function (data) {
-      let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
-      $("#staking-status").text(text)
+      console.log('state', data);
+      $("#staking-status").removeClass("hidden");
+      if (parseInt(data.current) > parseInt(data.end)) {
+        $("#staking-status").addClass("error");
+      } else {
+        $("#staking-status").removeClass("error");
+        $("#staking-status .current").text("Current ETH Block: " + data.current);
+        $("#staking-status .period").text("Period: " + (data.end - data.start));
+        $("#staking-status .yOfZ").text("Block: " + (data.current - data.start) + " of " + (data.end - data.start));
+      }
     })
+
     socket.on("user-update", function (data) {
       console.log("user-update", data);
       if (data.event === "LEV.Approval") {
@@ -175,6 +184,13 @@ module.exports = (function () {
       }
     })
   };
+
+  client.showAppInfo = function () {
+    const config = contract.getConfig();
+    $('#app-address .lev a').attr("href", config.levLink).text(config.lev);
+    $('#app-address .fee a').attr("href", config.feeLink).text(config.fee);
+    $('#app-address .stake a').attr("href", config.stakeLink).text(config.stake);
+  }
 
   client.setEvents = function () {
     $("#choose-action").click(chooseMethod);

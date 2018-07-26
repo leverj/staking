@@ -32,6 +32,95 @@
   }
 }
 
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  display: none;
+}
+
+.help-button {
+  color: #FD8900;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  top: 70px;
+  left: 40px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  @media screen and (max-width: 768px) {
+    left: 20px;
+  }
+}
+
+#staking-status {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  text-align: right;
+  font-size: 15px;
+
+  &:not(.error) {
+    & > div {
+      display: block;
+
+      &.error {
+        display: none;
+      }
+    }
+  }
+
+  &.error {
+    & > div {
+      display: none;
+
+      &.error {
+        display: block;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    right: 30px;
+  }
+}
+
+#app-address {
+  margin-top: 20px;
+  max-width: 700px;
+  font-weight: 600;
+
+  & > div {
+    label {
+      float: left;
+      width: 38%;
+      margin-right: 2%;
+      text-align: right;
+    }
+
+    a {
+      float: left;
+      width: 60%;
+      word-wrap: break-word;
+    }
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+}
+
 button {
   cursor: pointer;
   display: inline-block;
@@ -174,7 +263,6 @@ input[type=text] {
       overflow: hidden;
       width: 88%;
 
-
       @media screen and (max-width: 768px) {
         max-width: 200px;
       }
@@ -183,6 +271,12 @@ input[type=text] {
     i {
       float: right;
       line-height: 1.5rem;
+    }
+  }
+
+  &:not(.active) {
+    .icon-copy span {
+      display: none;
     }
   }
 }

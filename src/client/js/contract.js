@@ -112,6 +112,17 @@ module.exports = (function () {
     return userInfo;
   };
 
+  contract.getConfig = function () {
+    return {
+      lev: config.lev,
+      levLink: `${config.etherscan}/address/${config.lev}`,
+      fee: config.fee,
+      feeLink: `${config.etherscan}/address/${config.fee}`,
+      stake: config.stake,
+      stakeLink: `${config.etherscan}/address/${config.stake}`,
+    }
+  };
+
   async function setUser() {
     if (!contract.isManual) {
       let accounts = await web3.eth.getAccounts();

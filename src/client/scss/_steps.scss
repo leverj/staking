@@ -7,7 +7,7 @@
   border: 0;
   border-bottom: 1px solid $color-primary;
   overflow: hidden;
-  padding: 30px 0;
+  padding: 10px 0;
 
   .fieldset-container {
     white-space: nowrap;
@@ -48,7 +48,7 @@
     }
 
     .actions {
-      margin-top: 40px;
+      margin-top: 20px;
 
       &:after {
         content: "";
@@ -56,10 +56,6 @@
         clear: both;
       }
     }
-
-    /*&.active {
-      height: auto;
-    }*/
   }
 
   .form-field__container {
