@@ -17,9 +17,8 @@ jobs:
           command: |
             sudo npm install -g truffle@4.1.3
             truffle compile
-      - run:
-          name: test
-          command: npm test
+      - run: npm test
+      - run: npm run nsp
       - run:
           name: build
           command: |

@@ -19,3 +19,5 @@ Fee.txt
 Stake.txt
 deployment/run.sh
 flattened/
+src/client/css/style.css
+src/client/css/style.css.map

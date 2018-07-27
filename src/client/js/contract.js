@@ -40,6 +40,7 @@ module.exports = (function () {
     ]);
     result = result.map(num => ((num - 0) / Math.pow(10, config.levDecimals)).toFixed(config.levDecimals) - 0);
     userInfo = {
+      userLink: `${config.etherscan}/address/${contract.user}`,
       lev: result[0],
       staked: result[1],
       approved: result[2],
@@ -63,11 +64,23 @@ module.exports = (function () {
     };
   };
 
-  contract.approve = async function (levCounts) {
+  contract.approve = async function (levCounts, onHash) {
     if (contract.isManual) return;
     affirm(levCounts > 0, "Amount to approve must be greater than 0");
     let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
-    await lev.methods.approve(config.stake, amount).send({from: contract.user});
+    await lev
+      .methods
+      .approve(config.stake, amount)
+      .send({from: contract.user})
+      .on('transactionHash', function(hash) {
+        onHash(hash);
+      })
+      .on('confirmation', function(confirmationNumber, receipt){
+        // console.log('confirmation', confirmationNumber, receipt)
+      })
+      .then(function(newContractInstance){
+        // console.log('newContractInstance', newContractInstance) // instance with the new contract address
+      });
   };
 
   contract.getStakeInfo = async function (levCounts) {
@@ -82,15 +95,32 @@ module.exports = (function () {
     };
   };
 
-  contract.stake = async function (levCounts) {
+  contract.stake = async function (levCounts, onHash) {
     if (contract.isManual) return;
     affirm(levCounts > 0, "Amount to approve must be greater than 0");
     let amount = Math.floor(levCounts * Math.pow(10, config.levDecimals));
-    await stake.methods.stakeTokens(amount).send({from: contract.user});
+    await stake
+      .methods
+      .stakeTokens(amount)
+      .send({from: contract.user})
+      .on('transactionHash', function(hash) {
+        onHash(hash);
+      });
   };
 
   contract.getUserInfo = function () {
     return userInfo;
+  };
+
+  contract.getConfig = function () {
+    return {
+      lev: config.lev,
+      levLink: `${config.etherscan}/address/${config.lev}`,
+      fee: config.fee,
+      feeLink: `${config.etherscan}/address/${config.fee}`,
+      stake: config.stake,
+      stakeLink: `${config.etherscan}/address/${config.stake}`,
+    }
   };
 
   async function setUser() {
