@@ -166,12 +166,14 @@ module.exports = (function () {
       console.log('state', data);
       $("#staking-status").removeClass("hidden");
       if (parseInt(data.current) > parseInt(data.end)) {
-        $("#staking-status").addClass("error");
+        $("#staking-status div.error").removeClass("hidden");
+        $("#staking-status div:not(.error)").addClass("hidden");
       } else {
-        $("#staking-status").removeClass("error");
-        $("#staking-status .current").text("Current ETH Block: " + data.current);
-        $("#staking-status .period").text("Period: " + (data.end - data.start));
-        $("#staking-status .yOfZ").text("Block: " + (data.current - data.start) + " of " + (data.end - data.start));
+        $("#staking-status div.error").addClass("hidden");
+        $("#staking-status div:not(.error)").removeClass("hidden");
+        $("#staking-status .current span").text(data.current);
+        $("#staking-status .period span").text(data.end - data.start);
+        $("#staking-status .yOfZ span").text((data.current - data.start) + " of " + (data.end - data.start));
       }
     })
 
