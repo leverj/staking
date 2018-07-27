@@ -61,11 +61,11 @@ module.exports = (function () {
   };
 
   client.rememberState = function () {
-    console.log("client.rememberState function");
+    // console.log("client.rememberState function");
   };
 
   client.detectDevice = function () {
-    console.log("client.detectDevice function");
+    // console.log("client.detectDevice function");
   };
 
   client.removeLoading = function () {
@@ -163,7 +163,7 @@ module.exports = (function () {
     $("#approve-tx-info").txInfo("approve");
 
     socket.on("state", async function (data) {
-      console.log('state', data);
+      // console.log('state', data);
       $("#staking-status").removeClass("hidden");
       if (parseInt(data.current) > parseInt(data.end)) {
         $("#staking-status div.error").removeClass("hidden");
@@ -178,7 +178,7 @@ module.exports = (function () {
     })
 
     socket.on("user-update", function (data) {
-      console.log("user-update", data);
+      // console.log("user-update", data);
       if (data.event === "LEV.Approval") {
         loadUserInfo.bind($("#approve-action"))();
       } else if (data.event === "STAKE.STAKE") {
@@ -325,14 +325,14 @@ module.exports = (function () {
         $("#approve-data").text(info.data);
       })
       .then(() => contract.approve(tokens, (hash) => {
-        console.log("approve hash generated: " + hash);
+        // console.log("approve hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
         approveTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
-        console.log("contract.approve done")
+        // console.log("contract.approve done")
         showClick.bind(self)();
         buttons.prop("disabled", false);
       })
@@ -367,14 +367,14 @@ module.exports = (function () {
         $("#stake-data").text(info.data);
       })
       .then(() => contract.stake(tokens, (hash) => {
-        console.log("staking hash generated: " + hash);
+        // console.log("staking hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
         stakeTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
-        console.log("contract.stake done")
+        // console.log("contract.stake done")
         showClick.bind(self)();
       })
       .catch((e) => {

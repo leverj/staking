@@ -76,10 +76,10 @@ module.exports = (function () {
         onHash(hash);
       })
       .on('confirmation', function(confirmationNumber, receipt){
-        console.log('confirmation', confirmationNumber, receipt)
+        // console.log('confirmation', confirmationNumber, receipt)
       })
       .then(function(newContractInstance){
-        console.log('newContractInstance', newContractInstance) // instance with the new contract address
+        // console.log('newContractInstance', newContractInstance) // instance with the new contract address
       });
   };
 
