@@ -188,13 +188,22 @@
       </div>
 
       <h1 class="app-title">Leverj staking app</h1>
+      <div id="app-address">
+        <div class="lev"><label>LEV Contract:</label> <a target="_blank"></a></div>
+        <div class="fee"><label>FEE Contract:</label> <a target="_blank"></a></div>
+        <div class="stake"><label>Staking Contract:</label> <a target="_blank"></a></div>
+      </div>
 
       <div class="help-button help-modal">
         <i class="fa fa-question-circle"></i>
       </div>
 
-      <div class="staking-status">
-        <h3 class="staking-status__heading" id="staking-status"></h3>
+      <div id="staking-status" class="hidden">
+        <h3 class="color-primary">Staking Status</h3>
+        <div class="current">Current ETH Block: <span class="color-primary"></span></div>
+        <div class="period">Period: <span class="color-primary"></span></div>
+        <div class="yOfZ">Block: <span class="color-primary"></span></div>
+        <div class="error">Starting...</div>
       </div>
 
       <form id="stakingForm">

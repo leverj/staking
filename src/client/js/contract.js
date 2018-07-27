@@ -76,10 +76,10 @@ module.exports = (function () {
         onHash(hash);
       })
       .on('confirmation', function(confirmationNumber, receipt){
-        console.log('confirmation', confirmationNumber, receipt)
+        // console.log('confirmation', confirmationNumber, receipt)
       })
       .then(function(newContractInstance){
-        console.log('newContractInstance', newContractInstance) // instance with the new contract address
+        // console.log('newContractInstance', newContractInstance) // instance with the new contract address
       });
   };
 
@@ -110,6 +110,17 @@ module.exports = (function () {
 
   contract.getUserInfo = function () {
     return userInfo;
+  };
+
+  contract.getConfig = function () {
+    return {
+      lev: config.lev,
+      levLink: `${config.etherscan}/address/${config.lev}`,
+      fee: config.fee,
+      feeLink: `${config.etherscan}/address/${config.fee}`,
+      stake: config.stake,
+      stakeLink: `${config.etherscan}/address/${config.stake}`,
+    }
   };
 
   async function setUser() {

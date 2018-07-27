@@ -18,7 +18,6 @@ module.exports = (function () {
   let currentStep = 0;
 
   client.stakingForm = function () {
-
     $(".next").click(function(){
       goToStep(currentStep + 1);
     });
@@ -62,11 +61,11 @@ module.exports = (function () {
   };
 
   client.rememberState = function () {
-    console.log("client.rememberState function");
+    // console.log("client.rememberState function");
   };
 
   client.detectDevice = function () {
-    console.log("client.detectDevice function");
+    // console.log("client.detectDevice function");
   };
 
   client.removeLoading = function () {
@@ -154,6 +153,7 @@ module.exports = (function () {
     }
     client.setup();
     client.setEvents();
+    client.showAppInfo();
   }
 
   client.setup = function () {
@@ -163,11 +163,22 @@ module.exports = (function () {
     $("#approve-tx-info").txInfo("approve");
 
     socket.on("state", async function (data) {
-      let text = data.current > data.end ? "expired" : `${data.end - data.current} blocks left`;
-      $("#staking-status").text(text)
+      // console.log('state', data);
+      $("#staking-status").removeClass("hidden");
+      if (parseInt(data.current) > parseInt(data.end)) {
+        $("#staking-status div.error").removeClass("hidden");
+        $("#staking-status div:not(.error)").addClass("hidden");
+      } else {
+        $("#staking-status div.error").addClass("hidden");
+        $("#staking-status div:not(.error)").removeClass("hidden");
+        $("#staking-status .current span").text(data.current);
+        $("#staking-status .period span").text(data.end - data.start);
+        $("#staking-status .yOfZ span").text((data.current - data.start) + " of " + (data.end - data.start));
+      }
     })
+
     socket.on("user-update", function (data) {
-      console.log("user-update", data);
+      // console.log("user-update", data);
       if (data.event === "LEV.Approval") {
         loadUserInfo.bind($("#approve-action"))();
       } else if (data.event === "STAKE.STAKE") {
@@ -175,6 +186,13 @@ module.exports = (function () {
       }
     })
   };
+
+  client.showAppInfo = function () {
+    const config = contract.getConfig();
+    $('#app-address .lev a').attr("href", config.levLink).text(config.lev);
+    $('#app-address .fee a').attr("href", config.feeLink).text(config.fee);
+    $('#app-address .stake a').attr("href", config.stakeLink).text(config.stake);
+  }
 
   client.setEvents = function () {
     $("#choose-action").click(chooseMethod);
@@ -245,11 +263,12 @@ module.exports = (function () {
         if (buttonId === "load-eth-info") {
           if (userInfo.lev > 0 || userInfo.approved > 0 || userInfo.staked > 0) {
             if (userInfo.lev > 0 && userInfo.approved === 0 && userInfo.staked === 0) {
-              return goToStep(3);
+              return goToStep(2);
             } else if (userInfo.lev === 0 && ((userInfo.approved > 0 && userInfo.staked === 0) || (userInfo.staked > 0 && userInfo.approved === 0))) {
-              return goToStep(4);
+              return goToStep(3);
             }
 
+            reachStep(3);
             client.showStepsModal(userInfo);
           }
         } else {
@@ -306,14 +325,14 @@ module.exports = (function () {
         $("#approve-data").text(info.data);
       })
       .then(() => contract.approve(tokens, (hash) => {
-        console.log("approve hash generated: " + hash);
+        // console.log("approve hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
         approveTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
-        console.log("contract.approve done")
+        // console.log("contract.approve done")
         showClick.bind(self)();
         buttons.prop("disabled", false);
       })
@@ -348,14 +367,14 @@ module.exports = (function () {
         $("#stake-data").text(info.data);
       })
       .then(() => contract.stake(tokens, (hash) => {
-        console.log("staking hash generated: " + hash);
+        // console.log("staking hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
         stakeTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
-        console.log("contract.stake done")
+        // console.log("contract.stake done")
         showClick.bind(self)();
       })
       .catch((e) => {
@@ -412,7 +431,6 @@ module.exports = (function () {
     $(".fieldset-container").css("transform", "translateX(-" + (currentStep * fieldsetWidth) + "px)");
     $(".fieldset-container fieldset").removeClass("active");
     $(".fieldset-container fieldset:eq(" + currentStep + ")").addClass("active");
-    $(".fieldset-container fieldset:lt(" + (currentStep) + ")").find(".next").prop("disabled", false);
 
     reachStep(step);
     $("#progressbar li").removeClass("passed current");
@@ -428,5 +446,6 @@ module.exports = (function () {
 
   function reachStep(step) {
     $("#progressbar li:lt(" + (step + 1) + ")").addClass("reached");
+    $(".fieldset-container fieldset:lt(" + step + ")").find(".next").prop("disabled", false);
   }
 })();
