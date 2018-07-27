@@ -268,6 +268,7 @@ module.exports = (function () {
               return goToStep(3);
             }
 
+            reachStep(3);
             client.showStepsModal(userInfo);
           }
         } else {
@@ -430,7 +431,6 @@ module.exports = (function () {
     $(".fieldset-container").css("transform", "translateX(-" + (currentStep * fieldsetWidth) + "px)");
     $(".fieldset-container fieldset").removeClass("active");
     $(".fieldset-container fieldset:eq(" + currentStep + ")").addClass("active");
-    $(".fieldset-container fieldset:lt(" + (currentStep) + ")").find(".next").prop("disabled", false);
 
     reachStep(step);
     $("#progressbar li").removeClass("passed current");
@@ -446,5 +446,6 @@ module.exports = (function () {
 
   function reachStep(step) {
     $("#progressbar li:lt(" + (step + 1) + ")").addClass("reached");
+    $(".fieldset-container fieldset:lt(" + step + ")").find(".next").prop("disabled", false);
   }
 })();
