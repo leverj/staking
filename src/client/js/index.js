@@ -296,6 +296,8 @@ module.exports = (function () {
     $("[name=staked-count]").text(userInfo.staked.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.staked).parent().attr("href", userInfo.stakedLink);
     $("[name=approved-count]").text(userInfo.approved.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.approved).parent().attr("href", userInfo.approvedLink);
     $("[name=fee-count]").text(userInfo.fee.toLocaleString(undefined,{maximumFractionDigits:9})).data("value", userInfo.fee).parent().attr("href", userInfo.feeLink);
+    const dt = new Date();
+    $("[name=timestamp]").text(dt.toDateString() + " " + dt.toLocaleTimeString());
   }
 
   function approve() {
@@ -323,11 +325,14 @@ module.exports = (function () {
         $("#approve-amount").text(info.amount);
         $("#approve-gas").text(info.gas);
         $("#approve-data").text(info.data);
+        const dt = new Date();
+        $("#approve-timestamp").text(dt.toDateString() + " " + dt.toLocaleTimeString());
       })
       .then(() => contract.approve(tokens, (hash) => {
         // console.log("approve hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
+        approveTxInfo.prev(".action-status").text("Approval is PENDING...").removeClass("hidden");
         approveTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
@@ -335,10 +340,12 @@ module.exports = (function () {
         // console.log("contract.approve done")
         showClick.bind(self)();
         buttons.prop("disabled", false);
+        approveTxInfo.prev(".action-status").html("Approval is <strong>COMPLETE</strong>.");
       })
       .catch((e) => {
-        handle();
+        handle(e);
         approveTxInfo.removeClass("active");
+        approveTxInfo.prev(".action-status").addClass("hidden");
       })
       .finally(function() {
         $(self).removeClass("working");
@@ -365,20 +372,24 @@ module.exports = (function () {
         $("#stake-amount").text(info.amount);
         $("#stake-gas").text(info.gas);
         $("#stake-data").text(info.data);
+        const dt = new Date();
+        $("#stake-timestamp").text(dt.toDateString() + " " + dt.toLocaleTimeString());
       })
       .then(() => contract.stake(tokens, (hash) => {
         // console.log("staking hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
+        stakeTxInfo.prev(".action-status").text("Staking is PENDING...").removeClass("hidden");
         stakeTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
         // console.log("contract.stake done")
         showClick.bind(self)();
+        stakeTxInfo.prev(".action-status").html("Staking is <strong>COMPLETE</strong>.");
       })
       .catch((e) => {
-        if (e.toString().indexOf("Error: gas required exceeds allowance")) {
+        if (e.toString().indexOf("Error: gas required exceeds allowance") > -1) {
           handle({
             message: "Staking has failed, it could be one of the following two reasons. <br>" +
                     "1. Staking has expired. Wait for a new staking period. <br>" +
@@ -388,6 +399,7 @@ module.exports = (function () {
           handle(e);
         }
         stakeTxInfo.removeClass("active");
+        stakeTxInfo.prev(".action-status").addClass("hidden");
       })
       .finally(function() {
         $(self).removeClass("working");
@@ -438,9 +450,9 @@ module.exports = (function () {
     $("#progressbar li:lt(" + (step) + ")").addClass("passed");
 
     if (step !== 3) {
-      $("#stake-tx-info").hide();
+      $("#stake-tx-info").addClass("hidden");
     } else {
-      $("#stake-tx-info").show();
+      $("#stake-tx-info").removeClass("hidden");
     }
   }
 
