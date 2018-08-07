@@ -4,7 +4,12 @@ const Web3 = require('web3');
 const feeABI = require("../../../build/contracts/Fee.json").abi;
 const levABI = require("../../../build/contracts/Token.json").abi;
 const stakeABI = require("../../../build/contracts/Stake.json").abi;
-
+const networks = {
+  "1": "Select 'Main Ethereum Network' in MetaMask",
+  "3": "Select 'Ropsten Test Network' in MetaMask",
+  "4": "Select 'Kovan Test Network' in MetaMask",
+  "42": "Select 'Rinkeby Test Network' in MetaMask",
+};
 
 module.exports = (function () {
   let contract = {};
@@ -20,10 +25,17 @@ module.exports = (function () {
     contract.isManual = _isManual;
     let provider = _isManual ? new Web3.providers.HttpProvider(config.network) : window.web3.currentProvider;
     window.web3 = new Web3(provider);
-    await setUser();
-    stake = new web3.eth.Contract(stakeABI, config.stake);
-    lev = new web3.eth.Contract(levABI, config.lev);
-    fee = new web3.eth.Contract(feeABI, config.fee);
+    return web3.eth.net.getId()
+      .then(networkId => {
+        if (!_isManual) {
+          affirm(config.networkId == networkId, networks[config.networkId] ? networks[config.networkId] : "You have to select a correct network.");
+        }
+
+        setUser();
+        stake = new web3.eth.Contract(stakeABI, config.stake);
+        lev = new web3.eth.Contract(levABI, config.lev);
+        fee = new web3.eth.Contract(feeABI, config.fee);
+      });
   };
 
   contract.setUser = function (_user) {

@@ -3,6 +3,7 @@ const _ = require('lodash');
 module.exports = _.assign(config, {
   "common": {
     "network": process.env.NETWORK,
+    "networkId": process.env.NETWORK_ID,
     "stake": process.env.STAKE,
     "fee": process.env.FEE,
     "lev": process.env.LEV,
