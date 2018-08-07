@@ -123,6 +123,10 @@ module.exports = (function () {
     }
   };
 
+  contract.getTxLink = function(txHash) {
+    return `${config.etherscan}/tx/${txHash}`;
+  }
+
   async function setUser() {
     if (!contract.isManual) {
       let accounts = await web3.eth.getAccounts();

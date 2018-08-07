@@ -332,7 +332,11 @@ module.exports = (function () {
         // console.log("approve hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
-        approveTxInfo.prev(".action-status").text("Approval is PENDING...").removeClass("hidden");
+        const actionStatus = approveTxInfo.prev(".action-status");
+        actionStatus.removeClass("hidden");
+        actionStatus.find("a").attr("href", contract.getTxLink(hash));
+        actionStatus.find("a span").text("Approval is PENDING...");
+
         approveTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
@@ -340,7 +344,8 @@ module.exports = (function () {
         // console.log("contract.approve done")
         showClick.bind(self)();
         buttons.prop("disabled", false);
-        approveTxInfo.prev(".action-status").html("Approval is <strong>COMPLETE</strong>.");
+        const actionStatus = approveTxInfo.prev(".action-status");
+        actionStatus.find("a span").html("Approval is <strong>COMPLETE</strong>.");
       })
       .catch((e) => {
         handle(e);
@@ -379,14 +384,19 @@ module.exports = (function () {
         // console.log("staking hash generated: " + hash);
         $(self).addClass("working");
         $(self).html("<i class='fa fa-spinner fa-spin'></i>");
-        stakeTxInfo.prev(".action-status").text("Staking is PENDING...").removeClass("hidden");
+        const actionStatus = stakeTxInfo.prev(".action-status");
+        actionStatus.removeClass("hidden");
+        actionStatus.find("a").attr("href", contract.getTxLink(hash));
+        actionStatus.find("a span").text("Staking is PENDING...");
+
         stakeTxInfo.addClass("loading");
         buttons.prop("disabled", true);
       }))
       .then(() => {
         // console.log("contract.stake done")
         showClick.bind(self)();
-        stakeTxInfo.prev(".action-status").html("Staking is <strong>COMPLETE</strong>.");
+        const actionStatus = stakeTxInfo.prev(".action-status");
+        actionStatus.find("a span").html("Staking is <strong>COMPLETE</strong>.");
       })
       .catch((e) => {
         if (e.toString().indexOf("Error: gas required exceeds allowance") > -1) {
