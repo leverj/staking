@@ -8,5 +8,6 @@ export LEV=0xaa7127e250e87476fdd253f15e86a4ea9c4c4bd4
 export SALE=0xce2e19cec5a5188b434c7e11e40a12d611acac11
 export FEEDECIMALS=9
 export LEVDECIMALS=9
+export NETWORK_ID=3
 
 grunt; nodemon -d 2 src/server/index.js
