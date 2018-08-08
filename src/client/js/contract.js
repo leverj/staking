@@ -23,7 +23,7 @@ module.exports = (function () {
 
   contract.setManual = async function (_isManual) {
     contract.isManual = _isManual;
-    let provider      = _isManual ? new Web3.providers.HttpProvider(config.network) : window.web3.currentProvider;
+    let provider      = _isManual ? config.network : window.web3.currentProvider;
     window.web3       = new Web3(provider);
     const networkId   = await web3.eth.net.getId()
     affirm(config.networkId === networkId, networks[config.networkId] ? networks[config.networkId] : "You have to select a correct network.");
@@ -153,4 +153,4 @@ module.exports = (function () {
 
   init();
   return contract;
-})();
+}());
