@@ -36,7 +36,7 @@
     border: none;
     display: inline-block;
     width: 100%;
-    padding: 0 15px;
+    padding: 15px;
     white-space: normal;
     vertical-align: middle;
     position: relative;
@@ -54,6 +54,12 @@
         content: "";
         display: table;
         clear: both;
+      }
+    }
+
+    &:not(.active) {
+      .eth-info {
+        display: none;
       }
     }
   }
@@ -81,4 +87,102 @@
   .error-container {
     margin: 8px 0;
   }
+}
+
+.eth-info {
+  display: none;
+  opacity: 0;
+  transition: all 0.7s ease;
+  position: relative;
+
+  &.active {
+    min-height: 120px;
+    display: block;
+    opacity: 1;
+  }
+
+  &.loading {
+    opacity: 0.6;
+  }
+
+  .user-info-row {
+    color: $color-text-muted;
+    text-align: left;
+    margin: 8px 0;
+
+    &:after {
+      content: '';
+      clear: both;
+      display: table;
+    }
+
+    label {
+      width: 48%;
+      text-align: left;
+      float: left;
+      margin-left: 1.6%;
+    }
+
+    a {
+      width: 50%;
+      cursor: pointer;
+      text-align: right;
+      float: left;
+
+      span {
+        color: $color-white;
+        word-break: break-all;
+        margin-right: 8px;
+      }
+
+      &:hover {
+        span {
+          color: $color-primary;
+        }
+      }
+    }
+
+    &.heading {
+      font-size: 18px;
+
+      label {
+        width: 100%;
+        text-align: center;
+        word-break: break-all;
+      }
+    }
+  }
+}
+
+#stake-tx-info {
+  .icon-copy {
+    span {
+      display: inline-block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 88%;
+
+      @media screen and (max-width: 768px) {
+        max-width: 200px;
+      }
+    }
+
+    i {
+      float: right;
+      line-height: 1.5rem;
+    }
+  }
+
+  &:not(.active) {
+    .icon-copy span {
+      display: none;
+    }
+  }
+}
+
+.action-status {
+  margin-top: 18px;
+  line-height: 1;
+  font-weight: 400;
 }
