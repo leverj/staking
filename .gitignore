@@ -1,22 +1,16 @@
-# Logs
 logs
 *.log
 build
 .idea
-#package-lock.json
-secrets.json
 node_modules/
 dist
 dist1
 bower_components
 .DS_Store
 conf.ropsten/stake.json
-migrations/config/
 scripts/stake*.sh
 start-prod.sh
 contract.sh
-Fee.txt
-Stake.txt
 deployment/run.sh
 flattened/
 src/client/css/style.css

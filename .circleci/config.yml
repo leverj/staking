@@ -9,26 +9,17 @@ jobs:
       - image: circleci/node:8.9.1
     steps:
       - checkout
-      - run:
-          name: npm install
-          command: npm install
-      - run:
-          name: truffle compile
-          command: |
-            sudo npm install -g truffle@4.1.3
-            truffle compile
-      - run: npm test
-      - run: npm run nsp
-      - run:
-          name: build
-          command: |
-            sudo npm install -g grunt
-            grunt
+      - run: npm install -g yarn
+      - run: yarn
+      - run: node_modules/.bin/truffle compile
+      - run: yarn test
+      - run: npm nsp
+      - run: yarn grunt
       - run:
           name: flatten contract
           command: |
-            node node_modules/truffle-flattener/index.js contracts/Fee.sol > Fee.sol
-            node node_modules/truffle-flattener/index.js contracts/Stake.sol > Stake.sol
+            node node_modules/.bin/truffle-flattener contracts/Fee.sol > Fee.sol
+            node node_modules/.bin/truffle-flattener contracts/Stake.sol > Stake.sol
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
@@ -36,10 +27,8 @@ jobs:
           command: |
             docker info
             docker build -t leverj/stake:$CIRCLE_BRANCH .
-            docker build -f Dockerfile-automation -t leverj/stake-automation:$CIRCLE_BRANCH .
             docker build -f Dockerfile-contract-deploy -t leverj/stake-contract:$CIRCLE_BRANCH .
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push leverj/stake
-            docker push leverj/stake-automation
             docker push leverj/stake-contract
 

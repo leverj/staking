@@ -30,7 +30,6 @@ contract('Stake and withdraw in consecutive interval', ([admin, user1, user2, us
   })
 });
 
-
 contract('Stake and withdraw in same interval', ([admin, user1, user2, user3, wallet, user5, operator]) => {
   let token, stake, fee, affirm;
 
@@ -170,7 +169,7 @@ contract('staking and withdraw when no fee or eth have been collected', ([admin,
   })
 });
 
-contract.only('changing intervals', ([admin, user1, user2, user3, wallet, user5, operator]) => {
+contract('changing intervals', ([admin, user1, user2, user3, wallet, user5, operator]) => {
   let token, stake, fee, affirm;
 
   before(async function () {
