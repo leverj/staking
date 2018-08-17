@@ -13,7 +13,7 @@ jobs:
       - run: yarn
       - run: node_modules/.bin/truffle compile
       - run: yarn test
-      - run: npm nsp
+      - run: yarn nsp
       - run: yarn grunt
       - run:
           name: flatten contract
