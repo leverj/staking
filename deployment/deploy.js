@@ -30,9 +30,9 @@ async function deploy() {
   }
 
   async function createContracts() {
-    fee   = await deploymentUtil.getOrCreateContract(config.Fee.address, feeJson, addDeployerToAdmin(config.Fee.values), config.Fee.source);
-    config.Stake.values.fee = fee._address
-    stake = await deploymentUtil.getOrCreateContract(config.Stake.address, stakeJson, addDeployerToAdmin(config.Stake.values), config.Stake.source);
+    fee                 = await deploymentUtil.getOrCreateContract(config.Fee.address, feeJson, addDeployerToAdmin(config.Fee.values), config.Fee.source);
+    config.Stake.values = config.Stake.values.map(_ => _ === 'fee' ? fee._address : _)
+    stake               = await deploymentUtil.getOrCreateContract(config.Stake.address, stakeJson, addDeployerToAdmin(config.Stake.values), config.Stake.source);
   }
 
   function addDeployerToAdmin(values) {
