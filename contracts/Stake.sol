@@ -1,13 +1,3 @@
-/**
-  * stake users levs
-  * get fee from trading contract
-  * get eth from trading contract
-  * calculate fee tokens to be generated
-  * distribute fee tokens and lev to users in chunks.
-  * re-purpose it for next trading duration.
-  * what happens to extra fee if not enough trading happened? destroy it.
-  * Stake will have full control over FEE.sol
-  */
 pragma solidity ^0.4.19;
 
 
@@ -35,17 +25,10 @@ contract Stake is Owned, Validating, GenericCall {
     event RedeemEvent(address indexed user, uint levs, uint feeEarned, uint startBlock, uint endBlock, uint intervalId);
     event FeeCalculated(uint feeCalculated, uint feeReceived, uint weiReceived, uint startBlock, uint endBlock, uint intervalId);
     event Block(uint start, uint end, uint intervalId);
-    event Log(int signedQuantity, uint unsignedQuantity, uint lev, uint withdrawLev); //todo: remove before prod.
     //account
     struct UserStake {uint interval; uint lev; uint levBlock;}
 
     mapping(address => UserStake) public stakes;
-
-    function getStake(address account) external constant returns (uint, uint, uint){
-        UserStake storage userStake = stakes[account];
-        return (userStake.interval, userStake.lev, userStake.levBlock);
-    }
-
     // per staking interval data
     mapping(uint => uint) public totalLevBlocks;
     mapping(uint => uint) public FEEGenerated;
