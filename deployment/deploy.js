@@ -31,7 +31,7 @@ async function deploy() {
 
   async function createContracts() {
     fee   = await deploymentUtil.getOrCreateContract(config.Fee.address, feeJson, addDeployerToAdmin(config.Fee.values), config.Fee.source);
-    config.Stake.values['registry.address'] = fee._address
+    config.Stake.values.fee = fee._address
     stake = await deploymentUtil.getOrCreateContract(config.Stake.address, stakeJson, addDeployerToAdmin(config.Stake.values), config.Stake.source);
   }
 
