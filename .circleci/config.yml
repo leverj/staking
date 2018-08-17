@@ -9,7 +9,7 @@ jobs:
       - image: circleci/node:8.9.1
     steps:
       - checkout
-      - run: npm install -g yarn
+      - run: sudo npm install -g yarn
       - run: yarn
       - run: node_modules/.bin/truffle compile
       - run: yarn test
