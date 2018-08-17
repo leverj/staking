@@ -1,23 +1,10 @@
 const Fee = artifacts.require('./Fee.sol');
 const expect = require('expect.js');
-const fs = require('fs');
-const BN = require('bn.js');
-const HttpProvider = require('ethjs-provider-http');
-const EthRPC = require('ethjs-rpc');
-const EthQuery = require('ethjs-query');
-const Web3 = require('web3');
-const ethRPC = new EthRPC(new HttpProvider('http://localhost:8545'));
-const ethQuery = new EthQuery(new HttpProvider('http://localhost:8545'));
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
-contract('generate and send fee', (accounts) => {
+contract('generate and send fee', ([admin, user1,user2,user3, minter]) => {
   let fee;
-  let minter = accounts[4];
-  let user1 = accounts[1];
-  let user2 = accounts[2];
-  let user3 = accounts[3];
   before(async function () {
-    fee = await Fee.deployed();
+    fee = await Fee.new([admin], "Leverj FEE Token", "0", "FEE" );
     await fee.setMinter(minter)
   });
   it('minter should be able to send fee', async function () {
@@ -44,13 +31,10 @@ contract('generate and send fee', (accounts) => {
 
 });
 
-contract('burn tokens', (accounts) => {
+contract('burn tokens', ([admin, user1,user2,user3, minter]) => {
   let fee;
-  let minter = accounts[4];
-  let user1 = accounts[1];
-  let user2 = accounts[2];
   before(async function () {
-    fee = await Fee.deployed();
+    fee = await Fee.new([admin], "Leverj FEE Token", "0", "FEE" );
     await fee.setMinter(minter);
     await fee.sendTokens(user1, 1000, {from: minter});
     await fee.sendTokens(user2, 1100, {from: minter})

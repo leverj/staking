@@ -1,0 +1,26 @@
+{
+  "extends": "default",
+  "rules": {
+    "avoid-call-value":"warn",
+    "avoid-low-level-calls": "warn",
+    "avoid-suicide": "error",
+    "avoid-sha3": "warn",
+    "check-send-result": false,
+    "const-name-snakecase": false,
+    "expression-indent": false,
+    "func-name-mixedcase": false,
+    "func-order": false,
+    "func-param-name-mixedcase": false,
+    "indent": false,
+    "max-line-length": 120,
+    "multiple-sends": false,
+    "no-empty-blocks": false,
+    "no-inline-assembly": false,
+    "quotes":"warn",
+    "separate-by-one-line-in-contract": false,
+    "statement-indent": false,
+    "two-lines-top-level-separator": false,
+    "var-name-mixedcase": false,
+    "visibility-modifier-order": false
+  }
+}

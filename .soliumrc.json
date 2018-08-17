@@ -1,0 +1,17 @@
+{
+  "extends": "solium:recommended",
+  "plugins": ["security"],
+  "rules": {
+    "variable-declarations": "error",
+    "indentation": 0,
+    "operator-whitespace": 0,
+    "quotes": ["error", "double"],
+    "visibility-first": 0,
+    "whitespace": 0,
+    "security/max-statements-in-func": "warning",
+    "security/no-inline-assembly": 0,
+    "security/no-send": 0,
+    "security/no-suicide-or-selfdestruct": "error",
+    "security/no-var": "warning"
+  }
+}

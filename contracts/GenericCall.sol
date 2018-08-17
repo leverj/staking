@@ -11,7 +11,7 @@ contract GenericCall {
 
   function execute(address destination, uint value, bytes data) external isAllowed {
     if (destination.call.value(value)(data)) {
-      Execution(destination, value, data);
+      emit Execution(destination, value, data);
     }
   }
 }
