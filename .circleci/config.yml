@@ -15,20 +15,15 @@ jobs:
       - run: yarn test
       - run: yarn nsp
       - run: yarn grunt
-      - run:
-          name: flatten contract
-          command: |
-            node node_modules/.bin/truffle-flattener contracts/Fee.sol > Fee.sol
-            node node_modules/.bin/truffle-flattener contracts/Stake.sol > Stake.sol
+      - run: node node_modules/.bin/truffle-flattener contracts/Fee.sol > Fee.sol
+      - run: node node_modules/.bin/truffle-flattener contracts/Stake.sol > Stake.sol
       - setup_remote_docker:
           docker_layer_caching: true
-      - run:
-          name: docker image
-          command: |
-            docker info
-            docker build -t leverj/stake:$CIRCLE_BRANCH .
-            docker build -f Dockerfile-contract-deploy -t leverj/stake-contract:$CIRCLE_BRANCH .
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push leverj/stake
-            docker push leverj/stake-contract
+      - run: docker info
+      - run: docker build -t leverj/stake:$CIRCLE_BRANCH .
+      - run: docker build -f Dockerfile-contract-deploy -t leverj/stake-contract:$CIRCLE_BRANCH .
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker push leverj/stake
+      - run: docker push leverj/stake-contract
+      - run: docker logout
 
