@@ -5,7 +5,7 @@ import './SafeMath.sol';
 import './Owned.sol';
 import './Validating.sol';
 import './Token.sol';
-import './Fee.sol';
+import './IFee.sol';
 import './GenericCall.sol';
 
 
@@ -14,7 +14,7 @@ contract Stake is Owned, Validating, GenericCall {
 
     uint public weiPerFEE; // Wei for each Fee token
     Token public LEV;
-    Fee public FEE;
+    IFee public FEE;
     address public wallet;
     uint public interval;
     uint public deployedBlock;
@@ -54,7 +54,7 @@ contract Stake is Owned, Validating, GenericCall {
         weiPerFEE = _weiPerFee;
         LEV = Token(_levToken);
         interval = _interval;
-        FEE = Fee(_feeToken);
+        FEE = IFee(_feeToken);
         deployedBlock = block.number;
         latest = 1;
         start[latest] = deployedBlock;
