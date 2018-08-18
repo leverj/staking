@@ -46,9 +46,8 @@ contract Stake is Owned, Validating, GenericCall {
 
     /// @notice Constructor to set all the default values for the owner, wallet,
     /// weiPerFee, tokenID and endBlock
-    constructor(address[] _owners, address _operator, address _wallet, uint _weiPerFee, address _levToken, address _feeToken, uint _interval)
-    public validAddress(_wallet) validAddress(_operator) validAddress(_levToken) validAddress(_feeToken) notZero(_weiPerFee) notZero(_interval){
-
+    constructor(address[] _owners, address _operator, address _wallet, uint _weiPerFee, address _levToken, address _feeToken, uint _interval) public
+    validAddress(_wallet) validAddress(_operator) validAddress(_levToken) validAddress(_feeToken) notZero(_weiPerFee) notZero(_interval){
         setOwners(_owners);
         operator = _operator;
         wallet = _wallet;
@@ -59,45 +58,47 @@ contract Stake is Owned, Validating, GenericCall {
         deployedBlock = block.number;
         latest = 1;
         start[latest] = deployedBlock;
-        end[latest] = start[latest] + interval - 1;
+        end[latest] = start[latest] + interval;
     }
 
     /// @notice To set the wallet address by the owner only
     /// @param _wallet The wallet address
     function setWallet(address _wallet) external validAddress(_wallet) onlyOwner {
+        ensureInterval();
         wallet = _wallet;
     }
 
     function setInterval(uint _interval) external notZero(_interval) onlyOwner {
+        ensureInterval();
         interval = _interval;
     }
 
     function getCurrentStakingPeriod() external constant returns (uint _start, uint _end){
         uint diff = (block.number - deployedBlock) % interval;
         _start = block.number - diff;
-        _end = _start + interval - 1;
+        _end = _start + interval;
     }
 
     //create interval if not there
     function ensureInterval() public {
         if (end[latest] > block.number) return;
-        calculateFEE2Distribute();
+        _calculateFEE2Distribute();
         uint diff = (block.number - end[latest]) % interval;
         latest = latest + 1;
-        start[latest] = end[latest - 1] + 1;
+        start[latest] = end[latest - 1];
         end[latest] = block.number - diff + interval;
         emit Block(start[latest], end[latest], latest);
     }
 
     //calculate fee for previous interval if not calculated
-    function calculateFEE2Distribute() private {
+    function _calculateFEE2Distribute() private {
         if (FEECalculated[latest] || end[latest] > block.number) return;
-        uint feeReceived = FEE.balanceOf(this);
-        FEEGenerated[latest] = feeReceived.add(address(this).balance.div(weiPerFEE));
+        (uint feeEarned, uint ethEarned) = calculateDistributedIntervalEarning(start[latest], end[latest]);
+        FEEGenerated[latest] = feeEarned.add(ethEarned.div(weiPerFEE));
         FEECalculated[latest] = true;
-        emit FeeCalculated(FEEGenerated[latest], feeReceived, address(this).balance, start[latest], end[latest], latest);
-        if (feeReceived > 0) FEE.burnTokens(feeReceived);
-        if (address(this).balance > 0) wallet.transfer(address(this).balance);
+        emit FeeCalculated(FEEGenerated[latest], feeEarned, ethEarned, start[latest], end[latest], latest);
+        if (feeEarned > 0) FEE.burnTokens(feeEarned);
+        if (ethEarned > 0) wallet.transfer(ethEarned);
     }
 
     function restake(int _signedQuantity) private {
@@ -150,5 +151,12 @@ contract Stake is Owned, Validating, GenericCall {
         if (feeEarned > 0) FEE.sendTokens(msg.sender, feeEarned);
         if (lev > 0) require(LEV.transfer(msg.sender, lev));
         emit RedeemEvent(msg.sender, lev, feeEarned, start[_interval], end[_interval], _interval);
+    }
+
+    function calculateDistributedIntervalEarning(uint _start, uint _end) public constant returns (uint _feeEarned, uint _ethEarned){
+        _feeEarned = FEE.balanceOf(this);
+        _ethEarned = address(this).balance;
+        _feeEarned = _feeEarned.mul(_end.sub(_start)).div(block.number.sub(_start));
+        _ethEarned = _ethEarned.mul(_end.sub(_start)).div(block.number.sub(_start));
     }
 }

@@ -10,7 +10,8 @@ const toNumber   = _ => Array.isArray(_) ? _.map(bn => bn.toNumber()) : _.toNumb
 const balance    = async (address, token) => token ? (await token.balanceOf(address)).toNumber() : await customWeb3.eth.getBalance(address);
 const sendEth    = async (from, to, value) => await customWeb3.eth.sendTransaction({from, to, value: new BN(value, 10)})
 const fromEth    = (eth) => new BN(customWeb3.utils.toWei(eth), 10)
-
+const bounce     = async _ => _
+const empty      = async _ => null
 
 async function stakeit(count, user, stake, token) {
   if (count > 0) await token.approve(stake.address, count, {from: user});
@@ -37,4 +38,4 @@ async function sendFeesToSelf(_to, _owner, _fee, _qty) {
   await _fee.setMinter(minter, {from: _owner});
 }
 
-module.exports = {forceMine, balance, fromEth, stakeit, sendFeesToSelf, sendEth, mineBlocks, mine, toNumber, customWeb3}
+module.exports = {forceMine, balance, fromEth, stakeit, sendFeesToSelf, sendEth, mineBlocks, mine, toNumber, customWeb3, bounce, empty}
