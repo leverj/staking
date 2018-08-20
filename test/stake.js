@@ -1,6 +1,7 @@
 const HumanStandardToken = artifacts.require("./HumanStandardToken.sol");
 const Stake              = artifacts.require("./Stake.sol");
 const Fee                = artifacts.require("./Fee.sol");
+const Mock               = artifacts.require("./external/Mock.sol");
 const expect             = require("expect.js");
 
 const {forceMine, balance, stakeit, sendFeesToSelf, sendEth, toNumber, customWeb3, bounce} = require('./help')
@@ -10,6 +11,9 @@ contract('changing intervals', ([admin, user1, user2, user3, wallet, user5, oper
   before(async () => [stake, fee, token, affirm] = await setup([admin, user1, user2, user3, wallet, user5, operator]));//11
 
   it('changing interval creates stake intervals based on new interval', async () => {
+    await affirm.latestStakeInterval(1, 10, 50)
+    await forceMine(40)
+    await stake.ensureInterval()
     await affirm.latestStakeInterval(1, 10, 50)
     await forceMine(49)
     await stake.ensureInterval()
@@ -207,6 +211,26 @@ contract('restake calculation', ([admin, user1, user2, user3, wallet, user5, ope
     await affirm.userState(user1, [2, 25, 1220], 75, 0)
   })
 });
+
+contract.skip('sending eth should initiate new staking interval', ([admin, user1, user2, user3, wallet, user5, operator]) => {
+  let token, stake, fee, affirm, mock;
+  before(async () => {
+    [stake, fee, token, affirm] = await setup([admin, user1, user2, user3, wallet, user5, operator])
+    mock                        = await Mock.new()
+  })
+
+  it('sending eth should initiate new staking interval', async () => {
+    await affirm.latestStakeInterval(1, 10, 50)
+    await forceMine(40)
+    await mock.sendFunds(stake.address, {value: 1})
+    await affirm.latestStakeInterval(1, 10, 50)
+    await forceMine(49)
+    // const state = await stake.calculateDistributedIntervalEarning(10, 50).then(toNumber)
+    // console.log({state})
+    await mock.sendFunds(stake.address, {value: 1})
+    // await affirm.latestStakeInterval(2, 50, 90)
+  })
+})
 
 contract('Stake setup', ([admin, user1, user2, user3, wallet, user5, operator]) => {
   let token, stake, fee, affirm;
