@@ -16,8 +16,7 @@ contract Stake is Owned, Validating, GenericCall {
     Token public LEV;
     IFee public FEE;
     address public wallet;
-    uint public interval;
-    uint public deployedBlock;
+    uint public intervalSize;
 
     // events
     event StakeEvent(address indexed user, uint levs, uint startBlock, uint endBlock, uint intervalId);
@@ -26,15 +25,13 @@ contract Stake is Owned, Validating, GenericCall {
     event FeeCalculated(uint feeCalculated, uint feeReceived, uint weiReceived, uint startBlock, uint endBlock, uint intervalId);
     event Block(uint start, uint end, uint intervalId);
     //account
-    struct UserStake {uint interval; uint lev; uint levBlock;}
+    struct UserStake {uint intervalId; uint lev; uint levBlock;}
 
     mapping(address => UserStake) public stakes;
     // per staking interval data
-    mapping(uint => uint) public totalLevBlocks;
-    mapping(uint => uint) public FEEGenerated;
-    mapping(uint => uint) public start;
-    mapping(uint => uint) public end;
-    mapping(uint => bool) public FEECalculated;
+    struct Interval {uint totalLevBlocks;uint FEEGenerated;uint start;uint end;bool FEECalculated;}
+
+    mapping(uint => Interval) public intervals;
 
     // user specific
     uint public latest;
@@ -46,19 +43,17 @@ contract Stake is Owned, Validating, GenericCall {
 
     /// @notice Constructor to set all the default values for the owner, wallet,
     /// weiPerFee, tokenID and endBlock
-    constructor(address[] _owners, address _operator, address _wallet, uint _weiPerFee, address _levToken, address _feeToken, uint _interval) public
-    validAddress(_wallet) validAddress(_operator) validAddress(_levToken) validAddress(_feeToken) notZero(_weiPerFee) notZero(_interval){
+    constructor(address[] _owners, address _wallet, uint _weiPerFee, address _levToken, address _feeToken, uint _intervalSize) public
+    validAddress(_wallet) validAddress(_levToken) validAddress(_feeToken) notZero(_weiPerFee) notZero(_intervalSize){
         setOwners(_owners);
-        operator = _operator;
         wallet = _wallet;
         weiPerFEE = _weiPerFee;
         LEV = Token(_levToken);
-        interval = _interval;
+        intervalSize = _intervalSize;
         FEE = IFee(_feeToken);
-        deployedBlock = block.number;
         latest = 1;
-        start[latest] = deployedBlock;
-        end[latest] = start[latest] + interval;
+        intervals[latest].start = block.number;
+        intervals[latest].end = intervals[latest].start + intervalSize;
     }
 
     /// @notice To set the wallet address by the owner only
@@ -68,42 +63,37 @@ contract Stake is Owned, Validating, GenericCall {
         wallet = _wallet;
     }
 
-    function setInterval(uint _interval) external notZero(_interval) onlyOwner {
+    function setIntervalSize(uint _intervalSize) external notZero(_intervalSize) onlyOwner {
         ensureInterval();
-        interval = _interval;
-    }
-
-    function getCurrentStakingPeriod() external constant returns (uint _start, uint _end){
-        uint diff = (block.number - deployedBlock) % interval;
-        _start = block.number - diff;
-        _end = _start + interval;
+        intervalSize = _intervalSize;
     }
 
     //create interval if not there
     function ensureInterval() public {
-        if (end[latest] > block.number) return;
+        if (intervals[latest].end > block.number) return;
         _calculateFEE2Distribute();
-        uint diff = (block.number - end[latest]) % interval;
+        uint diff = (block.number - intervals[latest].end) % intervalSize;
         latest = latest + 1;
-        start[latest] = end[latest - 1];
-        end[latest] = block.number - diff + interval;
-        emit Block(start[latest], end[latest], latest);
+        intervals[latest].start = intervals[latest - 1].end;
+        intervals[latest].end = block.number - diff + intervalSize;
+        emit Block(intervals[latest].start, intervals[latest].end, latest);
     }
 
     //calculate fee for previous interval if not calculated
     function _calculateFEE2Distribute() private {
-        if (FEECalculated[latest] || end[latest] > block.number) return;
-        (uint feeEarned, uint ethEarned) = calculateDistributedIntervalEarning(start[latest], end[latest]);
-        FEEGenerated[latest] = feeEarned.add(ethEarned.div(weiPerFEE));
-        FEECalculated[latest] = true;
-        emit FeeCalculated(FEEGenerated[latest], feeEarned, ethEarned, start[latest], end[latest], latest);
+        Interval storage interval = intervals[latest];
+        if (interval.FEECalculated || interval.end > block.number) return;
+        (uint feeEarned, uint ethEarned) = calculateDistributedIntervalEarning(interval.start, interval.end);
+        interval.FEEGenerated = feeEarned.add(ethEarned.div(weiPerFEE));
+        interval.FEECalculated = true;
+        emit FeeCalculated(interval.FEEGenerated, feeEarned, ethEarned, interval.start, interval.end, latest);
         if (feeEarned > 0) FEE.burnTokens(feeEarned);
         if (ethEarned > 0) wallet.transfer(ethEarned);
     }
 
     function restake(int _signedQuantity) private {
         UserStake storage userStake = stakes[msg.sender];
-        if (userStake.interval == latest || userStake.interval == 0) return;
+        if (userStake.intervalId == latest || userStake.intervalId == 0) return;
         uint lev = userStake.lev;
         uint withdrawLev = _signedQuantity >= 0 ? 0 : uint(_signedQuantity * - 1) >= userStake.lev ? userStake.lev : uint(_signedQuantity * - 1);
         _withdraw(withdrawLev);
@@ -112,10 +102,11 @@ contract Stake is Owned, Validating, GenericCall {
             delete stakes[msg.sender];
             return;
         }
-        userStake.interval = latest;
-        userStake.levBlock = userStake.lev.mul(interval);
-        totalLevBlocks[latest] = totalLevBlocks[latest].add(userStake.levBlock);
-        emit ReStakeEvent(msg.sender, userStake.lev, start[latest], end[latest], latest);
+        Interval storage interval = intervals[latest];
+        userStake.intervalId = latest;
+        userStake.levBlock = userStake.lev.mul(interval.end.sub(interval.start));
+        interval.totalLevBlocks = interval.totalLevBlocks.add(userStake.levBlock);
+        emit ReStakeEvent(msg.sender, userStake.lev, interval.start, interval.end, latest);
     }
 
     function stake(int _signedQuantity) external {
@@ -127,30 +118,29 @@ contract Stake is Owned, Validating, GenericCall {
 
     function stakeWithCurrentPeriod(uint _quantity) private {
         require(LEV.allowance(msg.sender, this) >= _quantity, "Approve LEV tokens first");
-        UserStake storage userStake = stakes[msg.sender];
-        userStake.interval = latest;
-        userStake.levBlock = userStake.levBlock.add(_quantity.mul(end[latest].sub(block.number)));
-        userStake.lev = userStake.lev.add(_quantity);
-        totalLevBlocks[latest] = totalLevBlocks[latest].add(_quantity.mul(end[latest].sub(block.number)));
+        Interval storage interval = intervals[latest];
+        stakes[msg.sender].intervalId = latest;
+        stakes[msg.sender].levBlock = stakes[msg.sender].levBlock.add(_quantity.mul(intervals[latest].end.sub(block.number)));
+        stakes[msg.sender].lev = stakes[msg.sender].lev.add(_quantity);
+        interval.totalLevBlocks = interval.totalLevBlocks.add(_quantity.mul(interval.end.sub(block.number)));
         require(LEV.transferFrom(msg.sender, this, _quantity), "LEV token transfer was not successful");
-        emit StakeEvent(msg.sender, _quantity, start[latest], end[latest], latest);
+        emit StakeEvent(msg.sender, _quantity, interval.start, interval.end, latest);
     }
 
     function withdraw() external {
         ensureInterval();
-        UserStake storage userStake = stakes[msg.sender];
-        if (userStake.interval == 0 || userStake.interval == latest) return;
-        _withdraw(userStake.lev);
+        if (stakes[msg.sender].intervalId == 0 || stakes[msg.sender].intervalId == latest) return;
+        _withdraw(stakes[msg.sender].lev);
     }
 
     function _withdraw(uint lev) private {
-        UserStake storage userStake = stakes[msg.sender];
-        uint _interval = userStake.interval;
-        uint feeEarned = userStake.levBlock.mul(FEEGenerated[_interval]).div(totalLevBlocks[_interval]);
+        uint intervalId = stakes[msg.sender].intervalId;
+        Interval storage interval = intervals[intervalId];
+        uint feeEarned = stakes[msg.sender].levBlock.mul(interval.FEEGenerated).div(interval.totalLevBlocks);
         delete stakes[msg.sender];
         if (feeEarned > 0) FEE.sendTokens(msg.sender, feeEarned);
         if (lev > 0) require(LEV.transfer(msg.sender, lev));
-        emit RedeemEvent(msg.sender, lev, feeEarned, start[_interval], end[_interval], _interval);
+        emit RedeemEvent(msg.sender, lev, feeEarned, interval.start, interval.end, intervalId);
     }
 
     function calculateDistributedIntervalEarning(uint _start, uint _end) public constant returns (uint _feeEarned, uint _ethEarned){

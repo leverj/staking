@@ -25,21 +25,6 @@ contract('owner manipulations', (accounts) => {
     }
   });
 
-  it('non-owner should not be able to set the operator', async function () {
-    try {
-      await fee.setOperator(accounts[4], {from: accounts[4]});
-      throw new Error('did not fail');
-    } catch (e) {
-      expect(e.message).to.eql('VM Exception while processing transaction: revert')
-    }
-  });
-
-  it('any owner can set the operator', async function () {
-    expect(await fee.operator.call()).to.eql(0);
-    await fee.setOperator(accounts[1], { from: accounts[0] });
-    expect(await fee.operator.call()).to.eql(accounts[1]);
-  });
-
   it('any owner can add a new owner', async function () {
     let _owners = owners(accounts).concat(accounts[4]);
     await fee.addOwner(accounts[4], {from: accounts[1]});

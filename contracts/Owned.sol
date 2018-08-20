@@ -14,22 +14,10 @@ contract Owned {
 
   address[] public owners;
 
-  address public operator;
-
   modifier onlyOwner {
 
     require(isOwner[msg.sender]);
     _;
-  }
-
-  modifier onlyOperator {
-    require(msg.sender == operator);
-    _;
-  }
-
-  function setOperator(address _operator) external onlyOwner {
-    require(_operator != address(0));
-    operator = _operator;
   }
 
   function removeOwner(address _owner) public onlyOwner {
