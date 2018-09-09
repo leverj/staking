@@ -1,6 +1,6 @@
 {
   "name": "@leverj/stake",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Stake LEV tokens here to get FEE tokens for a particular staking-interval",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "npm run solium & npm run solhint",
     "test": "BLUEBIRD_DEBUG=1 node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
     "test-automation": "node scripts/testStakeAutomation.js",
-    "version:major": "npm version patch && git push origin --tags",
+    "version:major": "npm version patch && git push --follow-tags",
     "publish:major": "yarn version:major && bin/publish.sh"
   },
   "repository": {
