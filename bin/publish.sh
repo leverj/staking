@@ -14,11 +14,6 @@ function checkDocker(){
   [ "$?" -eq 1 ] && exit 1
 }
 
-function version(){
-  npm version patch
-  git push --tags origin master
-}
-
 function build(){
   node_modules/.bin/truffle compile
   node node_modules/.bin/truffle-flattener contracts/Fee.sol > Fee.sol
@@ -42,11 +37,11 @@ function publishNpmModule(){
 IMAGE=leverj/stake-contract
 cleanup
 checkDocker
-version
-build
-createAndDeployImage
-publishNpmModule
-cleanup
+echo npm_package_version:$npm_package_version
+#build
+#createAndDeployImage
+#publishNpmModule
+#cleanup
 
 
 
