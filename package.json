@@ -9,7 +9,8 @@
     "lint": "npm run solium & npm run solhint",
     "test": "BLUEBIRD_DEBUG=1 node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
     "test-automation": "node scripts/testStakeAutomation.js",
-    "publish:major": "bin/publish.sh"
+    "version:major":"npm version patch && git push --tags origin master",
+    "publish:major": "yarn version:major && bin/publish.sh"
   },
   "repository": {
     "type": "git",
