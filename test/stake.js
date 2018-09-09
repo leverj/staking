@@ -309,7 +309,8 @@ async function setup([admin, user1, user2, user3, wallet, user5, operator]) {
   await lev.transfer(user1, 100);
   await lev.transfer(user2, 200);
   await forceMine(9);
-  const stake = await Stake.new([admin], wallet, '1000000', lev.address, fee.address, '40') // 10
+  const stake = await Stake.new([admin], wallet, '1000000', lev.address, fee.address, '40', '1.0.0') // 10
+  expect(await stake.version()).to.eql('1.0.0')
   await fee.setMinter(stake.address); //11
   let stateAffirm = StateAffirm(stake, fee, lev)
   return [stake, fee, lev, stateAffirm];

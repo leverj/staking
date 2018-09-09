@@ -1,23 +1,24 @@
-const fs     = require('fs');
-const path   = require('path')
+const fs = require('fs');
+const path = require('path')
 const affirm = require('affirm.js')
 
 module.exports = (function () {
   function getConf() {
     affirmEnvVariables()
+    let version = reqiure('../package.json').version
     return {
-      network    : process.env.NETWORK,
+      network: process.env.NETWORK,
       maxGasPrice: process.env.MAX_GAS_PRICE - 0,
-      privateKey : getPrivateKey(),
-      Fee        : {
-        values : JSON.parse(process.env.FEE_CONSTRUCTOR),
+      privateKey: getPrivateKey(),
+      Fee: {
+        values: JSON.parse(process.env.FEE_CONSTRUCTOR),
         address: process.env.FEE_ADDRESS,
-        source : getSourceCode('Fee'),
+        source: getSourceCode('Fee'),
       },
-      Stake      : {
-        values : JSON.parse(process.env.STAKE_CONSTRUCTOR),
+      Stake: {
+        values: JSON.parse(process.env.STAKE_CONSTRUCTOR).concat([version]),
         address: process.env.STAKE_ADDRESS,
-        source : getSourceCode('Stake'),
+        source: getSourceCode('Stake'),
       }
     }
   }

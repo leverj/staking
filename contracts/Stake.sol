@@ -11,7 +11,7 @@ import './GenericCall.sol';
 
 contract Stake is Owned, Validating, GenericCall {
     using SafeMath for uint;
-
+    string public version;
     uint public weiPerFEE; // Wei for each Fee token
     Token public LEV;
     IFee public FEE;
@@ -43,7 +43,7 @@ contract Stake is Owned, Validating, GenericCall {
 
     /// @notice Constructor to set all the default values for the owner, wallet,
     /// weiPerFee, tokenID and endBlock
-    constructor(address[] _owners, address _wallet, uint _weiPerFee, address _levToken, address _feeToken, uint _intervalSize) public
+    constructor(address[] _owners, address _wallet, uint _weiPerFee, address _levToken, address _feeToken, uint _intervalSize, string _version) public
     validAddress(_wallet) validAddress(_levToken) validAddress(_feeToken) notZero(_weiPerFee) notZero(_intervalSize){
         setOwners(_owners);
         wallet = _wallet;
@@ -54,6 +54,7 @@ contract Stake is Owned, Validating, GenericCall {
         latest = 1;
         intervals[latest].start = block.number;
         intervals[latest].end = intervals[latest].start + intervalSize;
+        version = _version;
     }
 
     /// @notice To set the wallet address by the owner only

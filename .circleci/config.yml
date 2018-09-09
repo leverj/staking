@@ -11,19 +11,19 @@ jobs:
       - checkout
       - run: sudo npm install -g yarn
       - run: yarn
-      - run: node_modules/.bin/truffle compile
       - run: yarn test
-      - run: yarn nsp
-      - run: yarn grunt
-      - run: node node_modules/.bin/truffle-flattener contracts/Fee.sol > Fee.sol
-      - run: node node_modules/.bin/truffle-flattener contracts/Stake.sol > Stake.sol
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run: docker info
-      - run: docker build -t leverj/stake:$CIRCLE_BRANCH .
-      - run: docker build -f Dockerfile-contract-deploy -t leverj/stake-contract:$CIRCLE_BRANCH .
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker push leverj/stake
-      - run: docker push leverj/stake-contract
-      - run: docker logout
+#      - run: node_modules/.bin/truffle compile
+#      - run: yarn nsp
+#      - run: yarn grunt
+#      - run: node node_modules/.bin/truffle-flattener contracts/Fee.sol > Fee.sol
+#      - run: node node_modules/.bin/truffle-flattener contracts/Stake.sol > Stake.sol
+#      - setup_remote_docker:
+#          docker_layer_caching: true
+#      - run: docker info
+#      - run: docker build -t leverj/stake:$CIRCLE_BRANCH .
+#      - run: docker build -f Dockerfile-contract-deploy -t leverj/stake-contract:$CIRCLE_BRANCH .
+#      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+#      - run: docker push leverj/stake
+#      - run: docker push leverj/stake-contract
+#      - run: docker logout
 
