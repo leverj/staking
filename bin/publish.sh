@@ -38,10 +38,10 @@ IMAGE=leverj/stake-contract
 cleanup
 checkDocker
 echo npm_package_version:$npm_package_version
-#build
-#createAndDeployImage
-#publishNpmModule
-#cleanup
+build
+createAndDeployImage
+publishNpmModule
+cleanup
 
 
 
