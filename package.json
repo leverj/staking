@@ -10,7 +10,6 @@
     "test": "BLUEBIRD_DEBUG=1 node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
     "test-automation": "node scripts/testStakeAutomation.js",
     "version:major": "npm version patch && git push --follow-tags",
-    "publish:major": "yarn version:major && yarn publish:modules",
     "publish:modules": "bin/publish.sh"
   },
   "repository": {
