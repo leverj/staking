@@ -5,7 +5,7 @@ const affirm = require('affirm.js')
 module.exports = (function () {
   function getConf() {
     affirmEnvVariables()
-    let version = process.env.npm_package_version
+    let version =require('../package.json').version
     return {
       network: process.env.NETWORK,
       maxGasPrice: process.env.MAX_GAS_PRICE - 0,

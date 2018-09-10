@@ -8,8 +8,11 @@
     "solhint": "solhint contracts/**/*.sol",
     "lint": "npm run solium & npm run solhint",
     "test": "BLUEBIRD_DEBUG=1 node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
-    "bump": "npm version patch && git push --follow-tags",
-    "docker": "bin/publish.sh"
+    "bump:patch": "npm version patch && git push --follow-tags",
+    "bump:minor": "npm version minor && git push --follow-tags",
+    "bump:major": "npm version major && git push --follow-tags",
+    "docker": "bin/publish.sh",
+    "docker:local": "LOCAL=true bin/publish.sh"
   },
   "repository": {
     "type": "git",

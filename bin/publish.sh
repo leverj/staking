@@ -3,10 +3,6 @@
 function cleanup(){
   rm -rf build dist
   rm -f Fee.sol Stake.sol
-  # ensure publishing only latest & greatest from master ...
-  #branch=$(git rev-parse --abbrev-ref HEAD)
-  #[ "$branch" != "master" ] && echo "publish can be done only from master branch" && exit 1
-  git pull
 }
 
 function checkDocker(){
@@ -22,7 +18,7 @@ function build(){
 
 function createAndDeployImage(){
   docker build -t ${IMAGE}:${npm_package_version} .
-  docker push ${IMAGE}:${npm_package_version}
+  ${LOCAL} || docker push ${IMAGE}:${npm_package_version}
 }
 
 function publishNpmModule(){
@@ -35,12 +31,13 @@ function publishNpmModule(){
 }
 
 IMAGE=leverj/stake-contract
+${LOCAL} || git pull
 cleanup
-checkDocker
+${LOCAL} || checkDocker
 echo npm_package_version:$npm_package_version
 build
 createAndDeployImage
-publishNpmModule
+${LOCAL} || publishNpmModule
 cleanup
 
 
