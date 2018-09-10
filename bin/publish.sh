@@ -18,7 +18,7 @@ function build(){
 
 function createAndDeployImage(){
   docker build -t ${IMAGE}:${npm_package_version} .
-  ${LOCAL} || docker push ${IMAGE}:${npm_package_version}
+  if [ -z "$LOCAL" ]; then docker push ${IMAGE}:${npm_package_version} ;fi
 }
 
 function publishNpmModule(){
@@ -31,13 +31,13 @@ function publishNpmModule(){
 }
 
 IMAGE=leverj/stake-contract
-${LOCAL} || git pull
+if [ -z "$LOCAL" ]; then git pull; fi
 cleanup
-${LOCAL} || checkDocker
+if [ -z "$LOCAL" ]; then checkDocker ;fi
 echo npm_package_version:$npm_package_version
 build
 createAndDeployImage
-${LOCAL} || publishNpmModule
+if [ -z "$LOCAL" ]; then publishNpmModule ;fi
 cleanup
 
 
