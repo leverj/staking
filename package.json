@@ -1,6 +1,6 @@
 {
   "name": "@leverj/stake",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Stake LEV tokens here to get FEE tokens for a particular staking-interval",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "test": "BLUEBIRD_DEBUG=1 node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
     "test-automation": "node scripts/testStakeAutomation.js",
     "version:major": "npm version patch && git push --follow-tags",
-    "publish:major": "yarn version:major && bin/publish.sh"
+    "publish:major": "yarn version:major && yarn publish:modules",
+    "publish:modules": "bin/publish.sh"
   },
   "repository": {
     "type": "git",
