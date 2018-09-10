@@ -1,6 +1,6 @@
 {
   "name": "@leverj/stake",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Stake LEV tokens here to get FEE tokens for a particular staking-interval",
   "main": "index.js",
   "scripts": {
