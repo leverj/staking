@@ -1,8 +1,8 @@
 const HumanStandardToken = artifacts.require("./HumanStandardToken.sol");
-const Stake              = artifacts.require("./Stake.sol");
-const Fee                = artifacts.require("./Fee.sol");
-const Mock               = artifacts.require("./external/Mock.sol");
-const expect             = require("expect.js");
+const Stake = artifacts.require("./Stake.sol");
+const Fee = artifacts.require("./Fee.sol");
+const Mock = artifacts.require("./external/Mock.sol");
+const expect = require("expect.js");
 
 const {forceMine, balance, stakeit, sendFeesToSelf, sendEth, toNumber, customWeb3, bounce} = require('./help')
 
@@ -57,14 +57,14 @@ contract('Stake and withdraw in consecutive interval', ([admin, user1, user2, us
     await stakeit(15, user2, stake, token) //15
     await affirm.userState(user1, [1, 10, 10 * (50 - 13)/*370*/], 90, 0)
     await affirm.userState(user2, [1, 15, 15 * (50 - 15)/*525*/], 185, 0)
-    await affirm.stakeInterval(1, 10, 50, 0, 895, 0, 0, 25, false)
+    await affirm.stakeInterval(1, 10, 50, 0, 895, 0, 0, 25, false, 0)
     await sendEth(admin, stake.address, "1000000000000")
     await sendFeesToSelf(stake.address, admin, fee, '2000000')
     await forceMine(49)
     await stake.withdraw({from: user1})
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 3000000, 895, 0, 0, 15, true)
-    await affirm.stakeInterval(2, 50, 90, 0, 0, 0, 0, 15, false)
+    await affirm.stakeInterval(1, 10, 50, 3000000, 895, 0, 0, 15, true, 1759777)
+    await affirm.stakeInterval(2, 50, 90, 0, 0, 0, 0, 15, false, 1759777)
     await affirm.userState(user1, [0, 0, 0], 100, Math.floor(3000000 * 370 / 895))
     await affirm.userState(user2, [1, 15, 525], 185, 0)
   })
@@ -82,7 +82,7 @@ contract('Stake and withdraw in same interval', ([admin, user1, user2, user3, wa
     await forceMine(40)
     await stake.withdraw({from: user1})
     await affirm.latestStakeInterval(1, 10, 50)
-    await affirm.stakeInterval(1, 10, 50, 0, 895, 1000000000000, 2000000, 25, false)
+    await affirm.stakeInterval(1, 10, 50, 0, 895, 1000000000000, 2000000, 25, false, 0)
     await affirm.userState(user1, [1, 10, 370], 90, 0)
     await affirm.userState(user2, [1, 15, 525], 185, 0)
   })
@@ -102,14 +102,14 @@ contract('stake => restake => withdraw in consecutive interval', ([admin, user1,
     await stake.ensureInterval() //62
 
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25, true)
+    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25, true, 2307691)
     await affirm.userState(user1, [1, 10, 370], 90, 0)
     await affirm.userState(user2, [1, 15, 525], 185, 0)
 
     await stakeit(15, user1, stake, token) //64
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25 + 15, true)
-    await affirm.stakeInterval(2, 50, 90, 0, 10 * 40 + 15 * (90 - 64) /*=790*/, 230769230770, 461539, 25 + 15, false)
+    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25 + 15, true, 1353674)
+    await affirm.stakeInterval(2, 50, 90, 0, 10 * 40 + 15 * (90 - 64) /*=790*/, 230769230770, 461539, 25 + 15, false, 1353674)
     await affirm.userState(user1, [2, 10 + 15, 10 * 40 + 15 * (90 - 64) /*=790*/], 75, 954017)
     await affirm.userState(user2, [1, 15, 525], 185, 0)
 
@@ -119,8 +119,8 @@ contract('stake => restake => withdraw in consecutive interval', ([admin, user1,
     await stake.withdraw({from: user1});
     await stake.withdraw({from: user2});
     await affirm.latestStakeInterval(3, 90, 130)
-    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 58608058609, 164836, 0, true)
-    await affirm.stakeInterval(2, 50, 90, 4468864, 10 * 40 + 15 * (90 - 64) /*=790*/, 58608058609, 164836, 0, true)
+    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 58608058609, 164836, 0, true, 1)
+    await affirm.stakeInterval(2, 50, 90, 4468864, 10 * 40 + 15 * (90 - 64) /*=790*/, 58608058609, 164836, 0, true, 1)
     await affirm.userState(user1, [0, 0, 0], 100, 954017 + 4468864)
     await affirm.userState(user2, [0, 0, 0], 200, Math.floor(2307691 * 525 / 895))
   })
@@ -142,14 +142,14 @@ contract('stake => restake with negative amount', ([admin, user1, user2, user3, 
     await forceMine(61)
     await stake.ensureInterval() //62
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25, true)
+    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25, true, 2307691)
     await affirm.userState(user1, [1, 10, 370], 90, 0)
     await affirm.userState(user2, [1, 15, 525], 185, 0)
 
     await stakeit(-6, user1, stake, token) //63
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25 - 6, true)
-    await affirm.stakeInterval(2, 50, 90, 0, 4 * 40 /*=160*/, 230769230770, 461539, 25 - 6, false)
+    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25 - 6, true, 1353674)
+    await affirm.stakeInterval(2, 50, 90, 0, 4 * 40 /*=160*/, 230769230770, 461539, 25 - 6, false, 1353674)
     await affirm.userState(user1, [2, 10 - 6, 4 * 40 /*=160*/], 96, Math.floor(2307691 * 370 / 895))
     await affirm.userState(user2, [1, 15, 525], 185, 0)
   })
@@ -168,14 +168,14 @@ contract('stake => restake with negative amount more than previously staked', ([
     await forceMine(61)
     await stake.ensureInterval() //62
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25, true)
+    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 25, true, 2307691)
     await affirm.userState(user1, [1, 10, 370], 90, 0)
     await affirm.userState(user2, [1, 15, 525], 185, 0)
 
     await stakeit(-12, user1, stake, token) //63
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 15, true)
-    await affirm.stakeInterval(2, 50, 90, 0, 0, 230769230770, 461539, 15, false)
+    await affirm.stakeInterval(1, 10, 50, 2307691, 895, 230769230770, 461539, 15, true, 1353674)
+    await affirm.stakeInterval(2, 50, 90, 0, 0, 230769230770, 461539, 15, false, 1353674)
     await affirm.userState(user1, [0, 0, 0], 100, Math.floor(2307691 * 370 / 895))
     await affirm.userState(user2, [1, 15, 525], 185, 0)
   })
@@ -191,7 +191,7 @@ contract('staking and withdraw when no fee or eth have been collected', ([admin,
     await forceMine(61)
     await stake.withdraw({from: user1})
     await affirm.latestStakeInterval(2, 50, 90)
-    await affirm.stakeInterval(1, 10, 50, 0, 895, 0, 0, 15, true)
+    await affirm.stakeInterval(1, 10, 50, 0, 895, 0, 0, 15, true, 0)
     await affirm.userState(user1, [0, 0, 0], 100, 0)
     await affirm.userState(user2, [1, 15, 525], 185, 0)
   })
@@ -206,8 +206,8 @@ contract('restake calculation', ([admin, user1, user2, user3, wallet, user5, ope
     await forceMine(100)
     await stakeit(15, user1, stake, token)
     await affirm.latestStakeInterval(2, 50, 130)
-    await affirm.stakeInterval(1, 10, 50, 0, 370, 0, 0, 25, true)
-    await affirm.stakeInterval(2, 50, 130, 0, 1220, 0, 0, 25, false)
+    await affirm.stakeInterval(1, 10, 50, 0, 370, 0, 0, 25, true, 0)
+    await affirm.stakeInterval(2, 50, 130, 0, 1220, 0, 0, 25, false, 0)
     await affirm.userState(user1, [2, 25, 1220], 75, 0)
   })
 });
@@ -216,7 +216,7 @@ contract.skip('sending eth should initiate new staking interval', ([admin, user1
   let token, stake, fee, affirm, mock;
   before(async () => {
     [stake, fee, token, affirm] = await setup([admin, user1, user2, user3, wallet, user5, operator])
-    mock                        = await Mock.new()
+    mock = await Mock.new()
   })
 
   it('sending eth should initiate new staking interval', async () => {
@@ -275,10 +275,10 @@ contract('generic call enabled on stake', ([admin, user1, user2, user3, wallet, 
   before(async () => [stake, fee, token, affirm] = await setup([admin, user1, user2, user3, wallet, user5, operator]));//11
 
   it('should be able to execute a method on any contract', async function () {
-    let transferFEE         = 1e11;
+    let transferFEE = 1e11;
     let feeContractFromWeb3 = new customWeb3.eth.Contract(fee.abi, fee.address)
-    let data                = feeContractFromWeb3.methods.sendTokens(user1, transferFEE).encodeABI()
-    let result              = await stake.execute(fee.address, 0, data)
+    let data = feeContractFromWeb3.methods.sendTokens(user1, transferFEE).encodeABI()
+    let result = await stake.execute(fee.address, 0, data)
     expect(await balance(user1, fee)).to.eql(transferFEE)
     expect(result.logs.length).to.eql(1)
     let log = result.logs[0];
@@ -288,11 +288,23 @@ contract('generic call enabled on stake', ([admin, user1, user2, user3, wallet, 
     expect(log.args.data).to.eql(data)
   })
 
-  it('should not allow to execute if account is not admin', async function () {
-    let initialBalance      = await balance(user1, fee)
-    let added               = 1e11;
+  it("should allow transfer of any token to any address", async function () {
+    let transfer = '2000000'
+    await sendFeesToSelf(stake.address, admin, fee, transfer)
+    expect(await balance(user5, fee)).to.eql(0)
+    let stakeBalance = await balance(stake.address, fee)
     let feeContractFromWeb3 = new customWeb3.eth.Contract(fee.abi, fee.address)
-    let data                = feeContractFromWeb3.methods.sendTokens(user1, added).encodeABI()
+    let data = feeContractFromWeb3.methods.transfer(user5, transfer).encodeABI()
+    let result = await stake.execute(fee.address, 0, data)
+    expect(stakeBalance - transfer).to.eql(await balance(stake.address, fee))
+    expect(await balance(user5, fee)).to.eql(transfer)
+  })
+
+  it('should not allow to execute if account is not admin', async function () {
+    let initialBalance = await balance(user1, fee)
+    let added = 1e11;
+    let feeContractFromWeb3 = new customWeb3.eth.Contract(fee.abi, fee.address)
+    let data = feeContractFromWeb3.methods.sendTokens(user1, added).encodeABI()
     try {
       await stake.execute(fee.address, 0, data, {from: user2})
       expect().to.fail('It should have failed')
@@ -300,6 +312,86 @@ contract('generic call enabled on stake', ([admin, user1, user2, user3, wallet, 
       expect(e.message).to.match(/VM Exception while processing transaction/)
     }
     expect(await balance(user1, fee)).to.eql(initialBalance)
+  })
+})
+
+contract('stake and restakes', function ([admin, user1, user2, user3, wallet, user5, operator]) {
+  let token, stake, fee, affirm;
+  before(async () => [stake, fee, token, affirm] = await setup([admin, user1, user2, user3, wallet, user5, operator]));//11
+
+  it('multiple users', async function () {
+    await Promise.all([token.transfer(user3, 100), token.transfer(wallet, 100), token.transfer(user5, 100)])
+    await stakeit(15, user1, stake, token)
+    await sendEth(admin, stake.address, "1000000000000")
+    await sendFeesToSelf(stake.address, admin, fee, '2000000')
+    await forceMine(100)
+
+    await stakeit(16, user2, stake, token)
+    await sendEth(admin, stake.address, "1000000000000")
+    await sendFeesToSelf(stake.address, admin, fee, '2000000')
+    await forceMine(200)
+
+    await sendEth(admin, stake.address, "1000000000000")
+    await sendFeesToSelf(stake.address, admin, fee, '2000000')
+    await stakeit(17, user3, stake, token)
+    await forceMine(300)
+
+    await stakeit(18, wallet, stake, token)
+    await forceMine(400)
+
+    await stakeit(19, user5, stake, token)
+    await forceMine(500)
+    await sendEth(admin, stake.address, "947851305141")
+    await stakeit(-10, user1, stake, token)
+    await stakeit(-10, user3, stake, token)
+    await stakeit(-10, user2, stake, token)
+    await stakeit(-10, wallet, stake, token)
+    await stakeit(-10, user5, stake, token)
+  })
+
+})
+
+contract('halt', function ([admin, user1, user2, user3, wallet, user5, operator]) {
+  let token, stake, fee, affirm;
+  before(async () => [stake, fee, token, affirm] = await setup([admin, user1, user2, user3, wallet, user5, operator]));//11
+  it('should halt staking, transfer eth to wallet and let everyone withdraw their levs and FEE generated', async function () {
+    await stakeit(10, user1, stake, token)
+    await forceMine(99)
+    await stakeit(0, user1, stake, token)
+    await stakeit(15, user2, stake, token)
+    await sendEth(admin, stake.address, "10000000")
+    await sendFeesToSelf(stake.address, admin, fee, '2000000')
+
+    await affirm.latestStakeInterval(2, 50, 130)
+    await affirm.stakeInterval(2, 50, 130, 0, 1220, 10000000, 2000000, 25, false, 0)
+    await affirm.userState(user1, [2, 10, 800], 90, 0)
+    await affirm.userState(user2, [2, 15, 420], 185, 0)
+
+    try {
+      await stake.halt({from: user1})
+      throw new Error('non admin user was able to halt stake')
+    } catch (e) {
+      expect(e.message).to.eql('VM Exception while processing transaction: revert')
+    }
+    await stake.halt()
+    try {
+      await stakeit(10, user1, stake, token)
+      throw new Error('staking happens after halt')
+    } catch (e) {
+      expect(e.message).to.eql('VM Exception while processing transaction: revert')
+    }
+    try {
+      await stake.ensureInterval()
+      throw new Error('interval updates after stake halt')
+    } catch (e) {
+      expect(e.message).to.eql('VM Exception while processing transaction: revert')
+    }
+    await affirm.latestStakeInterval(3, 108, 148)
+    await affirm.stakeInterval(2, 50, 108, 2000010, 1220, 0, 0, 25, true, 2000010)
+    await stake.withdraw({from: user1})
+    await affirm.userState(user1, [0, 0, 0], 100, 1311481)
+    await stake.withdraw({from: user2})
+    await affirm.userState(user2, [0, 0, 0], 200, 688528)
   })
 })
 
@@ -312,21 +404,21 @@ async function setup([admin, user1, user2, user3, wallet, user5, operator]) {
   const stake = await Stake.new([admin], wallet, '1000000', lev.address, fee.address, '40', '1.0.0') // 10
   expect(await stake.version()).to.eql('1.0.0')
   await fee.setMinter(stake.address); //11
-  let stateAffirm = StateAffirm(stake, fee, lev)
-  return [stake, fee, lev, stateAffirm];
+  let stakeAffirm = StakeAffirm(stake, fee, lev)
+  return [stake, fee, lev, stakeAffirm];
 }
 
 function calculateFEEAndEthProportion(start, end, current, feeEarned, ethEarned) {
-  let total              = current - start
-  let left               = current - end
+  let total = current - start
+  let left = current - end
   let [feeLeft, ethLeft] = [feeEarned, ethEarned].map(_ => Math.ceil(_ * left / total))
-  let feeGenerated       = Math.floor((feeEarned - feeLeft) + (ethEarned - ethLeft) / 1000000)
+  let feeGenerated = Math.floor((feeEarned - feeLeft) + (ethEarned - ethLeft) / 1000000)
   console.log({feeLeft, ethLeft, feeGenerated})
   return {feeLeft, ethLeft, feeGenerated}
 }
 
-function StateAffirm(stake, fee, lev) {
-  async function stakeInterval(intervalId, start, end, FEEGenerated, totalLevBlocks, ethBalance, FEEBalance, levBalance, FEECalculated) {
+function StakeAffirm(stake, fee, lev) {
+  async function stakeInterval(intervalId, start, end, FEEGenerated, totalLevBlocks, ethBalance, FEEBalance, levBalance, FEECalculated, toBeDistributed) {
     let interval = await getInterval(stake, intervalId)
     expect([
       intervalId,
@@ -335,14 +427,15 @@ function StateAffirm(stake, fee, lev) {
       interval.FEEGenerated,
       interval.totalLevBlocks,
       await balance(stake.address).then(_ => _ - 0),
-      await balance(stake.address, fee),
+      (await balance(stake.address, fee) - await stake.FEE2Distribute()),
       await balance(stake.address, lev),
-      interval.FEECalculated
+      interval.FEECalculated,
+      await stake.FEE2Distribute().then(_ => _ - 0)
     ]).to.be.eql([...arguments])
   }
 
   async function latestStakeInterval(intervalId, start, end) {
-    let latest   = await stake.latest().then(toNumber);
+    let latest = await stake.latest().then(toNumber);
     let interval = await getInterval(stake, latest)
     expect([latest, interval.start, interval.end]).to.be.eql([...arguments])
 
@@ -364,10 +457,10 @@ async function getInterval(stake, intervalId) {
   let interval = await stake.intervals(intervalId)
   return {
     totalLevBlocks: toNumber(interval[0]),
-    FEEGenerated  : toNumber(interval[1]),
-    start         : toNumber(interval[2]),
-    end           : toNumber(interval[3]),
-    FEECalculated : interval[4],
+    FEEGenerated: toNumber(interval[1]),
+    start: toNumber(interval[2]),
+    end: toNumber(interval[3]),
+    FEECalculated: interval[4],
   }
 }
 
