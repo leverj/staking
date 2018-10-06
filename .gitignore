@@ -9,3 +9,5 @@ src/client/css/style.css
 src/client/css/style.css.map
 createDocker.sh
 ignore/
+coverage.json
+coverage

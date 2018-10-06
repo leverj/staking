@@ -7,6 +7,7 @@
     "solium": "solium -d contracts/",
     "solhint": "solhint contracts/**/*.sol",
     "lint": "npm run solium & npm run solhint",
+    "coverage":"solidity-coverage",
     "test": "BLUEBIRD_DEBUG=1 node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
     "bump:patch": "npm version patch && git push --follow-tags",
     "bump:minor": "npm version minor && git push --follow-tags",
@@ -37,6 +38,7 @@
     "ethjs-rpc": "^0.2.0",
     "expect.js": "^0.3.1",
     "solhint": "^1.2.1",
+    "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",
     "truffle": "^4.1.13",
     "truffle-flattener": "^1.2.5"
