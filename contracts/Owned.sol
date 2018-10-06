@@ -30,7 +30,7 @@ contract Owned {
       }
     }
     owners.length = SafeMath.sub(owners.length, 1);
-    OwnerRemoval(_owner);
+    emit OwnerRemoval(_owner);
   }
 
   function addOwner(address _owner) external onlyOwner {
@@ -38,14 +38,14 @@ contract Owned {
     if(isOwner[_owner]) return;
     isOwner[_owner] = true;
     owners.push(_owner);
-    OwnerAddition(_owner);
+    emit OwnerAddition(_owner);
   }
 
   function setOwners(address[] _owners) internal {
     for (uint i = 0; i < _owners.length; i++) {
       require(_owners[i] != address(0));
       isOwner[_owners[i]] = true;
-      OwnerAddition(_owners[i]);
+      emit OwnerAddition(_owners[i]);
     }
     owners = _owners;
   }
