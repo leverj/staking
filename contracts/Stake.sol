@@ -20,6 +20,7 @@ contract Stake is Owned, Validating, GenericCall {
     uint public intervalSize;
     bool public halted;
     uint public FEE2Distribute;
+    uint public totalLevStaked;
 
     // events
     event StakeEvent(address indexed user, uint levs, uint startBlock, uint endBlock, uint intervalId);
@@ -131,6 +132,7 @@ contract Stake is Owned, Validating, GenericCall {
         stakes[msg.sender].quantity = stakes[msg.sender].quantity.add(_quantity);
         interval.worth = interval.worth.add(_quantity.mul(interval.end.sub(block.number)));
         require(LEV.transferFrom(msg.sender, this, _quantity), "LEV token transfer was not successful");
+        totalLevStaked = totalLevStaked.add(_quantity);
         emit StakeEvent(msg.sender, _quantity, interval.start, interval.end, latest);
     }
 
@@ -155,10 +157,13 @@ contract Stake is Owned, Validating, GenericCall {
         if (ethEarned > 0) wallet.transfer(ethEarned);
     }
 
-//    function transferToken(address token, uint quantity) public {
-//        require(token != address(FEE), "Can not transfer FEE tokens");
-//        Token(token).transfer(wallet, quantity);
-//    }
+    function transferToken(address token) public {
+        if (token == address(FEE)) return;
+        uint balance = Token(token).balanceOf(this);
+        if(balance == 0) return;
+        if(token == address(LEV)) balance = balance.sub(totalLevStaked);
+        Token(token).transfer(wallet, balance);
+    }
 
     function redeem(uint lev) private {
         uint intervalId = stakes[msg.sender].intervalId;
@@ -169,7 +174,10 @@ contract Stake is Owned, Validating, GenericCall {
             FEE2Distribute = FEE2Distribute.sub(feeEarned);
             FEE.transfer(msg.sender, feeEarned);
         }
-        if (lev > 0) require(LEV.transfer(msg.sender, lev));
+        if (lev > 0) {
+            totalLevStaked = totalLevStaked.sub(lev);
+            require(LEV.transfer(msg.sender, lev));
+        }
         emit RedeemEvent(msg.sender, lev, feeEarned, interval.start, interval.end, intervalId);
     }
 
