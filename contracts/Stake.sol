@@ -160,9 +160,8 @@ contract Stake is Owned, Validating, GenericCall {
     function transferToken(address token) public {
         if (token == address(FEE)) return;
         uint balance = Token(token).balanceOf(this);
-        if(balance == 0) return;
         if(token == address(LEV)) balance = balance.sub(totalLevStaked);
-        Token(token).transfer(wallet, balance);
+        if(balance > 0)  Token(token).transfer(wallet, balance);
     }
 
     function redeem(uint lev) private {
