@@ -30,9 +30,9 @@ contract Stake is Owned, Validating, GenericCall {
     event StakingInterval(uint start, uint end, uint intervalId);
     event Halt(uint block, uint intervalId);
     //account
-    struct Stake {uint intervalId; uint quantity; uint worth;}
+    struct UserStake {uint intervalId; uint quantity; uint worth;}
 
-    mapping(address => Stake) public stakes;
+    mapping(address => UserStake) public stakes;
     // per staking interval data
     struct Interval {uint worth; uint generatedFEE; uint start; uint end;}
 
@@ -100,7 +100,7 @@ contract Stake is Owned, Validating, GenericCall {
     }
 
     function restake(int _signedQuantity) private {
-        Stake storage stake = stakes[msg.sender];
+        UserStake storage stake = stakes[msg.sender];
         if (stake.intervalId == latest || stake.intervalId == 0) return;
         uint lev = stake.quantity;
         uint withdrawLev = _signedQuantity >= 0 ? 0 : uint(_signedQuantity * - 1) >= stake.quantity ? stake.quantity : uint(_signedQuantity * - 1);
@@ -166,7 +166,7 @@ contract Stake is Owned, Validating, GenericCall {
 
     function redeem(uint lev) private {
         uint intervalId = stakes[msg.sender].intervalId;
-        Interval storage interval = intervals[intervalId];
+        Interval memory interval = intervals[intervalId];
         uint feeEarned = stakes[msg.sender].worth.mul(interval.generatedFEE).div(interval.worth);
         delete stakes[msg.sender];
         if (feeEarned > 0) {

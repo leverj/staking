@@ -1,4 +1,4 @@
-FROM coinpit/nodejs:v8
+FROM coinpit/nodejs:v10.12.0
 COPY build ./dist/build/
 COPY deployment ./dist/deployment/
 COPY package.json yarn.lock Fee.sol Stake.sol ./dist/
