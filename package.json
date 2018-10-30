@@ -1,13 +1,13 @@
 {
   "name": "@leverj/stake",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Stake LEV tokens here to get FEE tokens for a particular staking-interval",
   "main": "index.js",
   "scripts": {
     "solium": "solium -d contracts/",
     "solhint": "solhint contracts/**/*.sol",
     "lint": "npm run solium & npm run solhint",
-    "coverage":"solidity-coverage",
+    "coverage": "solidity-coverage",
     "test": "BLUEBIRD_DEBUG=1 node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
     "bump:patch": "npm version patch && git push --follow-tags",
     "bump:minor": "npm version minor && git push --follow-tags",
